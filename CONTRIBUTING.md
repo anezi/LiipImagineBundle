@@ -25,7 +25,7 @@ please be the more precise possible. Here a little list of required information:
 Fork the repository, clone it and create a new branch with the following commands:
 
  ``` bash
- $ git clone git@github.com:liip/LiipImagineBundle.git
+ $ git clone git@github.com:anezi/imagine-bundle.git
  $ git checkout -b bug-fix-description
  ```
 
@@ -78,7 +78,7 @@ Please format your commit messages as follows:
  4. If your branch conflicts with the master branch, you will need to rebase and repush it with the following commands:
 
     ``` bash
-    $ git remote add upstream git@github.com:liip/LiipImagineBundle.git
+    $ git remote add upstream git@github.com:anezi/imagine-bundle.git
     $ git pull --rebase upstream master
     $ git push origin bug-fix-description -f
     ```
@@ -92,6 +92,6 @@ Please format your commit messages as follows:
  [composer]: https://getcomposer.org/
  [gh-help]:  https://help.github.com
  [gh-pr]:    https://help.github.com/send-pull-requests
- [issue]:    https://github.com/liip/LiipImagineBundle/issues/new
- [pr]:       https://github.com/liip/LiipImagineBundle/pull/new
+ [issue]:    https://github.com/anezi/imagine-bundle/issues/new
+ [pr]:       https://github.com/anezi/imagine-bundle/pull/new
  [PSR-2]:    https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md

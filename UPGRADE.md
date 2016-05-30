@@ -4,12 +4,12 @@ Upgrade
 1.0.0-alpha6 to 1.0.0-alpha7
 ---------------
 
-* [Configuration] `liip_imagine.controller_action` option was removed in favour of an array of actions. See `liip_imagine.controller` config
+* [Configuration] `anezi_imagine.controller_action` option was removed in favour of an array of actions. See `anezi_imagine.controller` config
 
 ```diff
--liip_imagine:
+-anezi_imagine:
 -    controller_action: AcmeDemoBundle:Default:filterAction
-+liip_imagine:
++anezi_imagine:
 +    controller:
 +        filter_action: AcmeDemoBundle:Default:filterAction
 ```
@@ -23,12 +23,12 @@ Upgrade
     -_imagine:
     -    resource: .
     -    type:     imagine
-    +_liip_imagine:
-    +    resource: "@LiipImagineBundle/Resources/config/routing.xml"
+    +_anezi_imagine:
+    +    resource: "@AneziImagineBundle/Resources/config/routing.xml"
     ```
 
- * [Configuration] `liip_imagine.filter_sets.route` option and sub options were removed.
- * [Configuration] `liip_imagine.cache_prefix` option was removed.
+ * [Configuration] `anezi_imagine.filter_sets.route` option and sub options were removed.
+ * [Configuration] `anezi_imagine.cache_prefix` option was removed.
 
 0.19.x to 1.0.0-alpha5
 ---------------
@@ -58,18 +58,18 @@ Upgrade
 * [Data] `LoaderInterface::find` now can return string or `BinaryInterface` instance.
 * [Data] `DataManager::find` now can return `BinaryInterface` instance only.
 * [Data] All data loaders moved to `Binary/Loader` folder.
-* [Data] Tag name `liip_imagine.data.loader` changed to `liip_imagine.binary.loader`
-* [Data] Parameter key `liip_imagine.data.loader.filesystem.class` changed to `liip_imagine.binary.loader.filesystem.class`
-* [Data] Parameter key `liip_imagine.data.loader.stream.class` changed to `liip_imagine.binary.loader.stream.class`
-* [Data] Service id `liip_imagine.data.loader.prototype.filesystem` changed to `liip_imagine.binary.loader.prototype.filesystem`
-* [Data] Service id `liip_imagine.data.loader.prototype.stream` changed to `liip_imagine.binary.loader.prototype.stream`
+* [Data] Tag name `anezi_imagine.data.loader` changed to `anezi_imagine.binary.loader`
+* [Data] Parameter key `anezi_imagine.data.loader.filesystem.class` changed to `anezi_imagine.binary.loader.filesystem.class`
+* [Data] Parameter key `anezi_imagine.data.loader.stream.class` changed to `anezi_imagine.binary.loader.stream.class`
+* [Data] Service id `anezi_imagine.data.loader.prototype.filesystem` changed to `anezi_imagine.binary.loader.prototype.filesystem`
+* [Data] Service id `anezi_imagine.data.loader.prototype.stream` changed to `anezi_imagine.binary.loader.prototype.stream`
 * [Filter] `FilterManager::applyFilter` now return instance of `BinaryInterface`.
 * [Filter] `FilterManager::applyFilter` first argument was changed from Image instance to BinaryInterface one.
 * [Filter] `FilterManager::get` was removed.
-* [Configuration] `liip_imagine.filter_sets.path` option was removed.
-* [Configuration] `liip_imagine.filter_sets.format` option was removed.
-* [Configuration] `liip_imagine.cache_mkdir_mode` option was removed.
-* [Configuration] `liip_imagine.web_root` option was removed.
-* [Configuration] `liip_imagine.cache` default value was changed from `web_path`to `default`.
-* [Configuration] `liip_imagine.formats` option was removed.
-* [Configuration] `liip_imagine.data_root` option was removed.
+* [Configuration] `anezi_imagine.filter_sets.path` option was removed.
+* [Configuration] `anezi_imagine.filter_sets.format` option was removed.
+* [Configuration] `anezi_imagine.cache_mkdir_mode` option was removed.
+* [Configuration] `anezi_imagine.web_root` option was removed.
+* [Configuration] `anezi_imagine.cache` default value was changed from `web_path`to `default`.
+* [Configuration] `anezi_imagine.formats` option was removed.
+* [Configuration] `anezi_imagine.data_root` option was removed.

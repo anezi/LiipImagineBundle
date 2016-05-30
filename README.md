@@ -1,4 +1,4 @@
-LiipImagineBundle
+AneziImagineBundle
 =================
 
 This bundle is a fork of AvalancheImagineBundle which provides easy image
@@ -20,9 +20,9 @@ masking, etc.
 
 This bundle integrates the standalone PHP "[Imagine library](https://github.com/avalanche123/Imagine)".
 
-[![Build Status](https://secure.travis-ci.org/liip/LiipImagineBundle.png)](http://travis-ci.org/liip/LiipImagineBundle)
-[![Total Downloads](https://poser.pugx.org/liip/imagine-bundle/downloads.png)](https://packagist.org/packages/liip/imagine-bundle)
-[![Latest Stable Version](https://poser.pugx.org/liip/imagine-bundle/v/stable.png)](https://packagist.org/packages/liip/imagine-bundle)
+[![Build Status](https://secure.travis-ci.org/anezi/imagine-bundle.png)](http://travis-ci.org/anezi/imagine-bundle)
+[![Total Downloads](https://poser.pugx.org/anezi/imagine-bundle/downloads.png)](https://packagist.org/packages/anezi/imagine-bundle)
+[![Latest Stable Version](https://poser.pugx.org/anezi/imagine-bundle/v/stable.png)](https://packagist.org/packages/anezi/imagine-bundle)
 
 
 ## Installation
@@ -36,8 +36,8 @@ After installing the bundle, make sure you add this route to your routing:
 ``` yaml
 # app/config/routing.yml
 
-_liip_imagine:
-    resource: "@LiipImagineBundle/Resources/config/routing.xml"
+_anezi_imagine:
+    resource: "@AneziImagineBundle/Resources/config/routing.xml"
 ```
 
 For a complete configuration drill-down see [the respective chapter in the documentation](http://symfony.com/doc/master/bundles/LiipImagineBundle/configuration.html).
@@ -52,7 +52,7 @@ you want to thumbnail an image to a size of 120x90 pixels:
 ``` yaml
 # app/config/config.yml
 
-liip_imagine:
+anezi_imagine:
     resolvers:
        default:
           web_path: ~
@@ -109,14 +109,14 @@ $runtimeConfig = array(
 ```
 Also you can resolve image url from console:
 ```jinja
-app/console liip:imagine:cache:resolve relative/path/to/image.jpg relative/path/to/image2.jpg --filters=my_thumb --filters=thumbnail_default
+app/console anezi:imagine:cache:resolve relative/path/to/image.jpg relative/path/to/image2.jpg --filters=my_thumb --filters=thumbnail_default
 ```
 Where only paths required parameter. They are separated by space. If you omit filters option will be applied all available filters.
 
 If you need to access filtered image URL in your controller:
 
 ``` php
-$this->get('liip_imagine.cache.manager')->getBrowserPath('/relative/path/to/image.jpg', 'my_thumb'),
+$this->get('anezi_imagine.cache.manager')->getBrowserPath('/relative/path/to/image.jpg', 'my_thumb'),
 ```
 
 In this case, the final rendered path would contain some random data in the path
@@ -134,7 +134,7 @@ web_profiler:
 
 ## Filters
 
-The LiipImagineBundle provides a set of built-in filters.
+The AneziImagineBundle provides a set of built-in filters.
 You may easily roll your own filter, see [the filters chapter in the documentation](http://symfony.com/doc/master/bundles/LiipImagineBundle/filters.html).
 
 ## Using the controller as a service
@@ -148,7 +148,7 @@ class MyController extends Controller
     {
         // RedirectResponse object
         $imagemanagerResponse = $this->container
-            ->get('liip_imagine.controller')
+            ->get('anezi_imagine.controller')
             ->filterAction(
                 $this->request,         // http request
                 'uploads/foo.jpg',      // original image you want to apply a filter to
@@ -156,7 +156,7 @@ class MyController extends Controller
             );
 
         // string to put directly in the "src" of the tag <img>
-        $cacheManager = $this->container->get('liip_imagine.cache.manager');
+        $cacheManager = $this->container->get('anezi_imagine.cache.manager');
         $srcPath = $cacheManager->getBrowserPath('uploads/foo.jpg', 'my_thumb');
 
         // ..
@@ -170,7 +170,7 @@ If you want to use the service in another service, you have to simulate a new re
 
 ``` php
 $imagemanagerResponse = $this->container
-    ->get('liip_imagine.controller')
+    ->get('anezi_imagine.controller')
         ->filterAction(new Symfony\Component\HttpFoundation\Request(), 'uploads/foo.jpg', 'my_thumb');
 ```
 
@@ -181,7 +181,7 @@ you have to set your loader's parameter `data_root` in the `config.yml` with the
 located:
 
 ``` yaml
-liip_imagine:
+anezi_imagine:
     loaders:
         default:
             filesystem:

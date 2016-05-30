@@ -1,19 +1,19 @@
 {
-    "name": "liip/imagine-bundle",
+    "name": "anezi/imagine-bundle",
     "type": "symfony-bundle",
     "description": "This Bundle assists in imagine manipulation using the imagine library",
     "keywords": ["imagine", "image"],
-    "homepage": "http://liip.ch",
+    "homepage": "http://anezi.net",
     "license": "MIT",
     "minimum-stability": "dev",
     "authors": [
         {
             "name": "Liip and other contributors",
-            "homepage": "https://github.com/liip/LiipImagineBundle/contributors"
+            "homepage": "https://github.com/anezi/imagine-bundle/contributors"
         }
     ],
     "archive": {
-        "exclude": ["/Tests"]
+        "exclude": ["/tests"]
     },
     "require": {
         "php": "^5.3.9|^7.0",
@@ -23,7 +23,6 @@
         "symfony/options-resolver": "~2.3|~3.0",
         "symfony/framework-bundle": "~2.3|~3.0"
     },
-
     "require-dev": {
         "phpunit/phpunit": "~4.3",
         "symfony/browser-kit": "~2.3|~3.0",
@@ -40,7 +39,6 @@
         "psr/log": "~1.0",
         "ext-gd": "*"
     },
-
     "suggest": {
         "twig/twig":                "If you'd want to use some handy twig filters, version 1.12 or greater required",
         "aws/aws-sdk-php":          "Add it if you'd like to use aws v2 or v3 resolver",
@@ -48,16 +46,15 @@
         "monolog/monolog":          "If you'd want to write logs",
         "league/flysystem":         "If you'd want to use Flysystem binary loader"
     },
-
-
     "autoload": {
-        "psr-4": { "Liip\\ImagineBundle\\": "" }
+        "psr-4": { "Anezi\\ImagineBundle\\": "src/" }
     },
-
+    "autoload-dev": {
+        "psr-4": { "Anezi\\ImagineBundle\\Tests\\": "tests/" }
+    },
     "config": {
         "bin-dir": "bin"
     },
-
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"

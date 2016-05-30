@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="./Tests/bootstrap.php" colors="true" forceCoversAnnotation="true">
+<phpunit bootstrap="./tests/bootstrap.php" colors="true" forceCoversAnnotation="true">
 
     <testsuites>
-        <testsuite name="LiipImagineBundle test suite">
-            <directory suffix="Test.php">./Tests</directory>
+        <testsuite name="AneziImagineBundle test suite">
+            <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
 
@@ -13,7 +13,7 @@
             <directory>./</directory>
             <exclude>
                 <directory>./Resources</directory>
-                <directory>./Tests</directory>
+                <directory>./tests</directory>
                 <directory>./vendor</directory>
             </exclude>
         </whitelist>

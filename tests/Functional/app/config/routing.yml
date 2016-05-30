@@ -1,0 +1,2 @@
+_anezi_imagine:
+    resource: "@AneziImagineBundle/Resources/config/routing.xml"
