@@ -137,43 +137,6 @@ web_profiler:
 The AneziImagineBundle provides a set of built-in filters.
 You may easily roll your own filter, see [the filters chapter in the documentation](http://symfony.com/doc/master/bundles/LiipImagineBundle/filters.html).
 
-## Using the controller as a service
-
-If you need to use the filters in a controller, you can just load `ImagineController.php` controller as a service and handle the response:
-
-``` php
-class MyController extends Controller
-{
-    public function indexAction()
-    {
-        // RedirectResponse object
-        $imagemanagerResponse = $this->container
-            ->get('anezi_imagine.controller')
-            ->filterAction(
-                $this->request,         // http request
-                'uploads/foo.jpg',      // original image you want to apply a filter to
-                'my_thumb'              // filter defined in config.yml
-            );
-
-        // string to put directly in the "src" of the tag <img>
-        $cacheManager = $this->container->get('anezi_imagine.cache.manager');
-        $srcPath = $cacheManager->getBrowserPath('uploads/foo.jpg', 'my_thumb');
-
-        // ..
-    }
-}
-```
-
-In case you need to add more logic the recommended solution is to either extend `ImagineController.php` controller or take the code from that controller as a basis for your own controller.
-
-If you want to use the service in another service, you have to simulate a new request:
-
-``` php
-$imagemanagerResponse = $this->container
-    ->get('anezi_imagine.controller')
-        ->filterAction(new Symfony\Component\HttpFoundation\Request(), 'uploads/foo.jpg', 'my_thumb');
-```
-
 ## Outside the web root
 
 When your setup requires your source images to live outside the web root, or if that's just the way you roll,

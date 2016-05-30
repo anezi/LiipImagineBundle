@@ -6,13 +6,13 @@
         http://symfony.com/schema/routing/routing-1.0.xsd">
 
     <route id="anezi_imagine_filter_runtime" path="/media/cache/resolve/{filter}/rc/{hash}/{path}" methods="GET">
-        <default key="_controller">%anezi_imagine.controller.filter_runtime_action%</default>
+        <default key="_controller">Anezi\ImagineBundle\Controller\ImagineController::filterRuntimeAction</default>
         <requirement key="filter">[A-z0-9_\-]*</requirement>
         <requirement key="path">.+</requirement>
     </route>
 
     <route id="anezi_imagine_filter" path="/media/cache/resolve/{filter}/{path}" methods="GET">
-        <default key="_controller">%anezi_imagine.controller.filter_action%</default>
+        <default key="_controller">Anezi\ImagineBundle\Controller\ImagineController::filterAction</default>
         <requirement key="filter">[A-z0-9_\-]*</requirement>
         <requirement key="path">.+</requirement>
     </route>

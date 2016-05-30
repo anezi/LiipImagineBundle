@@ -4,64 +4,18 @@ namespace Anezi\ImagineBundle\Controller;
 
 use Imagine\Exception\RuntimeException;
 use Anezi\ImagineBundle\Exception\Imagine\Filter\NonExistingFilterException;
-use Anezi\ImagineBundle\Imagine\Cache\CacheManager;
-use Anezi\ImagineBundle\Imagine\Data\DataManager;
-use Anezi\ImagineBundle\Imagine\Filter\FilterManager;
 use Anezi\ImagineBundle\Exception\Binary\Loader\NotLoadableException;
-use Anezi\ImagineBundle\Imagine\Cache\SignerInterface;
-use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ImagineController
+/**
+ * Class ImagineController.
+ */
+class ImagineController extends Controller
 {
-    /**
-     * @var DataManager
-     */
-    protected $dataManager;
-
-    /**
-     * @var FilterManager
-     */
-    protected $filterManager;
-
-    /**
-     * @var CacheManager
-     */
-    protected $cacheManager;
-
-    /**
-     * @var SignerInterface
-     */
-    protected $signer;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
-     * @param DataManager     $dataManager
-     * @param FilterManager   $filterManager
-     * @param CacheManager    $cacheManager
-     * @param SignerInterface $signer
-     */
-    public function __construct(
-        DataManager $dataManager,
-        FilterManager $filterManager,
-        CacheManager $cacheManager,
-        SignerInterface $signer,
-        LoggerInterface $logger = null
-    ) {
-        $this->dataManager = $dataManager;
-        $this->filterManager = $filterManager;
-        $this->cacheManager = $cacheManager;
-        $this->signer = $signer;
-        $this->logger = $logger;
-    }
-
     /**
      * This action applies a given filter to a given image, optionally saves the image and outputs it to the browser at the same time.
      *
@@ -81,31 +35,33 @@ class ImagineController
         $resolver = $request->get('resolver');
 
         try {
-            if (!$this->cacheManager->isStored($path, $filter, $resolver)) {
+            if (!$this->get('anezi_imagine.cache.manager')->isStored($path, $filter, $resolver)) {
                 try {
-                    $binary = $this->dataManager->find($filter, $path);
+                    $binary = $this->get('anezi_imagine.data.manager')->find($filter, $path);
                 } catch (NotLoadableException $e) {
-                    if ($defaultImageUrl = $this->dataManager->getDefaultImageUrl($filter)) {
+                    $defaultImageUrl = $this->get('anezi_imagine.data.manager')->getDefaultImageUrl($filter);
+
+                    if ($defaultImageUrl) {
                         return new RedirectResponse($defaultImageUrl);
                     }
 
                     throw new NotFoundHttpException('Source image could not be found', $e);
                 }
 
-                $this->cacheManager->store(
-                    $this->filterManager->applyFilter($binary, $filter),
+                $this->get('anezi_imagine.cache.manager')->store(
+                    $this->get('anezi_imagine.filter.manager')->applyFilter($binary, $filter),
                     $path,
                     $filter,
                     $resolver
                 );
             }
 
-            return new RedirectResponse($this->cacheManager->resolve($path, $filter, $resolver), 301);
+            return new RedirectResponse($this->get('anezi_imagine.cache.manager')->resolve($path, $filter, $resolver), 301);
         } catch (NonExistingFilterException $e) {
             $message = sprintf('Could not locate filter "%s" for path "%s". Message was "%s"', $filter, $path, $e->getMessage());
 
-            if (null !== $this->logger) {
-                $this->logger->debug($message);
+            if ($this->has('logger')) {
+                $this->get('logger')->debug($message);
             }
 
             throw new NotFoundHttpException($message, $e);
@@ -132,13 +88,13 @@ class ImagineController
         $resolver = $request->get('resolver');
 
         try {
-            $filters = $request->query->get('filters', array());
+            $filters = $request->query->get('filters', []);
 
             if (!is_array($filters)) {
                 throw new NotFoundHttpException(sprintf('Filters must be an array. Value was "%s"', $filters));
             }
 
-            if (true !== $this->signer->check($hash, $path, $filters)) {
+            if (true !== $this->get('anezi_imagine.cache.signer')->check($hash, $path, $filters)) {
                 throw new BadRequestHttpException(sprintf(
                     'Signed url does not pass the sign check for path "%s" and filter "%s" and runtime config %s',
                     $path,
@@ -148,32 +104,34 @@ class ImagineController
             }
 
             try {
-                $binary = $this->dataManager->find($filter, $path);
+                $binary = $this->get('anezi_imagine.data.manager')->find($filter, $path);
             } catch (NotLoadableException $e) {
-                if ($defaultImageUrl = $this->dataManager->getDefaultImageUrl($filter)) {
+                $defaultImageUrl = $this->get('anezi_imagine.data.manager')->getDefaultImageUrl($filter);
+
+                if ($defaultImageUrl) {
                     return new RedirectResponse($defaultImageUrl);
                 }
 
                 throw new NotFoundHttpException(sprintf('Source image could not be found for path "%s" and filter "%s"', $path, $filter), $e);
             }
 
-            $rcPath = $this->cacheManager->getRuntimePath($path, $filters);
+            $rcPath = $this->get('anezi_imagine.cache.manager')->getRuntimePath($path, $filters);
 
-            $this->cacheManager->store(
-                $this->filterManager->applyFilter($binary, $filter, array(
+            $this->get('anezi_imagine.cache.manager')->store(
+                $this->get('anezi_imagine.filter.manager')->applyFilter($binary, $filter, [
                     'filters' => $filters,
-                )),
+                ]),
                 $rcPath,
                 $filter,
                 $resolver
             );
 
-            return new RedirectResponse($this->cacheManager->resolve($rcPath, $filter, $resolver), 301);
+            return new RedirectResponse($this->get('anezi_imagine.cache.manager')->resolve($rcPath, $filter, $resolver), 301);
         } catch (NonExistingFilterException $e) {
             $message = sprintf('Could not locate filter "%s" for path "%s". Message was "%s"', $filter, $hash.'/'.$path, $e->getMessage());
 
-            if (null !== $this->logger) {
-                $this->logger->debug($message);
+            if ($this->has('logger')) {
+                $this->get('logger')->debug($message);
             }
 
             throw new NotFoundHttpException($message, $e);

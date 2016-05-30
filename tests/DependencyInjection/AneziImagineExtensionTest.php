@@ -39,17 +39,6 @@ class AneziImagineExtensionTest extends AbstractTest
 
         $this->assertParameter('default', 'anezi_imagine.cache.resolver.default');
         $this->assertAlias('anezi_imagine.gd', 'anezi_imagine');
-        $this->assertHasDefinition('anezi_imagine.controller');
-        $this->assertDICConstructorArguments(
-            $this->containerBuilder->getDefinition('anezi_imagine.controller'),
-            array(
-                new Reference('anezi_imagine.data.manager'),
-                new Reference('anezi_imagine.filter.manager'),
-                new Reference('anezi_imagine.cache.manager'),
-                new Reference('anezi_imagine.cache.signer'),
-                new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
-            )
-        );
     }
 
     public function testCustomRouteRequirements()

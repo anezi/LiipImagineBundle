@@ -5,7 +5,6 @@ parameters:
     anezi_imagine.cache.manager.class: Anezi\ImagineBundle\Imagine\Cache\CacheManager
     anezi_imagine.cache.signer.class: Anezi\ImagineBundle\Imagine\Cache\Signer
     anezi_imagine.binary.mime_type_guesser.class: Anezi\ImagineBundle\Binary\SimpleMimeTypeGuesser
-    anezi_imagine.controller.class: Anezi\ImagineBundle\Controller\ImagineController
     anezi_imagine.twig.extension.class: Anezi\ImagineBundle\Templating\ImagineExtension
     anezi_imagine.templating.helper.class: Anezi\ImagineBundle\Templating\Helper\ImagineHelper
     anezi_imagine.gd.class: Imagine\Gd\Imagine
@@ -56,9 +55,6 @@ services:
     anezi_imagine.filter.configuration:
         class: '%anezi_imagine.filter.configuration.class%'
         arguments: ['%anezi_imagine.filter_sets%']
-    anezi_imagine.controller:
-        class: '%anezi_imagine.controller.class%'
-        arguments: ['@anezi_imagine.data.manager', '@anezi_imagine.filter.manager', '@anezi_imagine.cache.manager', '@anezi_imagine.cache.signer', '@?logger']
     anezi_imagine.meta_data.reader:
         class: '%anezi_imagine.meta_data.reader.class%'
         public: false

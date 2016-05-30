@@ -39,13 +39,6 @@ class ImagineControllerTest extends WebTestCase
         $this->filesystem->remove($this->cacheRoot);
     }
 
-    public function testCouldBeGetFromContainer()
-    {
-        $controller = self::$kernel->getContainer()->get('anezi_imagine.controller');
-
-        $this->assertInstanceOf('Anezi\ImagineBundle\Controller\ImagineController', $controller);
-    }
-
     public function testShouldResolvePopulatingCacheFirst()
     {
         //guard

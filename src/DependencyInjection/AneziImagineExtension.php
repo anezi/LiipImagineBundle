@@ -83,9 +83,6 @@ class AneziImagineExtension extends Extension
         $container->setParameter('anezi_imagine.filter_sets', $config['filter_sets']);
         $container->setParameter('anezi_imagine.binary.loader.default', $config['data_loader']);
 
-        $container->setParameter('anezi_imagine.controller.filter_action', $config['controller']['filter_action']);
-        $container->setParameter('anezi_imagine.controller.filter_runtime_action', $config['controller']['filter_runtime_action']);
-
         $resources = $container->hasParameter('twig.form.resources') ? $container->getParameter('twig.form.resources') : [];
         $resources[] = 'AneziImagineBundle:Form:form_div_layout.html.twig';
         $container->setParameter('twig.form.resources', $resources);
