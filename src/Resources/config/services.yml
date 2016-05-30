@@ -1,0 +1,200 @@
+parameters:
+    anezi_imagine.filter.configuration.class: Anezi\ImagineBundle\Imagine\Filter\FilterConfiguration
+    anezi_imagine.filter.manager.class: Anezi\ImagineBundle\Imagine\Filter\FilterManager
+    anezi_imagine.data.manager.class: Anezi\ImagineBundle\Imagine\Data\DataManager
+    anezi_imagine.cache.manager.class: Anezi\ImagineBundle\Imagine\Cache\CacheManager
+    anezi_imagine.cache.signer.class: Anezi\ImagineBundle\Imagine\Cache\Signer
+    anezi_imagine.binary.mime_type_guesser.class: Anezi\ImagineBundle\Binary\SimpleMimeTypeGuesser
+    anezi_imagine.controller.class: Anezi\ImagineBundle\Controller\ImagineController
+    anezi_imagine.twig.extension.class: Anezi\ImagineBundle\Templating\ImagineExtension
+    anezi_imagine.templating.helper.class: Anezi\ImagineBundle\Templating\Helper\ImagineHelper
+    anezi_imagine.gd.class: Imagine\Gd\Imagine
+    anezi_imagine.imagick.class: Imagine\Imagick\Imagine
+    anezi_imagine.gmagick.class: Imagine\Gmagick\Imagine
+    anezi_imagine.filter.loader.relative_resize.class: Anezi\ImagineBundle\Imagine\Filter\Loader\RelativeResizeFilterLoader
+    anezi_imagine.filter.loader.resize.class: Anezi\ImagineBundle\Imagine\Filter\Loader\ResizeFilterLoader
+    anezi_imagine.filter.loader.thumbnail.class: Anezi\ImagineBundle\Imagine\Filter\Loader\ThumbnailFilterLoader
+    anezi_imagine.filter.loader.crop.class: Anezi\ImagineBundle\Imagine\Filter\Loader\CropFilterLoader
+    anezi_imagine.filter.loader.paste.class: Anezi\ImagineBundle\Imagine\Filter\Loader\PasteFilterLoader
+    anezi_imagine.filter.loader.watermark.class: Anezi\ImagineBundle\Imagine\Filter\Loader\WatermarkFilterLoader
+    anezi_imagine.filter.loader.strip.class: Anezi\ImagineBundle\Imagine\Filter\Loader\StripFilterLoader
+    anezi_imagine.filter.loader.background.class: Anezi\ImagineBundle\Imagine\Filter\Loader\BackgroundFilterLoader
+    anezi_imagine.filter.loader.upscale.class: Anezi\ImagineBundle\Imagine\Filter\Loader\UpscaleFilterLoader
+    anezi_imagine.filter.loader.downscale.class: Anezi\ImagineBundle\Imagine\Filter\Loader\DownscaleFilterLoader
+    anezi_imagine.filter.loader.auto_rotate.class: Anezi\ImagineBundle\Imagine\Filter\Loader\AutoRotateFilterLoader
+    anezi_imagine.filter.loader.rotate.class: Anezi\ImagineBundle\Imagine\Filter\Loader\RotateFilterLoader
+    anezi_imagine.filter.loader.interlace.class: Anezi\ImagineBundle\Imagine\Filter\Loader\InterlaceFilterLoader
+    anezi_imagine.binary.loader.filesystem.class: Anezi\ImagineBundle\Binary\Loader\FileSystemLoader
+    anezi_imagine.binary.loader.stream.class: Anezi\ImagineBundle\Binary\Loader\StreamLoader
+    anezi_imagine.binary.loader.flysystem.class: Anezi\ImagineBundle\Binary\Loader\FlysystemLoader
+    anezi_imagine.cache.resolver.web_path.class: Anezi\ImagineBundle\Imagine\Cache\Resolver\WebPathResolver
+    anezi_imagine.cache.resolver.no_cache_web_path.class: Anezi\ImagineBundle\Imagine\Cache\Resolver\NoCacheWebPathResolver
+    anezi_imagine.cache.resolver.aws_s3.class: Anezi\ImagineBundle\Imagine\Cache\Resolver\AwsS3Resolver
+    anezi_imagine.cache.resolver.cache.class: Anezi\ImagineBundle\Imagine\Cache\Resolver\CacheResolver
+    anezi_imagine.cache.resolver.proxy.class: Anezi\ImagineBundle\Imagine\Cache\Resolver\ProxyResolver
+    anezi_imagine.form.type.image.class: Anezi\ImagineBundle\Form\Type\ImageType
+    anezi_imagine.meta_data.reader.class: Imagine\Image\Metadata\ExifMetadataReader
+    anezi_imagine.filter.post_processor.jpegoptim.class: Anezi\ImagineBundle\Imagine\Filter\PostProcessor\JpegOptimPostProcessor
+    anezi_imagine.jpegoptim.binary: /usr/bin/jpegoptim
+    anezi_imagine.filter.post_processor.optipng.class: Anezi\ImagineBundle\Imagine\Filter\PostProcessor\OptiPngPostProcessor
+    anezi_imagine.optipng.binary: /usr/bin/optipng
+    anezi_imagine.filter.post_processor.pngquant.class: Anezi\ImagineBundle\Imagine\Filter\PostProcessor\PngquantPostProcessor
+    anezi_imagine.pngquant.binary: /usr/bin/pngquant
+    anezi_imagine.filter.post_processor.mozjpeg.class: Anezi\ImagineBundle\Imagine\Filter\PostProcessor\MozJpegPostProcessor
+    anezi_imagine.mozjpeg.binary: /opt/mozjpeg/bin/cjpeg
+
+services:
+    anezi_imagine.filter.manager:
+        class: '%anezi_imagine.filter.manager.class%'
+        arguments: ['@anezi_imagine.filter.configuration', '@anezi_imagine', '@anezi_imagine.binary.mime_type_guesser']
+    anezi_imagine.data.manager:
+        class: '%anezi_imagine.data.manager.class%'
+        arguments: ['@anezi_imagine.binary.mime_type_guesser', '@anezi_imagine.extension_guesser', '@anezi_imagine.filter.configuration', '%anezi_imagine.binary.loader.default%', '%anezi_imagine.default_image%']
+    anezi_imagine.cache.manager:
+        class: '%anezi_imagine.cache.manager.class%'
+        arguments: ['@anezi_imagine.filter.configuration', '@router', '@anezi_imagine.cache.signer', '@event_dispatcher', '%anezi_imagine.cache.resolver.default%']
+    anezi_imagine.filter.configuration:
+        class: '%anezi_imagine.filter.configuration.class%'
+        arguments: ['%anezi_imagine.filter_sets%']
+    anezi_imagine.controller:
+        class: '%anezi_imagine.controller.class%'
+        arguments: ['@anezi_imagine.data.manager', '@anezi_imagine.filter.manager', '@anezi_imagine.cache.manager', '@anezi_imagine.cache.signer', '@?logger']
+    anezi_imagine.meta_data.reader:
+        class: '%anezi_imagine.meta_data.reader.class%'
+        public: false
+    anezi_imagine.gd:
+        class: '%anezi_imagine.gd.class%'
+        public: false
+    anezi_imagine.imagick:
+        class: '%anezi_imagine.imagick.class%'
+        public: false
+    anezi_imagine.gmagick:
+        class: '%anezi_imagine.gmagick.class%'
+        public: false
+    anezi_imagine.twig.extension:
+        class: '%anezi_imagine.twig.extension.class%'
+        public: false
+        tags:
+            - { name: twig.extension }
+        arguments: ['@anezi_imagine.cache.manager']
+    anezi_imagine.templating.helper:
+        class: '%anezi_imagine.templating.helper.class%'
+        tags:
+            - { name: templating.helper, alias: imagine }
+        arguments: ['@anezi_imagine.cache.manager']
+    anezi_imagine.filter.loader.relative_resize:
+        class: '%anezi_imagine.filter.loader.relative_resize.class%'
+        tags:
+            - { name: anezi_imagine.filter.loader, loader: relative_resize }
+    anezi_imagine.filter.loader.resize:
+        class: '%anezi_imagine.filter.loader.resize.class%'
+        tags:
+            - { name: anezi_imagine.filter.loader, loader: resize }
+    anezi_imagine.filter.loader.thumbnail:
+        class: '%anezi_imagine.filter.loader.thumbnail.class%'
+        tags:
+            - { name: anezi_imagine.filter.loader, loader: thumbnail }
+    anezi_imagine.filter.loader.crop:
+        class: '%anezi_imagine.filter.loader.crop.class%'
+        tags:
+            - { name: anezi_imagine.filter.loader, loader: crop }
+    anezi_imagine.filter.loader.paste:
+        class: '%anezi_imagine.filter.loader.paste.class%'
+        tags:
+            - { name: anezi_imagine.filter.loader, loader: paste }
+        arguments: ['@anezi_imagine', '%kernel.root_dir%']
+    anezi_imagine.filter.loader.watermark:
+        class: '%anezi_imagine.filter.loader.watermark.class%'
+        tags:
+            - { name: anezi_imagine.filter.loader, loader: watermark }
+        arguments: ['@anezi_imagine', '%kernel.root_dir%']
+    anezi_imagine.filter.loader.background:
+        class: '%anezi_imagine.filter.loader.background.class%'
+        tags:
+            - { name: anezi_imagine.filter.loader, loader: background }
+        arguments: ['@anezi_imagine']
+    anezi_imagine.filter.loader.strip:
+        class: '%anezi_imagine.filter.loader.strip.class%'
+        tags:
+            - { name: anezi_imagine.filter.loader, loader: strip }
+    anezi_imagine.filter.loader.upscale:
+        class: '%anezi_imagine.filter.loader.upscale.class%'
+        tags:
+            - { name: anezi_imagine.filter.loader, loader: upscale }
+    anezi_imagine.filter.loader.downscale:
+        class: '%anezi_imagine.filter.loader.downscale.class%'
+        tags:
+            - { name: anezi_imagine.filter.loader, loader: downscale }
+    anezi_imagine.filter.loader.auto_rotate:
+        class: '%anezi_imagine.filter.loader.auto_rotate.class%'
+        tags:
+            - { name: anezi_imagine.filter.loader, loader: auto_rotate }
+    anezi_imagine.filter.loader.rotate:
+        class: '%anezi_imagine.filter.loader.rotate.class%'
+        tags:
+            - { name: anezi_imagine.filter.loader, loader: rotate }
+    anezi_imagine.filter.loader.interlace:
+        class: '%anezi_imagine.filter.loader.interlace.class%'
+        tags:
+            - { name: anezi_imagine.filter.loader, loader: interlace }
+    anezi_imagine.binary.loader.prototype.filesystem:
+        class: '%anezi_imagine.binary.loader.filesystem.class%'
+        arguments: ['@anezi_imagine.mime_type_guesser', '@anezi_imagine.extension_guesser', '']
+    anezi_imagine.binary.loader.prototype.stream:
+        class: '%anezi_imagine.binary.loader.stream.class%'
+        arguments: ['', '']
+    anezi_imagine.binary.loader.prototype.flysystem:
+        class: '%anezi_imagine.binary.loader.flysystem.class%'
+        arguments: ['@anezi_imagine.extension_guesser', '']
+    anezi_imagine.cache.resolver.prototype.web_path:
+        class: '%anezi_imagine.cache.resolver.web_path.class%'
+        arguments: ['@filesystem', '@router.request_context', '', '']
+    anezi_imagine.cache.resolver.prototype.aws_s3:
+        class: '%anezi_imagine.cache.resolver.aws_s3.class%'
+        arguments: ['', '', '', '', '']
+    anezi_imagine.cache.resolver.prototype.cache:
+        class: '%anezi_imagine.cache.resolver.cache.class%'
+        arguments: ['', '']
+    anezi_imagine.cache.resolver.prototype.proxy:
+        class: '%anezi_imagine.cache.resolver.proxy.class%'
+        arguments: ['', '']
+    anezi_imagine.cache.resolver.no_cache_web_path:
+        class: '%anezi_imagine.cache.resolver.no_cache_web_path.class%'
+        tags:
+            - { name: anezi_imagine.cache.resolver, resolver: no_cache }
+        arguments: ['@router.request_context']
+    anezi_imagine.form.type.image:
+        class: '%anezi_imagine.form.type.image.class%'
+        tags:
+            - { name: form.type, alias: anezi_imagine_image }
+    anezi_imagine.mime_type_guesser:
+        class: Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface
+    anezi_imagine.extension_guesser:
+        class: Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesserInterface
+    anezi_imagine.binary.mime_type_guesser:
+        class: '%anezi_imagine.binary.mime_type_guesser.class%'
+        arguments: ['@anezi_imagine.mime_type_guesser']
+    anezi_imagine.cache.signer:
+        class: '%anezi_imagine.cache.signer.class%'
+        arguments: ['%kernel.secret%']
+    anezi_imagine.filter.post_processor.jpegoptim:
+        class: '%anezi_imagine.filter.post_processor.jpegoptim.class%'
+        tags:
+            - { name: anezi_imagine.filter.post_processor, post_processor: jpegoptim }
+        arguments: ['%anezi_imagine.jpegoptim.binary%']
+    anezi_imagine.filter.post_processor.optipng:
+        class: '%anezi_imagine.filter.post_processor.optipng.class%'
+        tags:
+            - { name: anezi_imagine.filter.post_processor, post_processor: optipng }
+        arguments: ['%anezi_imagine.optipng.binary%']
+    anezi_imagine.filter.post_processor.pngquant:
+        class: '%anezi_imagine.filter.post_processor.pngquant.class%'
+        tags:
+            - { name: anezi_imagine.filter.post_processor, post_processor: pngquant }
+        arguments: ['%anezi_imagine.pngquant.binary%']
+    anezi_imagine.filter.post_processor.mozjpeg:
+        class: '%anezi_imagine.filter.post_processor.mozjpeg.class%'
+        tags:
+            - { name: anezi_imagine.filter.post_processor, post_processor: mozjpeg }
+        arguments: ['%anezi_imagine.mozjpeg.binary%']
+    anezi_imagine: '@anezi_imagine.gd'

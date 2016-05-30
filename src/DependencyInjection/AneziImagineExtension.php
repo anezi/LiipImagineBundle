@@ -7,21 +7,24 @@ use Anezi\ImagineBundle\DependencyInjection\Factory\Resolver\ResolverFactoryInte
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
+/**
+ * Class AneziImagineExtension.
+ */
 class AneziImagineExtension extends Extension
 {
     /**
      * @var ResolverFactoryInterface[]
      */
-    protected $resolversFactories = array();
+    protected $resolversFactories = [];
 
     /**
      * @var LoaderFactoryInterface[]
      */
-    protected $loadersFactories = array();
+    protected $loadersFactories = [];
 
     /**
      * @param ResolverFactoryInterface $resolverFactory
@@ -60,13 +63,13 @@ class AneziImagineExtension extends Extension
         $this->loadResolvers($config['resolvers'], $container);
         $this->loadLoaders($config['loaders'], $container);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('imagine.xml');
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.yml');
 
         $this->setFactories($container);
 
         if (interface_exists('Imagine\Image\Metadata\MetadataReaderInterface')) {
-            $container->getDefinition('anezi_imagine.'.$config['driver'])->addMethodCall('setMetadataReader', array(new Reference('anezi_imagine.meta_data.reader')));
+            $container->getDefinition('anezi_imagine.'.$config['driver'])->addMethodCall('setMetadataReader', [new Reference('anezi_imagine.meta_data.reader')]);
         } else {
             $container->removeDefinition('anezi_imagine.meta_data.reader');
         }
@@ -83,7 +86,7 @@ class AneziImagineExtension extends Extension
         $container->setParameter('anezi_imagine.controller.filter_action', $config['controller']['filter_action']);
         $container->setParameter('anezi_imagine.controller.filter_runtime_action', $config['controller']['filter_runtime_action']);
 
-        $resources = $container->hasParameter('twig.form.resources') ? $container->getParameter('twig.form.resources') : array();
+        $resources = $container->hasParameter('twig.form.resources') ? $container->getParameter('twig.form.resources') : [];
         $resources[] = 'AneziImagineBundle:Form:form_div_layout.html.twig';
         $container->setParameter('twig.form.resources', $resources);
     }
@@ -121,15 +124,15 @@ class AneziImagineExtension extends Extension
      */
     private function setFactories(ContainerBuilder $container)
     {
-        $factories = array(
-            'anezi_imagine.mime_type_guesser' => array('Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser', 'getInstance'),
-            'anezi_imagine.extension_guesser' => array('Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser', 'getInstance'),
-        );
+        $factories = [
+            'anezi_imagine.mime_type_guesser' => ['Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser', 'getInstance'],
+            'anezi_imagine.extension_guesser' => ['Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser', 'getInstance'],
+        ];
 
         foreach ($factories as $service => $factory) {
             $definition = $container->getDefinition($service);
             if (method_exists($definition, 'setFactory')) {
-                // to be inlined in imagine.xml when dependency on Symfony DependencyInjection is bumped to 2.6
+                // to be inlined in services.xml when dependency on Symfony DependencyInjection is bumped to 2.6
                 $definition->setFactory($factory);
             } else {
                 // to be removed when dependency on Symfony DependencyInjection is bumped to 2.6
