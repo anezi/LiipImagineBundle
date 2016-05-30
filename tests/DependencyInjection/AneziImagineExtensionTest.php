@@ -7,8 +7,6 @@ use Anezi\ImagineBundle\DependencyInjection\Factory\Resolver\WebPathResolverFact
 use Anezi\ImagineBundle\Tests\AbstractTest;
 use Anezi\ImagineBundle\DependencyInjection\AneziImagineExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\HttpKernel\Kernel;
 
