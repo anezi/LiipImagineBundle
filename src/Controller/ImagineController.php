@@ -5,6 +5,8 @@ namespace Anezi\ImagineBundle\Controller;
 use Imagine\Exception\RuntimeException;
 use Anezi\ImagineBundle\Exception\Imagine\Filter\NonExistingFilterException;
 use Anezi\ImagineBundle\Exception\Binary\Loader\NotLoadableException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,6 +20,12 @@ class ImagineController extends Controller
 {
     /**
      * This action applies a given filter to a given image, optionally saves the image and outputs it to the browser at the same time.
+     *
+     * @Route(
+     *     path="/media/cache/resolve/{filter}/{path}",
+     *     name="anezi_imagine_filter",
+     *     requirements={"filter"="[A-z0-9_\-]*","path"=".+"}
+     * )
      *
      * @param Request $request
      * @param string  $path
@@ -72,6 +80,13 @@ class ImagineController extends Controller
 
     /**
      * This action applies a given filter to a given image, optionally saves the image and outputs it to the browser at the same time.
+     *
+     * @Route(
+     *     path="/media/cache/resolve/{filter}/rc/{hash}/{path}",
+     *     name="anezi_imagine_filter_runtime",
+     *     requirements={"filter"="[A-z0-9_\-]*","path"=".+"}
+     * )
+     * @Method("GET")
      *
      * @param Request $request
      * @param string  $hash
