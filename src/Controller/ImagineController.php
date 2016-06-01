@@ -23,7 +23,7 @@ class ImagineController extends Controller
      *
      * @Route(
      *     path="/media/cache/resolve/{filter}/{path}",
-     *     name="anezi_imagine_filter",
+     *     name="anezi_imagine_resolve",
      *     requirements={"filter"="[A-z0-9_\-]*","path"=".+"}
      * )
      *
@@ -36,7 +36,7 @@ class ImagineController extends Controller
      *
      * @return RedirectResponse
      */
-    public function filterAction(Request $request, $path, $filter)
+    public function resolveAction(Request $request, $path, $filter)
     {
         // decoding special characters and whitespaces from path obtained from url
         $path = urldecode($path);

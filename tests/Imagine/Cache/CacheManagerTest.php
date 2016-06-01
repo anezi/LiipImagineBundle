@@ -286,7 +286,7 @@ class CacheManagerTest extends AbstractTest
             ->expects($this->once())
             ->method('generate')
             ->with(
-                'anezi_imagine_filter',
+                'anezi_imagine_resolve',
                 array(
                     'path' => $path,
                     'filter' => 'thumbnail',
