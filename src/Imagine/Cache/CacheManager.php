@@ -12,6 +12,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Anezi\ImagineBundle\ImagineEvents;
 use Anezi\ImagineBundle\Events\CacheResolveEvent;
 
+/**
+ * Class CacheManager.
+ */
 class CacheManager
 {
     /**
@@ -27,7 +30,7 @@ class CacheManager
     /**
      * @var ResolverInterface[]
      */
-    protected $resolvers = array();
+    protected $resolvers = [];
 
     /**
      * @var SignerInterface
@@ -127,7 +130,7 @@ class CacheManager
      *
      * @return string
      */
-    public function getBrowserPath($path, $filter, array $runtimeConfig = array(), $resolver = null)
+    public function getBrowserPath($path, $filter, array $runtimeConfig = [], $resolver = null)
     {
         if (!empty($runtimeConfig)) {
             $rcPath = $this->getRuntimePath($path, $runtimeConfig);
@@ -140,7 +143,7 @@ class CacheManager
 
         return $this->isStored($path, $filter, $resolver) ?
             $this->resolve($path, $filter, $resolver) :
-            $this->generateUrl($path, $filter, array(), $resolver)
+            $this->generateUrl($path, $filter, [], $resolver)
         ;
     }
 
@@ -167,12 +170,12 @@ class CacheManager
      *
      * @return string
      */
-    public function generateUrl($path, $filter, array $runtimeConfig = array(), $resolver = null)
+    public function generateUrl($path, $filter, array $runtimeConfig = [], $resolver = null)
     {
-        $params = array(
+        $params = [
             'path' => ltrim($path, '/'),
             'filter' => $filter,
-        );
+        ];
 
         if ($resolver) {
             $params['resolver'] = $resolver;
@@ -255,10 +258,10 @@ class CacheManager
             $filters = array_keys($this->filterConfig->all());
         }
         if (!is_array($filters)) {
-            $filters = array($filters);
+            $filters = [$filters];
         }
         if (!is_array($paths)) {
-            $paths = array($paths);
+            $paths = [$paths];
         }
 
         $paths = array_filter($paths);
@@ -268,7 +271,7 @@ class CacheManager
         foreach ($filters as $filter) {
             $resolver = $this->getResolver($filter, null);
 
-            $list = isset($mapping[$resolver]) ? $mapping[$resolver] : array();
+            $list = isset($mapping[$resolver]) ? $mapping[$resolver] : [];
 
             $list[] = $filter;
 

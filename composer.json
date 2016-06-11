@@ -1,57 +1,58 @@
 {
     "name": "anezi/imagine-bundle",
-    "type": "symfony-bundle",
     "description": "This Bundle assists in imagine manipulation using the imagine library",
-    "keywords": ["imagine", "image"],
-    "homepage": "http://anezi.net",
+    "type": "symfony-bundle",
     "license": "MIT",
-    "minimum-stability": "dev",
+    "homepage": "http://anezi.net",
+    "keywords": [
+        "image",
+        "imagine"
+    ],
     "authors": [
         {
-            "name": "Liip and other contributors",
+            "name": "Hassan Amouhzi and other contributors",
             "homepage": "https://github.com/anezi/imagine-bundle/contributors"
         }
     ],
-    "archive": {
-        "exclude": ["/tests"]
-    },
-    "require": {
-        "php": "^5.3.9|^7.0",
-        "imagine/Imagine": "~0.5,<0.7",
-        "sensio/framework-extra-bundle": "*",
-        "symfony/finder": "~2.3|~3.0",
-        "symfony/filesystem": "~2.3|~3.0",
-        "symfony/options-resolver": "~2.3|~3.0",
-        "symfony/framework-bundle": "~2.3|~3.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~4.3",
-        "symfony/browser-kit": "~2.3|~3.0",
-        "symfony/yaml": "~2.3|~3.0",
-        "symfony/form": "~2.3|~3.0",
-        "symfony/console": "~2.3|~3.0",
-        "symfony/phpunit-bridge": "~2.3|~3.0",
-        "symfony/dependency-injection": "~2.3|~3.0",
-        "doctrine/orm": "~2.3",
-        "doctrine/cache": "~1.1",
-        "twig/twig": "~1.12",
-        "aws/aws-sdk-php": "~2.4",
-        "amazonwebservices/aws-sdk-for-php": "~1.0",
-        "psr/log": "~1.0",
-        "ext-gd": "*"
-    },
-    "suggest": {
-        "twig/twig":                "If you'd want to use some handy twig filters, version 1.12 or greater required",
-        "aws/aws-sdk-php":          "Add it if you'd like to use aws v2 or v3 resolver",
-        "amazonwebservices/aws-sdk-for-php": "Add it if you'd like to use aws v1 resolver",
-        "monolog/monolog":          "If you'd want to write logs",
-        "league/flysystem":         "If you'd want to use Flysystem binary loader"
-    },
     "autoload": {
-        "psr-4": { "Anezi\\ImagineBundle\\": "src/" }
+        "psr-4": {
+            "Anezi\\ImagineBundle\\": "src/"
+        }
     },
     "autoload-dev": {
-        "psr-4": { "Anezi\\ImagineBundle\\Tests\\": "tests/" }
+        "psr-4": {
+            "Anezi\\ImagineBundle\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "imagine/Imagine": "~0.5,<0.7",
+        "php": "^5.3.9|^7.0",
+        "sensio/framework-extra-bundle": "~2.3|~3.0",
+        "symfony/filesystem": "~2.3|~3.0",
+        "symfony/finder": "~2.3|~3.0",
+        "symfony/framework-bundle": "~2.3|~3.0",
+        "symfony/options-resolver": "~2.3|~3.0"
+    },
+    "require-dev": {
+        "amazonwebservices/aws-sdk-for-php": "~1.0",
+        "aws/aws-sdk-php": "~2.4",
+        "doctrine/cache": "~1.1",
+        "doctrine/orm": "~2.3",
+        "ext-gd": "*",
+        "phpunit/phpunit": "*",
+        "psr/log": "~1.0",
+        "symfony/browser-kit": "~2.3|~3.0",
+        "symfony/console": "~2.3|~3.0",
+        "symfony/dependency-injection": "~2.3|~3.0",
+        "symfony/form": "~2.3|~3.0",
+        "symfony/phpunit-bridge": "~2.3|~3.0",
+        "symfony/yaml": "~2.3|~3.0",
+        "twig/twig": "~1.12"
+    },
+    "archive": {
+        "exclude": [
+            "/tests"
+        ]
     },
     "config": {
         "bin-dir": "bin"
@@ -60,5 +61,13 @@
         "branch-alias": {
             "dev-master": "1.0.x-dev"
         }
+    },
+    "minimum-stability": "dev",
+    "suggest": {
+        "amazonwebservices/aws-sdk-for-php": "Add it if you'd like to use aws v1 resolver",
+        "aws/aws-sdk-php": "Add it if you'd like to use aws v2 or v3 resolver",
+        "league/flysystem": "If you'd want to use Flysystem binary loader",
+        "monolog/monolog": "If you'd want to write logs",
+        "twig/twig": "If you'd want to use some handy twig filters, version 1.12 or greater required"
     }
 }

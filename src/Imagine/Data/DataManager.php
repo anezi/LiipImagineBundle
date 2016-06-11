@@ -9,6 +9,9 @@ use Anezi\ImagineBundle\Model\Binary;
 use Anezi\ImagineBundle\Binary\BinaryInterface;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesserInterface;
 
+/**
+ * Class DataManager.
+ */
 class DataManager
 {
     /**
@@ -39,7 +42,7 @@ class DataManager
     /**
      * @var LoaderInterface[]
      */
-    protected $loaders = array();
+    protected $loaders = [];
 
     /**
      * @param MimeTypeGuesserInterface  $mimeTypeGuesser
@@ -74,26 +77,17 @@ class DataManager
     }
 
     /**
-     * Returns a loader previously attached to the given filter.
+     * Returns a loader.
      *
-     * @param string $filter
-     *
-     * @throws \InvalidArgumentException
+     * @param string $loaderName
      *
      * @return LoaderInterface
+     *
      */
-    public function getLoader($filter)
+    public function getLoader(string $loaderName = null)
     {
-        $config = $this->filterConfig->get($filter);
-
-        $loaderName = empty($config['data_loader']) ? $this->defaultLoader : $config['data_loader'];
-
-        if (!isset($this->loaders[$loaderName])) {
-            throw new \InvalidArgumentException(sprintf(
-                'Could not find data loader "%s" for "%s" filter type',
-                $loaderName,
-                $filter
-            ));
+        if (!isset($this->loaders[$loaderName ?: $this->defaultLoader])) {
+            throw new \InvalidArgumentException(sprintf('Could not find data loader "%s"', $loaderName));
         }
 
         return $this->loaders[$loaderName];
@@ -102,18 +96,15 @@ class DataManager
     /**
      * Retrieves an image with the given filter applied.
      *
-     * @param string $filter
-     * @param string $path
+     * @param LoaderInterface $loader
+     * @param string          $path
      *
-     * @throws \LogicException
-     *
-     * @return \Anezi\ImagineBundle\Binary\BinaryInterface
+     * @return BinaryInterface
      */
-    public function find($filter, $path)
+    public function find(LoaderInterface $loader, $path)
     {
-        $loader = $this->getLoader($filter);
-
         $binary = $loader->find($path);
+
         if (!$binary instanceof BinaryInterface) {
             $mimeType = $this->mimeTypeGuesser->guess($binary);
 

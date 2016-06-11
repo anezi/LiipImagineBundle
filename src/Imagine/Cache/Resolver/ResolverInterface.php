@@ -5,6 +5,9 @@ namespace Anezi\ImagineBundle\Imagine\Cache\Resolver;
 use Anezi\ImagineBundle\Binary\BinaryInterface;
 use Anezi\ImagineBundle\Exception\Imagine\Cache\Resolver\NotResolvableException;
 
+/**
+ * Interface ResolverInterface
+ */
 interface ResolverInterface
 {
     /**

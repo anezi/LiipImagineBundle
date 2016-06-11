@@ -6,6 +6,9 @@ use Anezi\ImagineBundle\Binary\BinaryInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\RequestContext;
 
+/**
+ * Class WebPathResolver.
+ */
 class WebPathResolver implements ResolverInterface
 {
     /**
@@ -93,7 +96,7 @@ class WebPathResolver implements ResolverInterface
         }
 
         if (empty($paths)) {
-            $filtersCacheDir = array();
+            $filtersCacheDir = [];
             foreach ($filters as $filter) {
                 $filtersCacheDir[] = $this->cacheRoot.'/'.$filter;
             }

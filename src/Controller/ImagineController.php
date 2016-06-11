@@ -22,32 +22,34 @@ class ImagineController extends Controller
      * This action applies a given filter to a given image, optionally saves the image and outputs it to the browser at the same time.
      *
      * @Route(
-     *     path="/media/cache/resolve/{filter}/{path}",
+     *     path="/media/cache/resolve/{loader}/{filter}/{path}",
      *     name="anezi_imagine_resolve",
      *     requirements={"filter"="[A-z0-9_\-]*","path"=".+"}
      * )
      *
      * @param Request $request
-     * @param string  $path
+     * @param string  $loader
      * @param string  $filter
-     *
-     * @throws \RuntimeException
-     * @throws BadRequestHttpException
+     * @param string  $path
      *
      * @return RedirectResponse
      */
-    public function resolveAction(Request $request, $path, $filter)
+    public function resolveAction(Request $request, string $loader, string $filter, string $path) : RedirectResponse
     {
         // decoding special characters and whitespaces from path obtained from url
         $path = urldecode($path);
         $resolver = $request->get('resolver');
 
         try {
-            if (!$this->get('anezi_imagine.cache.manager')->isStored($path, $filter, $resolver)) {
+            $cacheManager = $this->get('anezi_imagine.cache.manager');
+
+            if (!$cacheManager->isStored($path, $filter, $resolver)) {
+                $dataManager = $this->get('anezi_imagine.data.manager');
+
                 try {
-                    $binary = $this->get('anezi_imagine.data.manager')->find($filter, $path);
+                    $binary = $dataManager->find($dataManager->getLoader($loader), $path);
                 } catch (NotLoadableException $e) {
-                    $defaultImageUrl = $this->get('anezi_imagine.data.manager')->getDefaultImageUrl($filter);
+                    $defaultImageUrl = $dataManager->getDefaultImageUrl($filter);
 
                     if ($defaultImageUrl) {
                         return new RedirectResponse($defaultImageUrl);
@@ -56,7 +58,7 @@ class ImagineController extends Controller
                     throw new NotFoundHttpException('Source image could not be found', $e);
                 }
 
-                $this->get('anezi_imagine.cache.manager')->store(
+                $cacheManager->store(
                     $this->get('anezi_imagine.filter.manager')->applyFilter($binary, $filter),
                     $path,
                     $filter,
@@ -64,7 +66,7 @@ class ImagineController extends Controller
                 );
             }
 
-            return new RedirectResponse($this->get('anezi_imagine.cache.manager')->resolve($path, $filter, $resolver), 301);
+            return new RedirectResponse($cacheManager->resolve($path, $filter, $resolver), 301);
         } catch (NonExistingFilterException $e) {
             $message = sprintf('Could not locate filter "%s" for path "%s". Message was "%s"', $filter, $path, $e->getMessage());
 
@@ -82,23 +84,21 @@ class ImagineController extends Controller
      * This action applies a given filter to a given image, optionally saves the image and outputs it to the browser at the same time.
      *
      * @Route(
-     *     path="/media/cache/resolve/{filter}/rc/{hash}/{path}",
+     *     path="/media/cache/resolve/{loader}/{filter}/rc/{hash}/{path}",
      *     name="anezi_imagine_filter_runtime",
      *     requirements={"filter"="[A-z0-9_\-]*","path"=".+"}
      * )
      * @Method("GET")
      *
      * @param Request $request
+     * @param string  $loader
      * @param string  $hash
      * @param string  $path
      * @param string  $filter
      *
-     * @throws \RuntimeException
-     * @throws BadRequestHttpException
-     *
      * @return RedirectResponse
      */
-    public function filterRuntimeAction(Request $request, $hash, $path, $filter)
+    public function filterRuntimeAction(Request $request, string $loader, string $hash, string $path, string $filter) : RedirectResponse
     {
         $resolver = $request->get('resolver');
 
@@ -118,10 +118,12 @@ class ImagineController extends Controller
                 ));
             }
 
+            $dataManager = $this->get('anezi_imagine.data.manager');
+
             try {
-                $binary = $this->get('anezi_imagine.data.manager')->find($filter, $path);
+                $binary = $dataManager->find($dataManager->getLoader($loader), $path);
             } catch (NotLoadableException $e) {
-                $defaultImageUrl = $this->get('anezi_imagine.data.manager')->getDefaultImageUrl($filter);
+                $defaultImageUrl = $dataManager->getDefaultImageUrl($filter);
 
                 if ($defaultImageUrl) {
                     return new RedirectResponse($defaultImageUrl);
@@ -130,9 +132,11 @@ class ImagineController extends Controller
                 throw new NotFoundHttpException(sprintf('Source image could not be found for path "%s" and filter "%s"', $path, $filter), $e);
             }
 
-            $rcPath = $this->get('anezi_imagine.cache.manager')->getRuntimePath($path, $filters);
+            $cacheManager = $this->get('anezi_imagine.cache.manager');
 
-            $this->get('anezi_imagine.cache.manager')->store(
+            $rcPath = $cacheManager->getRuntimePath($path, $filters);
+
+            $cacheManager->store(
                 $this->get('anezi_imagine.filter.manager')->applyFilter($binary, $filter, [
                     'filters' => $filters,
                 ]),
@@ -141,7 +145,7 @@ class ImagineController extends Controller
                 $resolver
             );
 
-            return new RedirectResponse($this->get('anezi_imagine.cache.manager')->resolve($rcPath, $filter, $resolver), 301);
+            return new RedirectResponse($cacheManager->resolve($rcPath, $filter, $resolver), 301);
         } catch (NonExistingFilterException $e) {
             $message = sprintf('Could not locate filter "%s" for path "%s". Message was "%s"', $filter, $hash.'/'.$path, $e->getMessage());
 
