@@ -1,19 +1,18 @@
 <?php
 
-namespace Anezi\ImagineBundle\Templating;
+namespace Anezi\ImagineBundle\Twig\Helper;
 
 use Anezi\ImagineBundle\Imagine\Cache\CacheManager;
+use Symfony\Component\Templating\Helper\Helper;
 
-class ImagineExtension extends \Twig_Extension
+class ImagineHelper extends Helper
 {
     /**
      * @var CacheManager
      */
-    private $cacheManager;
+    protected $cacheManager;
 
     /**
-     * Constructor.
-     *
      * @param CacheManager $cacheManager
      */
     public function __construct(CacheManager $cacheManager)
@@ -22,28 +21,17 @@ class ImagineExtension extends \Twig_Extension
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getFilters()
-    {
-        return array(
-            new \Twig_SimpleFilter('imagine_filter', array($this, 'filter')),
-        );
-    }
-
-    /**
      * Gets the browser path for the image and filter to apply.
      *
      * @param string $path
      * @param string $filter
      * @param array  $runtimeConfig
-     * @param string $resolver
      *
-     * @return \Twig_Markup
+     * @return string
      */
-    public function filter($path, $filter, array $runtimeConfig = array(), $resolver = null)
+    public function filter($path, $filter, array $runtimeConfig = array())
     {
-        return $this->cacheManager->getBrowserPath($path, $filter, $runtimeConfig, $resolver);
+        return $this->cacheManager->getBrowserPath($path, $filter, $runtimeConfig);
     }
 
     /**

@@ -1,18 +1,18 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Templating\Helper;
+namespace Anezi\ImagineBundle\Tests\Twig\Helper;
 
 use Anezi\ImagineBundle\Imagine\Cache\CacheManager;
-use Anezi\ImagineBundle\Templating\ImagineExtension;
+use Anezi\ImagineBundle\Twig\ImagineExtension;
 
 /**
- * @covers Anezi\ImagineBundle\Templating\ImagineExtension
+ * @covers Anezi\ImagineBundle\Twig\ImagineExtension
  */
 class ImagineExtensionTest extends \PHPUnit_Framework_TestCase
 {
     public function testSubClassOfHelper()
     {
-        $rc = new \ReflectionClass('Anezi\ImagineBundle\Templating\ImagineExtension');
+        $rc = new \ReflectionClass('Anezi\ImagineBundle\Twig\ImagineExtension');
 
         $this->assertTrue($rc->isSubclassOf('Twig_Extension'));
     }

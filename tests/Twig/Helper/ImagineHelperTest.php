@@ -1,20 +1,20 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Templating\Helper;
+namespace Anezi\ImagineBundle\Tests\Twig\Helper;
 
 use Anezi\ImagineBundle\Imagine\Cache\CacheManager;
-use Anezi\ImagineBundle\Templating\Helper\ImagineHelper;
+use Anezi\ImagineBundle\Twig\Helper\ImagineHelper;
 
 /**
- * @covers Anezi\ImagineBundle\Templating\Helper\ImagineHelper
+ * @covers Anezi\ImagineBundle\Twig\Helper\ImagineHelper
  */
 class ImagineHelperTest extends \PHPUnit_Framework_TestCase
 {
     public function testSubClassOfHelper()
     {
-        $rc = new \ReflectionClass('Anezi\ImagineBundle\Templating\Helper\ImagineHelper');
+        $rc = new \ReflectionClass('Anezi\ImagineBundle\Twig\Helper\ImagineHelper');
 
-        $this->assertTrue($rc->isSubclassOf('Symfony\Component\Templating\Helper\Helper'));
+        $this->assertTrue($rc->isSubclassOf('Symfony\Component\Twig\Helper\Helper'));
     }
 
     public function testCouldBeConstructedWithCacheManagerAsArgument()

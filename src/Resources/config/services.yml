@@ -5,8 +5,8 @@ parameters:
     anezi_imagine.cache.manager.class: Anezi\ImagineBundle\Imagine\Cache\CacheManager
     anezi_imagine.cache.signer.class: Anezi\ImagineBundle\Imagine\Cache\Signer
     anezi_imagine.binary.mime_type_guesser.class: Anezi\ImagineBundle\Binary\SimpleMimeTypeGuesser
-    anezi_imagine.twig.extension.class: Anezi\ImagineBundle\Templating\ImagineExtension
-    anezi_imagine.templating.helper.class: Anezi\ImagineBundle\Templating\Helper\ImagineHelper
+    anezi_imagine.twig.extension.class: Anezi\ImagineBundle\Twig\ImagineExtension
+    anezi_imagine.templating.helper.class: Anezi\ImagineBundle\Twig\Helper\ImagineHelper
     anezi_imagine.gd.class: Imagine\Gd\Imagine
     anezi_imagine.imagick.class: Imagine\Imagick\Imagine
     anezi_imagine.gmagick.class: Imagine\Gmagick\Imagine
