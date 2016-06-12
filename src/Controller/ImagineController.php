@@ -38,9 +38,7 @@ class ImagineController extends Controller
         $cacheManager = $this->get('anezi_imagine.cache.manager');
 
         try {
-            if ($cacheManager->isStored($path, $filter, $resolver) === false) {
-                dump(__LINE__);
-                die;
+            if ($cacheManager->isStored($path, $loader, $filter, $resolver) === false) {
                 $dataManager = $this->get('anezi_imagine.data.manager');
 
                 try {
@@ -58,13 +56,11 @@ class ImagineController extends Controller
                 $cacheManager->store(
                     $this->get('anezi_imagine.filter.manager')->applyFilter($binary, $filter),
                     $path,
+                    $loader,
                     $filter,
                     $resolver
                 );
             }
-
-            dump(__LINE__);
-            die;
 
             return new RedirectResponse($cacheManager->resolve($path, $filter, $resolver), 301);
         } catch (NonExistingFilterException $e) {
@@ -74,13 +70,8 @@ class ImagineController extends Controller
                 $this->get('logger')->debug($message);
             }
 
-            dump(__LINE__);
-            die;
-
             throw new NotFoundHttpException($message, $e);
         } catch (RuntimeException $e) {
-            dump(__LINE__);
-            die;
             throw new \RuntimeException(sprintf('Unable to create image for path "%s" and filter "%s". Message was "%s"', $path, $filter, $e->getMessage()), 0, $e);
         }
     }

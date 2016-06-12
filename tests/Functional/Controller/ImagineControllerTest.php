@@ -17,8 +17,14 @@ class ImagineControllerTest extends WebTestCase
      */
     protected $client;
 
+    /**
+     * @var string
+     */
     protected $webRoot;
 
+    /**
+     * @var string
+     */
     protected $cacheRoot;
 
     /**
@@ -26,6 +32,9 @@ class ImagineControllerTest extends WebTestCase
      */
     protected $filesystem;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
         parent::setUp();
@@ -39,6 +48,9 @@ class ImagineControllerTest extends WebTestCase
         $this->filesystem->remove($this->cacheRoot);
     }
 
+    /**
+     * @test
+     */
     public function testShouldResolvePopulatingCacheFirst()
     {
         //guard
@@ -55,6 +67,9 @@ class ImagineControllerTest extends WebTestCase
         $this->assertFileExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
     }
 
+    /**
+     * @test
+     */
     public function testShouldResolveFromCache()
     {
         $this->filesystem->dumpFile(
@@ -79,12 +94,12 @@ class ImagineControllerTest extends WebTestCase
      */
     public function testThrowBadRequestIfSignInvalidWhileUsingCustomFilters()
     {
-        $this->client->request('GET', '/media/cache/resolve/thumbnail_web_path/rc/invalidHash/images/cats.jpeg?'.http_build_query(array(
-            'filters' => array(
-                'thumbnail' => array('size' => array(50, 50)),
-            ),
+        $this->client->request('GET', '/media/cache/resolve/thumbnail_web_path/rc/invalidHash/images/cats.jpeg?'.http_build_query([
+            'filters' => [
+                'thumbnail' => ['size' => [50, 50]],
+            ],
             '_hash' => 'invalid',
-        )));
+            ]));
     }
 
     /**
@@ -93,10 +108,10 @@ class ImagineControllerTest extends WebTestCase
      */
     public function testShouldThrowNotFoundHttpExceptionIfFiltersNotArray()
     {
-        $this->client->request('GET', '/media/cache/resolve/thumbnail_web_path/rc/invalidHash/images/cats.jpeg?'.http_build_query(array(
+        $this->client->request('GET', '/media/cache/resolve/thumbnail_web_path/rc/invalidHash/images/cats.jpeg?'.http_build_query([
             'filters' => 'some-string',
             '_hash' => 'hash',
-        )));
+            ]));
     }
 
     /**
@@ -116,16 +131,19 @@ class ImagineControllerTest extends WebTestCase
         $this->client->request('GET', '/media/cache/resolve/invalid-filter/images/cats.jpeg');
     }
 
+    /**
+     * @test
+     */
     public function testShouldResolveWithCustomFiltersPopulatingCacheFirst()
     {
         /** @var Signer $signer */
         $signer = self::$kernel->getContainer()->get('anezi_imagine.cache.signer');
 
-        $params = array(
-            'filters' => array(
-                'thumbnail' => array('size' => array(50, 50)),
-            ),
-        );
+        $params = [
+            'filters' => [
+                'thumbnail' => ['size' => [50, 50]],
+            ],
+        ];
 
         $path = 'images/cats.jpeg';
 
@@ -149,16 +167,19 @@ class ImagineControllerTest extends WebTestCase
         $this->assertFileExists($this->cacheRoot.'/'.$expectedCachePath);
     }
 
+    /**
+     * @test
+     */
     public function testShouldResolveWithCustomFiltersFromCache()
     {
         /** @var Signer $signer */
         $signer = self::$kernel->getContainer()->get('anezi_imagine.cache.signer');
 
-        $params = array(
-            'filters' => array(
-                'thumbnail' => array('size' => array(50, 50)),
-            ),
-        );
+        $params = [
+            'filters' => [
+                'thumbnail' => ['size' => [50, 50]],
+            ],
+        ];
 
         $path = 'images/cats.jpeg';
 
@@ -184,6 +205,9 @@ class ImagineControllerTest extends WebTestCase
         $this->assertFileExists($this->cacheRoot.'/'.$expectedCachePath);
     }
 
+    /**
+     * @test
+     */
     public function testShouldResolvePathWithSpecialCharactersAndWhiteSpaces()
     {
         $this->filesystem->dumpFile(

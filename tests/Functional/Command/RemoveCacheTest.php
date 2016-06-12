@@ -4,6 +4,7 @@ namespace Anezi\ImagineBundle\Tests\Functional\Command;
 
 use Anezi\ImagineBundle\Tests\Functional\WebTestCase;
 use Anezi\ImagineBundle\Command\RemoveCacheCommand;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -15,14 +16,29 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class RemoveCacheTest extends WebTestCase
 {
+    /**
+     * @var Client
+     */
     protected $client;
 
+    /**
+     * @var string
+     */
     protected $webRoot;
 
+    /**
+     * @var Filesystem
+     */
     protected $filesystem;
 
+    /**
+     * @var string
+     */
     protected $cacheRoot;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
         parent::setUp();
@@ -36,6 +52,9 @@ class RemoveCacheTest extends WebTestCase
         $this->filesystem->remove($this->cacheRoot);
     }
 
+    /**
+     * @test 
+     */
     public function testExecuteSuccessfullyWithEmptyCacheAndWithoutParameters()
     {
         $this->assertFileNotExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
@@ -43,38 +62,50 @@ class RemoveCacheTest extends WebTestCase
         $this->executeConsole(new RemoveCacheCommand());
     }
 
+    /**
+     * @test 
+     */
     public function testExecuteSuccessfullyWithEmptyCacheAndOnePathAndOneFilter()
     {
         $this->assertFileNotExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
 
         $this->executeConsole(
             new RemoveCacheCommand(),
-            array(
-                'paths' => array('images/cats.jpeg'),
-                '--filters' => array('thumbnail_web_path'),
-        ));
+            [
+                'paths' => ['images/cats.jpeg'],
+                '--filters' => ['thumbnail_web_path'],
+            ]);
     }
 
+    /**
+     * @test
+     */
     public function testExecuteSuccessfullyWithEmptyCacheAndMultiplePaths()
     {
         $this->assertFileNotExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
 
         $this->executeConsole(
             new RemoveCacheCommand(),
-            array('paths' => array('images/cats.jpeg', 'images/cats2.jpeg'))
+            ['paths' => ['images/cats.jpeg', 'images/cats2.jpeg']]
         );
     }
 
+    /**
+     * @test
+     */
     public function testExecuteSuccessfullyWithEmptyCacheAndMultipleFilters()
     {
         $this->assertFileNotExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
 
         $this->executeConsole(
             new RemoveCacheCommand(),
-            array('--filters' => array('thumbnail_web_path', 'thumbnail_default'))
+            ['--filters' => ['thumbnail_web_path', 'thumbnail_default']]
         );
     }
 
+    /**
+     * @test
+     */
     public function testShouldRemoveAllCacheIfParametersDoesNotPassed()
     {
         $this->filesystem->dumpFile(
@@ -97,6 +128,9 @@ class RemoveCacheTest extends WebTestCase
         $this->assertFileNotExists($this->cacheRoot.'/thumbnail_default/images/cats.jpeg');
     }
 
+    /**
+     * @test
+     */
     public function testShouldRemoveCacheBySinglePath()
     {
         $this->filesystem->dumpFile(
@@ -118,7 +152,7 @@ class RemoveCacheTest extends WebTestCase
 
         $this->executeConsole(
             new RemoveCacheCommand(),
-            array('paths' => array('images/cats.jpeg'))
+            ['paths' => ['images/cats.jpeg']]
         );
 
         $this->assertFileNotExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
@@ -127,6 +161,9 @@ class RemoveCacheTest extends WebTestCase
         $this->assertFileExists($this->cacheRoot.'/thumbnail_default/images/cats2.jpeg');
     }
 
+    /**
+     * @test
+     */
     public function testShouldRemoveCacheByMultiplePaths()
     {
         $this->filesystem->dumpFile(
@@ -148,7 +185,7 @@ class RemoveCacheTest extends WebTestCase
 
         $this->executeConsole(
             new RemoveCacheCommand(),
-            array('paths' => array('images/cats.jpeg', 'images/cats2.jpeg'))
+            ['paths' => ['images/cats.jpeg', 'images/cats2.jpeg']]
         );
 
         $this->assertFileNotExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
@@ -157,6 +194,9 @@ class RemoveCacheTest extends WebTestCase
         $this->assertFileNotExists($this->cacheRoot.'/thumbnail_default/images/cats2.jpeg');
     }
 
+    /**
+     * @test
+     */
     public function testShouldRemoveCacheBySingleFilter()
     {
         $this->filesystem->dumpFile(
@@ -178,7 +218,7 @@ class RemoveCacheTest extends WebTestCase
 
         $this->executeConsole(
             new RemoveCacheCommand(),
-            array('--filters' => array('thumbnail_default'))
+            ['--filters' => ['thumbnail_default']]
         );
 
         $this->assertFileNotExists($this->cacheRoot.'/thumbnail_default/images/cats.jpeg');
@@ -187,6 +227,9 @@ class RemoveCacheTest extends WebTestCase
         $this->assertFileExists($this->cacheRoot.'/thumbnail_web_path/images/cats2.jpeg');
     }
 
+    /**
+     * @test
+     */
     public function testShouldRemoveCacheByMultipleFilters()
     {
         $this->filesystem->dumpFile(
@@ -208,7 +251,7 @@ class RemoveCacheTest extends WebTestCase
 
         $this->executeConsole(
             new RemoveCacheCommand(),
-            array('--filters' => array('thumbnail_default', 'thumbnail_web_path'))
+            ['--filters' => ['thumbnail_default', 'thumbnail_web_path']]
         );
 
         $this->assertFileNotExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
@@ -217,6 +260,9 @@ class RemoveCacheTest extends WebTestCase
         $this->assertFileNotExists($this->cacheRoot.'/thumbnail_default/images/cats2.jpeg');
     }
 
+    /**
+     * @test
+     */
     public function testShouldRemoveCacheByOnePathAndMultipleFilters()
     {
         $this->filesystem->dumpFile(
@@ -234,9 +280,10 @@ class RemoveCacheTest extends WebTestCase
 
         $this->executeConsole(
             new RemoveCacheCommand(),
-            array(
-                'paths' => array('images/cats.jpeg'),
-                '--filters' => array('thumbnail_default', 'thumbnail_web_path'), )
+            [
+                'paths' => ['images/cats.jpeg'],
+                '--filters' => ['thumbnail_default', 'thumbnail_web_path'],
+            ]
         );
 
         $this->assertFileNotExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
@@ -244,6 +291,9 @@ class RemoveCacheTest extends WebTestCase
         $this->assertFileExists($this->cacheRoot.'/thumbnail_web_path/images/cats2.jpeg');
     }
 
+    /**
+     * @test
+     */
     public function testShouldRemoveCacheByMultiplePathsAndSingleFilter()
     {
         $this->filesystem->dumpFile(
@@ -261,9 +311,10 @@ class RemoveCacheTest extends WebTestCase
 
         $this->executeConsole(
             new RemoveCacheCommand(),
-            array(
-                'paths' => array('images/cats.jpeg', 'images/cats2.jpeg'),
-                '--filters' => array('thumbnail_web_path'), )
+            [
+                'paths' => ['images/cats.jpeg', 'images/cats2.jpeg'],
+                '--filters' => ['thumbnail_web_path'],
+            ]
         );
 
         $this->assertFileNotExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
@@ -280,15 +331,15 @@ class RemoveCacheTest extends WebTestCase
      *
      * @return string
      */
-    protected function executeConsole(Command $command, array $arguments = array(), array $options = array())
+    protected function executeConsole(Command $command, array $arguments = [], array $options = [])
     {
         $command->setApplication(new Application($this->createClient()->getKernel()));
         if ($command instanceof ContainerAwareCommand) {
             $command->setContainer($this->createClient()->getContainer());
         }
 
-        $arguments = array_replace(array('command' => $command->getName()), $arguments);
-        $options = array_replace(array('--env' => 'test'), $options);
+        $arguments = array_replace(['command' => $command->getName()], $arguments);
+        $options = array_replace(['--env' => 'test'], $options);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute($arguments, $options);

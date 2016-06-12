@@ -4,6 +4,7 @@ namespace Anezi\ImagineBundle\Tests\Functional\Command;
 
 use Anezi\ImagineBundle\Tests\Functional\WebTestCase;
 use Anezi\ImagineBundle\Command\ResolveCacheCommand;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -15,14 +16,29 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class ResolveCacheTest extends WebTestCase
 {
+    /**
+     * @var Client
+     */
     protected $client;
 
+    /**
+     * @var string
+     */
     protected $webRoot;
 
+    /**
+     * @var Filesystem
+     */
     protected $filesystem;
 
+    /**
+     * @var string
+     */
     protected $cacheRoot;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
         parent::setUp();
@@ -36,15 +52,19 @@ class ResolveCacheTest extends WebTestCase
         $this->filesystem->remove($this->cacheRoot);
     }
 
+    /**
+     * @test
+     */
     public function testShouldResolveWithEmptyCache()
     {
         $this->assertFileNotExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
 
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
-            array(
-                'paths' => array('images/cats.jpeg'),
-                '--filters' => array('thumbnail_web_path'), )
+            [
+                'paths' => ['images/cats.jpeg'],
+                '--filters' => ['thumbnail_web_path'],
+            ]
         );
 
         $this->assertFileExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
@@ -52,6 +72,9 @@ class ResolveCacheTest extends WebTestCase
         $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $output);
     }
 
+    /**
+     * @test
+     */
     public function testShouldResolveWithCacheExists()
     {
         $this->filesystem->dumpFile(
@@ -61,9 +84,10 @@ class ResolveCacheTest extends WebTestCase
 
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
-            array(
-                'paths' => array('images/cats.jpeg'),
-                '--filters' => array('thumbnail_web_path'), )
+            [
+                'paths' => ['images/cats.jpeg'],
+                '--filters' => ['thumbnail_web_path'],
+            ]
         );
 
         $this->assertFileExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
@@ -71,19 +95,26 @@ class ResolveCacheTest extends WebTestCase
         $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $output);
     }
 
+    /**
+     * @test
+     */
     public function testShouldResolveWithFewPathsAndSingleFilter()
     {
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
-            array(
-                'paths' => array('images/cats.jpeg', 'images/cats2.jpeg'),
-                '--filters' => array('thumbnail_web_path'), )
+            [
+                'paths' => ['images/cats.jpeg', 'images/cats2.jpeg'],
+                '--filters' => ['thumbnail_web_path'],
+            ]
         );
 
         $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $output);
         $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats2.jpeg', $output);
     }
 
+    /**
+     * @test
+     */
     public function testShouldResolveWithFewPathsSingleFilterAndPartiallyFullCache()
     {
         $this->assertFileNotExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
@@ -95,9 +126,10 @@ class ResolveCacheTest extends WebTestCase
 
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
-            array(
-                'paths' => array('images/cats.jpeg', 'images/cats2.jpeg'),
-                '--filters' => array('thumbnail_web_path'), )
+            [
+                'paths' => ['images/cats.jpeg', 'images/cats2.jpeg'],
+                '--filters' => ['thumbnail_web_path'],
+            ]
         );
 
         $this->assertFileNotExists($this->cacheRoot.'/thumbnail_default/images/cats.jpeg');
@@ -107,13 +139,17 @@ class ResolveCacheTest extends WebTestCase
         $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats2.jpeg', $output);
     }
 
+    /**
+     * @test
+     */
     public function testShouldResolveWithFewPathsAndFewFilters()
     {
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
-            array(
-                'paths' => array('images/cats.jpeg', 'images/cats2.jpeg'),
-                '--filters' => array('thumbnail_web_path', 'thumbnail_default'), )
+            [
+                'paths' => ['images/cats.jpeg', 'images/cats2.jpeg'],
+                '--filters' => ['thumbnail_web_path', 'thumbnail_default'],
+            ]
         );
 
         $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $output);
@@ -122,11 +158,14 @@ class ResolveCacheTest extends WebTestCase
         $this->assertContains('http://localhost/media/cache/thumbnail_default/images/cats2.jpeg', $output);
     }
 
+    /**
+     * @test
+     */
     public function testShouldResolveWithFewPathsAndWithoutFilters()
     {
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
-            array('paths' => array('images/cats.jpeg', 'images/cats2.jpeg'))
+            ['paths' => ['images/cats.jpeg', 'images/cats2.jpeg']]
         );
 
         $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $output);
@@ -144,15 +183,15 @@ class ResolveCacheTest extends WebTestCase
      *
      * @return string
      */
-    protected function executeConsole(Command $command, array $arguments = array(), array $options = array())
+    protected function executeConsole(Command $command, array $arguments = [], array $options = [])
     {
         $command->setApplication(new Application($this->createClient()->getKernel()));
         if ($command instanceof ContainerAwareCommand) {
             $command->setContainer($this->createClient()->getContainer());
         }
 
-        $arguments = array_replace(array('command' => $command->getName()), $arguments);
-        $options = array_replace(array('--env' => 'test'), $options);
+        $arguments = array_replace(['command' => $command->getName()], $arguments);
+        $options = array_replace(['--env' => 'test'], $options);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute($arguments, $options);

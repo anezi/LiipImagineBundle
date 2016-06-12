@@ -197,14 +197,15 @@ class CacheManager
      * Checks whether the path is already stored within the respective Resolver.
      *
      * @param string $path
+     * @param string $loader
      * @param string $filter
      * @param string $resolver
      *
      * @return bool
      */
-    public function isStored($path, $filter, $resolver = null)
+    public function isStored(string $path, string $loader, string $filter, $resolver = null)
     {
-        return $this->getResolver($filter, $resolver)->isStored($path, $filter);
+        return $this->getResolver($filter, $resolver)->isStored($path, $loader, $filter);
     }
 
     /**
@@ -240,12 +241,13 @@ class CacheManager
      *
      * @param BinaryInterface $binary
      * @param string          $path
+     * @param string          $loader
      * @param string          $filter
      * @param string          $resolver
      */
-    public function store(BinaryInterface $binary, $path, $filter, $resolver = null)
+    public function store(BinaryInterface $binary, string $path, string $loader, string $filter, $resolver = null)
     {
-        $this->getResolver($filter, $resolver)->store($binary, $path, $filter);
+        $this->getResolver($filter, $resolver)->store($binary, $path, $loader, $filter);
     }
 
     /**
