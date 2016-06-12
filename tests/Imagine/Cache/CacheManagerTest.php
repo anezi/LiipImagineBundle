@@ -3,12 +3,12 @@
 namespace Anezi\ImagineBundle\Tests\Imagine\Cache;
 
 use Anezi\ImagineBundle\Imagine\Cache\CacheManager;
-use Anezi\ImagineBundle\Imagine\Cache\Resolver\ResolverInterface;
 use Anezi\ImagineBundle\Model\Binary;
 use Anezi\ImagineBundle\Tests\AbstractTest;
 use Anezi\ImagineBundle\Imagine\Cache\Signer;
 use Anezi\ImagineBundle\ImagineEvents;
 use Anezi\ImagineBundle\Events\CacheResolveEvent;
+use Anezi\ImagineBundle\Tests\Fixtures\CacheManagerAwareResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -17,17 +17,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class CacheManagerTest extends AbstractTest
 {
     /**
-     * @var ResolverInterface
-     */
-    protected $resolver;
-
-    /**
      * @test
      */
     public function testAddCacheManagerAwareResolver()
     {
         $cacheManager = new CacheManager($this->createFilterConfigurationMock(), $this->createRouterMock(), new Signer('secret'), $this->createEventDispatcherMock());
 
+        /** @var \PHPUnit_Framework_MockObject_MockObject|CacheManagerAwareResolver $resolver */
         $resolver = $this->getMock('Anezi\ImagineBundle\Tests\Fixtures\CacheManagerAwareResolver');
         $resolver
             ->expects($this->once())
@@ -298,7 +294,7 @@ class CacheManagerTest extends AbstractTest
         // Resolve fallback to default resolver
         $this->assertEquals('/thumbs/cats.jpeg', $cacheManager->resolve('cats.jpeg', 'thumbnail'));
 
-        $cacheManager->store($binary, '/thumbs/cats.jpeg', 'thumbnail');
+        $cacheManager->store($binary, '/thumbs/cats.jpeg', 'default', 'thumbnail');
 
         // Remove fallback to default resolver
         $cacheManager->remove('/thumbs/cats.jpeg', 'thumbnail');
@@ -718,6 +714,7 @@ class CacheManagerTest extends AbstractTest
             }))
         ;
 
+        /** @var CacheManager|\PHPUnit_Framework_MockObject_MockObject $cacheManager */
         $cacheManager = $this->getMock('Anezi\ImagineBundle\Imagine\Cache\CacheManager', ['getResolver'], array(
             $this->createFilterConfigurationMock(),
             $this->createRouterMock(),
