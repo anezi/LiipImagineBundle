@@ -6,7 +6,7 @@ use Anezi\ImagineBundle\Binary\BinaryInterface;
 use Anezi\ImagineBundle\Exception\Imagine\Cache\Resolver\NotResolvableException;
 
 /**
- * Interface ResolverInterface
+ * Interface ResolverInterface.
  */
 interface ResolverInterface
 {

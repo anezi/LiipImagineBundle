@@ -39,7 +39,6 @@ class ImagineController extends Controller
 
         try {
             if ($cacheManager->isStored($path, $filter, $resolver) === false) {
-
                 dump(__LINE__);
                 die;
                 $dataManager = $this->get('anezi_imagine.data.manager');
@@ -80,7 +79,6 @@ class ImagineController extends Controller
 
             throw new NotFoundHttpException($message, $e);
         } catch (RuntimeException $e) {
-
             dump(__LINE__);
             die;
             throw new \RuntimeException(sprintf('Unable to create image for path "%s" and filter "%s". Message was "%s"', $path, $filter, $e->getMessage()), 0, $e);

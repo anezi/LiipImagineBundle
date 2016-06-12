@@ -82,7 +82,6 @@ class DataManager
      * @param string $loaderName
      *
      * @return LoaderInterface
-     *
      */
     public function getLoader(string $loaderName = null)
     {

@@ -188,7 +188,7 @@ class AmazonS3Resolver implements ResolverInterface
      *
      * @param string $objectPath
      *
-     * @return boolean|null
+     * @return bool|null
      */
     protected function objectExists($objectPath)
     {
@@ -197,7 +197,7 @@ class AmazonS3Resolver implements ResolverInterface
 
     /**
      * @param string $message
-     * @param array $context
+     * @param array  $context
      */
     protected function logError($message, array $context = [])
     {
