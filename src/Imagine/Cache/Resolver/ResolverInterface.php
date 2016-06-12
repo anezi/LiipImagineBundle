@@ -25,13 +25,12 @@ interface ResolverInterface
      * Resolves filtered path for rendering in the browser.
      *
      * @param string $path   The path where the original file is expected to be.
+     * @param string $loader
      * @param string $filter The name of the imagine filter in effect.
      *
      * @return string The absolute URL of the cached image.
-     *
-     * @throws NotResolvableException
      */
-    public function resolve(string $path, string $filter) : string;
+    public function resolve(string $path, string $loader, string $filter) : string;
 
     /**
      * Stores the content of the given binary.

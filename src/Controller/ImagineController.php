@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -28,9 +29,10 @@ class ImagineController extends Controller
      * @param string  $filter
      * @param string  $path
      *
-     * @return RedirectResponse
+     * @return Response
+     * @throws \Exception
      */
-    public function loadAction(Request $request, string $loader, string $filter, string $path) : RedirectResponse
+    public function loadAction(Request $request, string $loader, string $filter, string $path) : Response
     {
         // decoding special characters and whitespaces from path obtained from url
         $path = urldecode($path);
@@ -53,6 +55,8 @@ class ImagineController extends Controller
                     throw new NotFoundHttpException('Source image could not be found', $e);
                 }
 
+                $result = $this->get('anezi_imagine.filter.manager')->applyFilter($binary, $filter);
+
                 $cacheManager->store(
                     $this->get('anezi_imagine.filter.manager')->applyFilter($binary, $filter),
                     $path,
@@ -60,9 +64,11 @@ class ImagineController extends Controller
                     $filter,
                     $resolver
                 );
+
+                return new Response($result->getContent(), 200, ['Content-Type' => $result->getMimeType()]);
             }
 
-            return new RedirectResponse($cacheManager->resolve($path, $filter, $resolver), 301);
+            throw new \Exception('TO DO: Configure HTTP Server to load file from disk.');
         } catch (NonExistingFilterException $e) {
             $message = sprintf('Could not locate filter "%s" for path "%s". Message was "%s"', $filter, $path, $e->getMessage());
 

@@ -5,6 +5,7 @@ namespace Anezi\ImagineBundle\Imagine\Cache;
 use Anezi\ImagineBundle\Binary\BinaryInterface;
 use Anezi\ImagineBundle\Imagine\Cache\Resolver\ResolverInterface;
 use Anezi\ImagineBundle\Imagine\Filter\FilterConfiguration;
+use Anezi\ImagineBundle\Imagine\Filter\FilterManager;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -17,6 +18,11 @@ use Anezi\ImagineBundle\Events\CacheResolveEvent;
  */
 class CacheManager
 {
+    /**
+     * @var FilterManager
+     */
+    private $filterManager;
+
     /**
      * @var FilterConfiguration
      */
@@ -50,6 +56,7 @@ class CacheManager
     /**
      * Constructs the cache manager to handle Resolvers based on the provided FilterConfiguration.
      *
+     * @param FilterManager            $filterManager
      * @param FilterConfiguration      $filterConfig
      * @param RouterInterface          $router
      * @param SignerInterface          $signer
@@ -57,12 +64,14 @@ class CacheManager
      * @param string                   $defaultResolver
      */
     public function __construct(
+        FilterManager $filterManager,
         FilterConfiguration $filterConfig,
         RouterInterface $router,
         SignerInterface $signer,
         EventDispatcherInterface $dispatcher,
         $defaultResolver = null
     ) {
+        $this->filterManager = $filterManager;
         $this->filterConfig = $filterConfig;
         $this->router = $router;
         $this->signer = $signer;
@@ -212,23 +221,25 @@ class CacheManager
      * Resolves filtered path for rendering in the browser.
      *
      * @param string $path
+     * @param string $loader
      * @param string $filter
      * @param string $resolver
      *
      * @return string The url of resolved image.
-     *
-     * @throws NotFoundHttpException if the path can not be resolved
      */
-    public function resolve($path, $filter, $resolver = null)
+    public function resolve(string $path, string $loader, string $filter, string $resolver = null)
     {
         if (false !== strpos($path, '/../') || 0 === strpos($path, '../')) {
             throw new NotFoundHttpException(sprintf("Source image was searched with '%s' outside of the defined root path", $path));
         }
 
-        $preEvent = new CacheResolveEvent($path, $filter);
+        $preEvent = new CacheResolveEvent($path, $loader, $filter);
         $this->dispatcher->dispatch(ImagineEvents::PRE_RESOLVE, $preEvent);
 
-        $url = $this->getResolver($preEvent->getFilter(), $resolver)->resolve($preEvent->getPath(), $preEvent->getFilter());
+        $url = $this->getResolver(
+            $preEvent->getFilter(),
+            $resolver)->resolve($preEvent->getPath(), $preEvent->getLoader(), $preEvent->getFilter()
+        );
 
         $postEvent = new CacheResolveEvent($preEvent->getPath(), $preEvent->getFilter(), $url);
         $this->dispatcher->dispatch(ImagineEvents::POST_RESOLVE, $postEvent);
@@ -252,22 +263,34 @@ class CacheManager
 
     /**
      * @param string|string[]|null $paths
+     * @param string|string[]|null  $loaders
      * @param string|string[]|null $filters
      */
-    public function remove($paths = null, $filters = null)
+    public function remove($paths = null, $loaders = null, $filters = null)
     {
         if (null === $filters) {
             $filters = array_keys($this->filterConfig->all());
         }
+        
         if (!is_array($filters)) {
             $filters = [$filters];
         }
+        
+        if (null === $loaders) {
+            $loaders = array_keys($this->filterManager->getLoaders());
+        }
+        
+        if (!is_array($loaders)) {
+            $loaders = [$loaders];
+        }
+        
         if (!is_array($paths)) {
             $paths = [$paths];
         }
 
         $paths = array_filter($paths);
         $filters = array_filter($filters);
+        $loaders = array_filter($loaders);
 
         $mapping = new \SplObjectStorage();
         foreach ($filters as $filter) {
@@ -279,9 +302,10 @@ class CacheManager
 
             $mapping[$resolver] = $list;
         }
-
+        
+        /** @var ResolverInterface $resolver */
         foreach ($mapping as $resolver) {
-            $resolver->remove($paths, $mapping[$resolver]);
+            $resolver->remove($paths, $loaders, $mapping[$resolver]);
         }
     }
 }

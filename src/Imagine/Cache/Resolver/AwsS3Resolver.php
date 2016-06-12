@@ -88,15 +88,15 @@ class AwsS3Resolver implements ResolverInterface
      */
     public function isStored(string $path, string $loader, string $filter) : bool
     {
-        return $this->objectExists($this->getObjectPath($path, $filter));
+        return $this->objectExists($this->getObjectPath($path, $loader, $filter));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function resolve(string $path, string $filter) : string
+    public function resolve(string $path, string $loader, string $filter) : string
     {
-        return $this->getObjectUrl($this->getObjectPath($path, $filter));
+        return $this->getObjectUrl($this->getObjectPath($path, $loader, $filter));
     }
 
     /**
@@ -104,7 +104,7 @@ class AwsS3Resolver implements ResolverInterface
      */
     public function store(BinaryInterface $binary, string $path, string $loader, string $filter)
     {
-        $objectPath = $this->getObjectPath($path, $filter);
+        $objectPath = $this->getObjectPath($path, $loader, $filter);
 
         try {
             $this->storage->putObject(
@@ -157,25 +157,27 @@ class AwsS3Resolver implements ResolverInterface
             return;
         }
 
-        foreach ($filters as $filter) {
-            foreach ($paths as $path) {
-                $objectPath = $this->getObjectPath($path, $filter);
-                if (!$this->objectExists($objectPath)) {
-                    continue;
-                }
+        foreach ($loaders as $loader) {
+            foreach ($filters as $filter) {
+                foreach ($paths as $path) {
+                    $objectPath = $this->getObjectPath($path, $loader, $filter);
+                    if (!$this->objectExists($objectPath)) {
+                        continue;
+                    }
 
-                try {
-                    $this->storage->deleteObject([
-                        'Bucket' => $this->bucket,
-                        'Key' => $objectPath,
-                    ]);
-                } catch (\Exception $e) {
-                    $this->logError('The object could not be deleted from Amazon S3.', [
-                        'objectPath' => $objectPath,
-                        'filter' => $filter,
-                        'bucket' => $this->bucket,
-                        'exception' => $e,
-                    ]);
+                    try {
+                        $this->storage->deleteObject([
+                            'Bucket' => $this->bucket,
+                            'Key' => $objectPath,
+                        ]);
+                    } catch (\Exception $e) {
+                        $this->logError('The object could not be deleted from Amazon S3.', [
+                            'objectPath' => $objectPath,
+                            'filter' => $filter,
+                            'bucket' => $this->bucket,
+                            'exception' => $e,
+                        ]);
+                    }
                 }
             }
         }
@@ -242,14 +244,15 @@ class AwsS3Resolver implements ResolverInterface
      * Returns the object path within the bucket.
      *
      * @param string $path   The base path of the resource.
+     * @param string $loader
      * @param string $filter The name of the imagine filter in effect.
      *
      * @return string The path of the object on S3.
      */
-    protected function getObjectPath($path, $filter)
+    protected function getObjectPath(string $path, string $loader, string $filter) : string
     {
         $path = $this->cachePrefix
-            ? sprintf('%s/%s/%s', $this->cachePrefix, $filter, $path)
+            ? sprintf('%s/%s/%s/%s', $this->cachePrefix, $loader, $filter, $path)
             : sprintf('%s/%s', $filter, $path);
 
         return str_replace('//', '/', $path);

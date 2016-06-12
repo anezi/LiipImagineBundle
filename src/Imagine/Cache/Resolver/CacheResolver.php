@@ -60,7 +60,7 @@ class CacheResolver implements ResolverInterface
      */
     public function isStored(string $path, string $loader, string $filter) : bool
     {
-        $cacheKey = $this->generateCacheKey($path, $filter);
+        $cacheKey = $this->generateCacheKey($path, $loader, $filter);
 
         return
             $this->cache->contains($cacheKey) ||
@@ -71,14 +71,14 @@ class CacheResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(string $path, string $filter) : string
+    public function resolve(string $path, string $loader, string $filter) : string
     {
-        $key = $this->generateCacheKey($path, $filter);
+        $key = $this->generateCacheKey($path, $loader, $filter);
         if ($this->cache->contains($key)) {
             return $this->cache->fetch($key);
         }
 
-        $resolved = $this->resolver->resolve($path, $filter);
+        $resolved = $this->resolver->resolve($path, $loader, $filter);
 
         $this->saveToCache($key, $resolved);
 
@@ -100,24 +100,27 @@ class CacheResolver implements ResolverInterface
     {
         $this->resolver->remove($paths, $loaders, $filters);
 
-        foreach ($filters as $filter) {
-            if (empty($paths)) {
-                $this->removePathAndFilter(null, $filter);
-            } else {
-                foreach ($paths as $path) {
-                    $this->removePathAndFilter($path, $filter);
+        foreach ($loaders as $loader) {
+            foreach ($filters as $filter) {
+                if (empty($paths)) {
+                    $this->removePathAndFilter(null, $loader, $filter);
+                } else {
+                    foreach ($paths as $path) {
+                        $this->removePathAndFilter($path, $loader, $filter);
+                    }
                 }
             }
         }
     }
 
     /**
-     * @param $path
-     * @param $filter
+     * @param string $path
+     * @param string $loader
+     * @param string $filter
      */
-    protected function removePathAndFilter($path, $filter)
+    protected function removePathAndFilter(string $path, string $loader, string $filter)
     {
-        $indexKey = $this->generateIndexKey($this->generateCacheKey($path, $filter));
+        $indexKey = $this->generateIndexKey($this->generateCacheKey($path, $loader, $filter));
         if (!$this->cache->contains($indexKey)) {
             return;
         }
@@ -131,7 +134,7 @@ class CacheResolver implements ResolverInterface
 
             $index = [];
         } else {
-            $cacheKey = $this->generateCacheKey($path, $filter);
+            $cacheKey = $this->generateCacheKey($path, $loader, $filter);
             if (false !== $indexIndex = array_search($cacheKey, $index)) {
                 unset($index[$indexIndex]);
                 $this->cache->delete($cacheKey);
@@ -151,15 +154,17 @@ class CacheResolver implements ResolverInterface
      * When overriding this method, ensure generateIndexKey is adjusted accordingly.
      *
      * @param string $path   The image path in use.
+     * @param string $loader
      * @param string $filter The filter in use.
      *
      * @return string
      */
-    public function generateCacheKey($path, $filter)
+    public function generateCacheKey(string $path, string $loader, string $filter) : string
     {
         return implode('.', [
             $this->sanitizeCacheKeyPart($this->options['global_prefix']),
             $this->sanitizeCacheKeyPart($this->options['prefix']),
+            $this->sanitizeCacheKeyPart($loader),
             $this->sanitizeCacheKeyPart($filter),
             $this->sanitizeCacheKeyPart($path),
         ]);

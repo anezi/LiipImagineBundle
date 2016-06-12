@@ -59,11 +59,11 @@ class WebPathResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(string $path, string $filter) : string
+    public function resolve(string $path, string $loader, string $filter) : string
     {
         return sprintf('%s/%s',
             $this->getBaseUrl(),
-            $this->getFileUrl($path, $filter)
+            $this->getFileUrl($path, $loader, $filter)
         );
     }
 
@@ -72,7 +72,7 @@ class WebPathResolver implements ResolverInterface
      */
     public function isStored(string $path, string $loader, string $filter) : bool
     {
-        return is_file($this->getFilePath($path, $filter));
+        return is_file($this->getFilePath($path, $loader, $filter));
     }
 
     /**
@@ -81,7 +81,7 @@ class WebPathResolver implements ResolverInterface
     public function store(BinaryInterface $binary, string $path, string $loader, string $filter)
     {
         $this->filesystem->dumpFile(
-            $this->getFilePath($path, $filter),
+            $this->getFilePath($path, $loader, $filter),
             $binary->getContent()
         );
     }
@@ -107,8 +107,10 @@ class WebPathResolver implements ResolverInterface
         }
 
         foreach ($paths as $path) {
-            foreach ($filters as $filter) {
-                $this->filesystem->remove($this->getFilePath($path, $filter));
+            foreach ($loaders as $loader) {
+                foreach ($filters as $filter) {
+                    $this->filesystem->remove($this->getFilePath($path, $loader, $filter));
+                }
             }
         }
     }
@@ -116,20 +118,20 @@ class WebPathResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    protected function getFilePath($path, $filter)
+    protected function getFilePath(string $path, string $loader, string $filter) : string
     {
-        return $this->webRoot.'/'.$this->getFileUrl($path, $filter);
+        return $this->webRoot.'/'.$this->getFileUrl($path, $loader, $filter);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getFileUrl($path, $filter)
+    protected function getFileUrl(string $path, string $loader, string $filter) : string
     {
         // crude way of sanitizing URL scheme ("protocol") part
         $path = str_replace('://', '---', $path);
 
-        return $this->cachePrefix.'/'.$filter.'/'.ltrim($path, '/');
+        return $this->cachePrefix.'/'.$loader.'/'.$filter.'/'.ltrim($path, '/');
     }
 
     /**

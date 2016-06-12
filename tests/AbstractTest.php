@@ -2,11 +2,19 @@
 
 namespace Anezi\ImagineBundle\Tests;
 
+use Anezi\ImagineBundle\Imagine\Cache\CacheManager;
 use Anezi\ImagineBundle\Imagine\Cache\Resolver\ResolverInterface;
 use Anezi\ImagineBundle\Imagine\Filter\FilterConfiguration;
+use Imagine\Image\ImageInterface;
+use Imagine\Image\ImagineInterface;
+use Imagine\Image\Metadata\MetadataBag;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * Class AbstractTest.
+ */
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -14,9 +22,19 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
      */
     protected $filesystem;
 
+    /**
+     * @var string
+     */
     protected $fixturesDir;
+
+    /**
+     * @var string
+     */
     protected $tempDir;
 
+    /**
+     * {@inheritdoc}
+     */
     protected function setUp()
     {
         $this->fixturesDir = __DIR__.'/Fixtures';
@@ -32,29 +50,38 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         $this->filesystem->mkdir($this->tempDir);
     }
 
+    /**
+     * @return array
+     */
     public function invalidPathProvider()
     {
-        return array(
-            array($this->fixturesDir.'/assets/../../foobar.png'),
-            array($this->fixturesDir.'/assets/some_folder/../foobar.png'),
-            array('../../outside/foobar.jpg'),
-        );
+        return [
+            [$this->fixturesDir.'/assets/../../foobar.png'],
+            [$this->fixturesDir.'/assets/some_folder/../foobar.png'],
+            ['../../outside/foobar.jpg'],
+        ];
     }
 
+    /**
+     * @return FilterConfiguration
+     */
     protected function createFilterConfiguration()
     {
         $config = new FilterConfiguration();
-        $config->set('thumbnail', array(
-            'size' => array(180, 180),
+        $config->set('thumbnail', [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        ));
+        ]);
 
         return $config;
     }
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|CacheManager
+     */
     protected function getMockCacheManager()
     {
-        return $this->getMock('Anezi\ImagineBundle\Imagine\Cache\CacheManager', array(), array(), '', false);
+        return $this->getMock('Anezi\ImagineBundle\Imagine\Cache\CacheManager', [], [], '', false);
     }
 
     /**
@@ -81,26 +108,41 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         return $this->getMock('Anezi\ImagineBundle\Imagine\Cache\Resolver\ResolverInterface');
     }
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|EventDispatcherInterface
+     */
     protected function createEventDispatcherMock()
     {
         return $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
     }
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|ImageInterface
+     */
     protected function getMockImage()
     {
         return $this->getMock('Imagine\Image\ImageInterface');
     }
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|MetadataBag
+     */
     protected function getMockMetaData()
     {
         return $this->getMock('Imagine\Image\Metadata\MetadataBag');
     }
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|ImagineInterface
+     */
     protected function createImagineMock()
     {
         return $this->getMock('Imagine\Image\ImagineInterface');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function tearDown()
     {
         if (!$this->filesystem) {

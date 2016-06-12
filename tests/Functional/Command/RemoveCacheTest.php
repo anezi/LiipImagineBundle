@@ -53,7 +53,7 @@ class RemoveCacheTest extends WebTestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function testExecuteSuccessfullyWithEmptyCacheAndWithoutParameters()
     {
@@ -63,7 +63,7 @@ class RemoveCacheTest extends WebTestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function testExecuteSuccessfullyWithEmptyCacheAndOnePathAndOneFilter()
     {

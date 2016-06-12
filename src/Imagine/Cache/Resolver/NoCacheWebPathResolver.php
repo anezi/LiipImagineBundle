@@ -34,7 +34,7 @@ class NoCacheWebPathResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(string $path, string $filter) : string
+    public function resolve(string $path, string $loader, string $filter) : string
     {
         return sprintf('%s://%s/%s',
             $this->requestContext->getScheme(),

@@ -51,7 +51,13 @@ services:
         arguments: ['@anezi_imagine.binary.mime_type_guesser', '@anezi_imagine.extension_guesser', '@anezi_imagine.filter.configuration', '%anezi_imagine.binary.loader.default%', '%anezi_imagine.default_image%']
     anezi_imagine.cache.manager:
         class: '%anezi_imagine.cache.manager.class%'
-        arguments: ['@anezi_imagine.filter.configuration', '@router', '@anezi_imagine.cache.signer', '@event_dispatcher', '%anezi_imagine.cache.resolver.default%']
+        arguments:
+            - '@anezi_imagine.filter.manager'
+            - '@anezi_imagine.filter.configuration'
+            - '@router'
+            - '@anezi_imagine.cache.signer'
+            - '@event_dispatcher'
+            - '%anezi_imagine.cache.resolver.default%'
     anezi_imagine.filter.configuration:
         class: '%anezi_imagine.filter.configuration.class%'
         arguments: ['%anezi_imagine.filter_sets%']

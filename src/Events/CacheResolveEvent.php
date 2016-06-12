@@ -4,6 +4,9 @@ namespace Anezi\ImagineBundle\Events;
 
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * Class CacheResolveEvent.
+ */
 class CacheResolveEvent extends Event
 {
     /**
@@ -12,6 +15,11 @@ class CacheResolveEvent extends Event
      * @var string
      */
     protected $path;
+
+    /**
+     * @var string
+     */
+    protected $loader;
 
     /**
      * Filter name.
@@ -31,12 +39,14 @@ class CacheResolveEvent extends Event
      * Init default event state.
      *
      * @param string      $path
+     * @param string      $loader
      * @param string      $filter
      * @param null|string $url
      */
-    public function __construct($path, $filter, $url = null)
+    public function __construct(string $path, string $loader, string $filter, string $url = null)
     {
         $this->path = $path;
+        $this->loader = $loader;
         $this->filter = $filter;
         $this->url = $url;
     }
@@ -59,6 +69,26 @@ class CacheResolveEvent extends Event
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * Gets the loader.
+     *
+     * @return string
+     */
+    public function getLoader() : string
+    {
+        return $this->loader;
+    }
+
+    /**
+     * Sets the loader.
+     *
+     * @param string $loader
+     */
+    public function setLoader(string $loader)
+    {
+        $this->loader = $loader;
     }
 
     /**

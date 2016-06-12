@@ -6,6 +6,9 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
+/**
+ * Class FiltersCompilerPass.
+ */
 class FiltersCompilerPass implements CompilerPassInterface
 {
     /**
@@ -19,7 +22,7 @@ class FiltersCompilerPass implements CompilerPassInterface
             $manager = $container->getDefinition('anezi_imagine.filter.manager');
 
             foreach ($tags as $id => $tag) {
-                $manager->addMethodCall('addLoader', array($tag[0]['loader'], new Reference($id)));
+                $manager->addMethodCall('addLoader', [$tag[0]['loader'], new Reference($id)]);
             }
         }
     }

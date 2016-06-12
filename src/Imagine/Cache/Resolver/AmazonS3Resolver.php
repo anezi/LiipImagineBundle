@@ -65,15 +65,15 @@ class AmazonS3Resolver implements ResolverInterface
      */
     public function isStored(string $path, string $loader, string $filter) : bool
     {
-        return $this->objectExists($this->getObjectPath($path, $filter));
+        return $this->objectExists($this->getObjectPath($path, $loader, $filter));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function resolve(string $path, string $filter) : string
+    public function resolve(string $path, string $loader, string $filter) : string
     {
-        return $this->getObjectUrl($this->getObjectPath($path, $filter));
+        return $this->getObjectUrl($this->getObjectPath($path, $loader, $filter));
     }
 
     /**
@@ -81,7 +81,7 @@ class AmazonS3Resolver implements ResolverInterface
      */
     public function store(BinaryInterface $binary, string $path, string $loader, string $filter)
     {
-        $objectPath = $this->getObjectPath($path, $filter);
+        $objectPath = $this->getObjectPath($path, $loader, $filter);
 
         $storageResponse = $this->storage->create_object($this->bucket, $objectPath, [
             'body' => $binary->getContent(),
@@ -121,19 +121,21 @@ class AmazonS3Resolver implements ResolverInterface
             return;
         }
 
-        foreach ($filters as $filter) {
-            foreach ($paths as $path) {
-                $objectPath = $this->getObjectPath($path, $filter);
-                if (!$this->objectExists($objectPath)) {
-                    continue;
-                }
+        foreach ($loaders as $loader) {
+            foreach ($filters as $filter) {
+                foreach ($paths as $path) {
+                    $objectPath = $this->getObjectPath($path, $loader, $filter);
+                    if (!$this->objectExists($objectPath)) {
+                        continue;
+                    }
 
-                if (!$this->storage->delete_object($this->bucket, $objectPath)->isOK()) {
-                    $this->logError('The objects could not be deleted from Amazon S3.', [
-                        'filter' => $filter,
-                        'bucket' => $this->bucket,
-                        'path' => $path,
-                    ]);
+                    if (!$this->storage->delete_object($this->bucket, $objectPath)->isOK()) {
+                        $this->logError('The objects could not be deleted from Amazon S3.', [
+                            'filter' => $filter,
+                            'bucket' => $this->bucket,
+                            'path' => $path,
+                        ]);
+                    }
                 }
             }
         }
@@ -162,13 +164,14 @@ class AmazonS3Resolver implements ResolverInterface
      * Returns the object path within the bucket.
      *
      * @param string $path   The base path of the resource.
+     * @param string $loader
      * @param string $filter The name of the imagine filter in effect.
      *
      * @return string The path of the object on S3.
      */
-    protected function getObjectPath($path, $filter)
+    protected function getObjectPath(string $path, string $loader, string $filter) : string
     {
-        return str_replace('//', '/', $filter.'/'.$path);
+        return str_replace('//', '/', $loader.'/'.$filter.'/'.$path);
     }
 
     /**

@@ -36,9 +36,9 @@ class ProxyResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(string $path, string $filter) : string
+    public function resolve(string $path, string $loader, string $filter) : string
     {
-        return $this->rewriteUrl($this->resolver->resolve($path, $filter));
+        return $this->rewriteUrl($this->resolver->resolve($path, $loader, $filter));
     }
 
     /**

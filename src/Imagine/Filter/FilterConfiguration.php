@@ -4,17 +4,20 @@ namespace Anezi\ImagineBundle\Imagine\Filter;
 
 use Anezi\ImagineBundle\Exception\Imagine\Filter\NonExistingFilterException;
 
+/**
+ * Class FilterConfiguration.
+ */
 class FilterConfiguration
 {
     /**
      * @var array
      */
-    protected $filters = array();
+    protected $filters = [];
 
     /**
      * @param array $filters
      */
-    public function __construct(array $filters = array())
+    public function __construct(array $filters = [])
     {
         $this->filters = $filters;
     }

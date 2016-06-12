@@ -21,7 +21,12 @@ class CacheManagerTest extends AbstractTest
      */
     public function testAddCacheManagerAwareResolver()
     {
-        $cacheManager = new CacheManager($this->createFilterConfigurationMock(), $this->createRouterMock(), new Signer('secret'), $this->createEventDispatcherMock());
+        $cacheManager = new CacheManager(
+            $this->createFilterConfigurationMock(),
+            $this->createRouterMock(),
+            new Signer('secret'),
+            $this->createEventDispatcherMock()
+        );
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|CacheManagerAwareResolver $resolver */
         $resolver = $this->getMock('Anezi\ImagineBundle\Tests\Fixtures\CacheManagerAwareResolver');
@@ -226,7 +231,7 @@ class CacheManagerTest extends AbstractTest
         );
 
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
-        $cacheManager->resolve($path, 'thumbnail');
+        $cacheManager->resolve($path, 'default', 'thumbnail');
     }
 
     /**
@@ -242,7 +247,7 @@ class CacheManagerTest extends AbstractTest
         );
 
         $this->setExpectedException('OutOfBoundsException', 'Could not find resolver "default" for "thumbnail" filter type');
-        $this->assertFalse($cacheManager->resolve('cats.jpeg', 'thumbnail'));
+        $this->assertFalse($cacheManager->resolve('cats.jpeg', 'default', 'thumbnail'));
     }
 
     /**
@@ -292,7 +297,7 @@ class CacheManagerTest extends AbstractTest
         $cacheManager->addResolver('default', $resolver);
 
         // Resolve fallback to default resolver
-        $this->assertEquals('/thumbs/cats.jpeg', $cacheManager->resolve('cats.jpeg', 'thumbnail'));
+        $this->assertEquals('/thumbs/cats.jpeg', $cacheManager->resolve('cats.jpeg', 'default', 'thumbnail'));
 
         $cacheManager->store($binary, '/thumbs/cats.jpeg', 'default', 'thumbnail');
 
@@ -629,7 +634,7 @@ class CacheManagerTest extends AbstractTest
         $dispatcher
             ->expects($this->at(0))
             ->method('dispatch')
-            ->with(ImagineEvents::PRE_RESOLVE, new CacheResolveEvent('cats.jpg', 'thumbnail'))
+            ->with(ImagineEvents::PRE_RESOLVE, new CacheResolveEvent('cats.jpg', 'default', 'thumbnail'))
         ;
 
         $cacheManager = new CacheManager(
@@ -640,7 +645,7 @@ class CacheManagerTest extends AbstractTest
         );
         $cacheManager->addResolver('default', $this->createResolverMock());
 
-        $cacheManager->resolve('cats.jpg', 'thumbnail');
+        $cacheManager->resolve('cats.jpg', 'default', 'thumbnail');
     }
 
     /**
@@ -652,7 +657,7 @@ class CacheManagerTest extends AbstractTest
         $dispatcher
             ->expects($this->at(1))
             ->method('dispatch')
-            ->with(ImagineEvents::POST_RESOLVE, new CacheResolveEvent('cats.jpg', 'thumbnail'))
+            ->with(ImagineEvents::POST_RESOLVE, new CacheResolveEvent('cats.jpg', 'default', 'thumbnail'))
         ;
 
         $cacheManager = new CacheManager(
@@ -663,7 +668,7 @@ class CacheManagerTest extends AbstractTest
         );
         $cacheManager->addResolver('default', $this->createResolverMock());
 
-        $cacheManager->resolve('cats.jpg', 'thumbnail');
+        $cacheManager->resolve('cats.jpg', 'default', 'thumbnail');
     }
 
     /**
@@ -676,7 +681,7 @@ class CacheManagerTest extends AbstractTest
             ->expects($this->at(0))
             ->method('dispatch')
             ->with(ImagineEvents::PRE_RESOLVE, $this->isInstanceOf('Anezi\ImagineBundle\Events\CacheResolveEvent'))
-            ->will($this->returnCallback(function ($name, $event) {
+            ->will($this->returnCallback(function (string $name, CacheResolveEvent $event) {
                 $event->setPath('changed_path');
                 $event->setFilter('changed_filter');
             }))
@@ -697,7 +702,7 @@ class CacheManagerTest extends AbstractTest
         );
         $cacheManager->addResolver('default', $resolver);
 
-        $cacheManager->resolve('cats.jpg', 'thumbnail');
+        $cacheManager->resolve('cats.jpg', 'default', 'thumbnail');
     }
 
     /**
@@ -709,18 +714,18 @@ class CacheManagerTest extends AbstractTest
         $dispatcher
             ->expects($this->at(0))
             ->method('dispatch')
-            ->will($this->returnCallback(function ($name, $event) {
+            ->will($this->returnCallback(function (string $name, CacheResolveEvent $event) {
                 $event->setFilter('thumbnail');
             }))
         ;
 
         /** @var CacheManager|\PHPUnit_Framework_MockObject_MockObject $cacheManager */
-        $cacheManager = $this->getMock('Anezi\ImagineBundle\Imagine\Cache\CacheManager', ['getResolver'], array(
+        $cacheManager = $this->getMock('Anezi\ImagineBundle\Imagine\Cache\CacheManager', ['getResolver'], [
             $this->createFilterConfigurationMock(),
             $this->createRouterMock(),
             new Signer('secret'),
             $dispatcher,
-        ));
+        ]);
 
         $cacheManager
             ->expects($this->once())
@@ -729,7 +734,7 @@ class CacheManagerTest extends AbstractTest
             ->will($this->returnValue($this->createResolverMock()))
         ;
 
-        $cacheManager->resolve('cats.jpg', 'default');
+        $cacheManager->resolve('cats.jpg', 'default', 'default');
     }
 
     /**
@@ -742,7 +747,7 @@ class CacheManagerTest extends AbstractTest
             ->expects($this->at(0))
             ->method('dispatch')
             ->with(ImagineEvents::PRE_RESOLVE, $this->isInstanceOf('Anezi\ImagineBundle\Events\CacheResolveEvent'))
-            ->will($this->returnCallback(function ($name, $event) {
+            ->will($this->returnCallback(function (string $name, CacheResolveEvent $event) {
                 $event->setPath('changed_path');
                 $event->setFilter('changed_filter');
             }))
@@ -768,7 +773,7 @@ class CacheManagerTest extends AbstractTest
         );
         $cacheManager->addResolver('default', $this->createResolverMock());
 
-        $cacheManager->resolve('cats.jpg', 'thumbnail');
+        $cacheManager->resolve('cats.jpg', 'default', 'thumbnail');
     }
 
     /**
@@ -781,7 +786,7 @@ class CacheManagerTest extends AbstractTest
             ->expects($this->at(1))
             ->method('dispatch')
             ->with(ImagineEvents::POST_RESOLVE, $this->isInstanceOf('Anezi\ImagineBundle\Events\CacheResolveEvent'))
-            ->will($this->returnCallback(function ($name, $event) {
+            ->will($this->returnCallback(function (string $name, CacheResolveEvent $event) {
                 $event->setUrl('changed_url');
             }))
         ;
@@ -794,7 +799,7 @@ class CacheManagerTest extends AbstractTest
         );
         $cacheManager->addResolver('default', $this->createResolverMock());
 
-        $url = $cacheManager->resolve('cats.jpg', 'thumbnail');
+        $url = $cacheManager->resolve('cats.jpg', 'default', 'thumbnail');
 
         $this->assertEquals('changed_url', $url);
     }
