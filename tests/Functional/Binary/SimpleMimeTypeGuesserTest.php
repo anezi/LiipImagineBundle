@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Functional\Binary;
+namespace Anezi\ImagineBundle\tests\Functional\Binary;
 
 use Anezi\ImagineBundle\Tests\Functional\WebTestCase;
 

@@ -2,8 +2,8 @@
 
 namespace Anezi\ImagineBundle\DependencyInjection\Factory\Resolver;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 interface ResolverFactoryInterface
 {

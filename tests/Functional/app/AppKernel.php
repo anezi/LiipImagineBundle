@@ -1,9 +1,9 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Functional\app;
+namespace Anezi\ImagineBundle\tests\Functional\app;
 
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
@@ -12,10 +12,10 @@ class AppKernel extends Kernel
      */
     public function registerBundles()
     {
-        $bundles = array(
+        $bundles = [
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Anezi\ImagineBundle\AneziImagineBundle(),
-        );
+        ];
 
         return $bundles;
     }

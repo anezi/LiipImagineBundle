@@ -2,10 +2,10 @@
 
 namespace Anezi\ImagineBundle\Binary\Loader;
 
+use Anezi\ImagineBundle\Exception\Binary\Loader\NotLoadableException;
 use Anezi\ImagineBundle\Model\FileBinary;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesserInterface;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
-use Anezi\ImagineBundle\Exception\Binary\Loader\NotLoadableException;
 
 class FileSystemLoader implements LoaderInterface
 {
@@ -51,7 +51,7 @@ class FileSystemLoader implements LoaderInterface
 
         $absolutePath = $this->rootPath.'/'.ltrim($path, '/');
 
-        if (false == file_exists($absolutePath)) {
+        if (false === file_exists($absolutePath)) {
             throw new NotLoadableException(sprintf('Source image not found in "%s"', $absolutePath));
         }
 

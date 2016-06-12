@@ -1,15 +1,15 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Functional\Command;
+namespace Anezi\ImagineBundle\tests\Functional\Command;
 
-use Anezi\ImagineBundle\Tests\Functional\WebTestCase;
 use Anezi\ImagineBundle\Command\ResolveCacheCommand;
+use Anezi\ImagineBundle\Tests\Functional\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @covers Anezi\ImagineBundle\Command\ResolveCacheCommand
@@ -46,7 +46,7 @@ class ResolveCacheTest extends WebTestCase
         $this->client = $this->createClient();
 
         $this->webRoot = self::$kernel->getContainer()->getParameter('kernel.root_dir').'/web';
-        $this->cacheRoot = $this->webRoot.'/media/cache';
+        $this->cacheRoot = $this->webRoot.'/images';
 
         $this->filesystem = new Filesystem();
         $this->filesystem->remove($this->cacheRoot);
@@ -62,14 +62,15 @@ class ResolveCacheTest extends WebTestCase
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
             [
-                'paths' => ['images/cats.jpeg'],
+                'paths'     => ['images/cats.jpeg'],
+                '--loaders' => ['web_path_loader'],
                 '--filters' => ['thumbnail_web_path'],
             ]
         );
 
-        $this->assertFileExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
-        $this->assertFileNotExists($this->cacheRoot.'/thumbnail_default/images/cats.jpeg');
-        $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $output);
+        $this->assertFileExists($this->cacheRoot.'/web_path_loader/thumbnail_web_path/images/cats.jpeg');
+        $this->assertFileNotExists($this->cacheRoot.'/web_path_loader/thumbnail_default/images/cats.jpeg');
+        $this->assertContains('http://localhost/images/web_path_loader/thumbnail_web_path/images/cats.jpeg', $output);
     }
 
     /**
@@ -85,14 +86,15 @@ class ResolveCacheTest extends WebTestCase
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
             [
-                'paths' => ['images/cats.jpeg'],
+                'paths'     => ['images/cats.jpeg'],
+                '--loaders' => ['web_path_loader'],
                 '--filters' => ['thumbnail_web_path'],
             ]
         );
 
-        $this->assertFileExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
-        $this->assertFileNotExists($this->cacheRoot.'/thumbnail_default/images/cats.jpeg');
-        $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $output);
+        $this->assertFileExists($this->cacheRoot.'/web_path_loader/thumbnail_web_path/images/cats.jpeg');
+        $this->assertFileNotExists($this->cacheRoot.'/web_path_loader/thumbnail_default/images/cats.jpeg');
+        $this->assertContains('http://localhost/images/web_path_loader/thumbnail_web_path/images/cats.jpeg', $output);
     }
 
     /**
@@ -103,13 +105,14 @@ class ResolveCacheTest extends WebTestCase
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
             [
-                'paths' => ['images/cats.jpeg', 'images/cats2.jpeg'],
+                'paths'     => ['images/cats.jpeg', 'images/cats2.jpeg'],
+                '--loaders' => ['web_path_loader'],
                 '--filters' => ['thumbnail_web_path'],
             ]
         );
 
-        $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $output);
-        $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats2.jpeg', $output);
+        $this->assertContains('http://localhost/images/web_path_loader/thumbnail_web_path/images/cats.jpeg', $output);
+        $this->assertContains('http://localhost/images/web_path_loader/thumbnail_web_path/images/cats2.jpeg', $output);
     }
 
     /**
@@ -117,26 +120,27 @@ class ResolveCacheTest extends WebTestCase
      */
     public function testShouldResolveWithFewPathsSingleFilterAndPartiallyFullCache()
     {
-        $this->assertFileNotExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
+        $this->assertFileNotExists($this->cacheRoot.'/web_path_loader/thumbnail_web_path/images/cats.jpeg');
 
         $this->filesystem->dumpFile(
-            $this->cacheRoot.'/thumbnail_web_path/images/cats2.jpeg',
+            $this->cacheRoot.'/web_path_loader/thumbnail_web_path/images/cats2.jpeg',
             'anImageContent'
         );
 
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
             [
-                'paths' => ['images/cats.jpeg', 'images/cats2.jpeg'],
+                'paths'     => ['images/cats.jpeg', 'images/cats2.jpeg'],
+                '--loaders' => ['web_path_loader'],
                 '--filters' => ['thumbnail_web_path'],
             ]
         );
 
-        $this->assertFileNotExists($this->cacheRoot.'/thumbnail_default/images/cats.jpeg');
-        $this->assertFileExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
-        $this->assertFileExists($this->cacheRoot.'/thumbnail_web_path/images/cats2.jpeg');
-        $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $output);
-        $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats2.jpeg', $output);
+        $this->assertFileNotExists($this->cacheRoot.'/web_path_loader/thumbnail_default/images/cats.jpeg');
+        $this->assertFileExists($this->cacheRoot.'/web_path_loader/thumbnail_web_path/images/cats.jpeg');
+        $this->assertFileExists($this->cacheRoot.'/web_path_loader/thumbnail_web_path/images/cats2.jpeg');
+        $this->assertContains('http://localhost/images/web_path_loader/thumbnail_web_path/images/cats.jpeg', $output);
+        $this->assertContains('http://localhost/images/web_path_loader/thumbnail_web_path/images/cats2.jpeg', $output);
     }
 
     /**
@@ -147,15 +151,16 @@ class ResolveCacheTest extends WebTestCase
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
             [
-                'paths' => ['images/cats.jpeg', 'images/cats2.jpeg'],
+                'paths'     => ['images/cats.jpeg', 'images/cats2.jpeg'],
+                '--loaders' => ['web_path_loader'],
                 '--filters' => ['thumbnail_web_path', 'thumbnail_default'],
             ]
         );
 
-        $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $output);
-        $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats2.jpeg', $output);
-        $this->assertContains('http://localhost/media/cache/thumbnail_default/images/cats.jpeg', $output);
-        $this->assertContains('http://localhost/media/cache/thumbnail_default/images/cats2.jpeg', $output);
+        $this->assertContains('http://localhost/images/web_path_loader/thumbnail_web_path/images/cats.jpeg', $output);
+        $this->assertContains('http://localhost/images/web_path_loader/thumbnail_web_path/images/cats2.jpeg', $output);
+        $this->assertContains('http://localhost/images/web_path_loader/thumbnail_default/images/cats.jpeg', $output);
+        $this->assertContains('http://localhost/images/web_path_loader/thumbnail_default/images/cats2.jpeg', $output);
     }
 
     /**
@@ -168,10 +173,10 @@ class ResolveCacheTest extends WebTestCase
             ['paths' => ['images/cats.jpeg', 'images/cats2.jpeg']]
         );
 
-        $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $output);
-        $this->assertContains('http://localhost/media/cache/thumbnail_web_path/images/cats2.jpeg', $output);
-        $this->assertContains('http://localhost/media/cache/thumbnail_default/images/cats.jpeg', $output);
-        $this->assertContains('http://localhost/media/cache/thumbnail_default/images/cats2.jpeg', $output);
+        $this->assertContains('http://localhost/images/web_path_loader/thumbnail_web_path/images/cats.jpeg', $output);
+        $this->assertContains('http://localhost/images/web_path_loader/thumbnail_web_path/images/cats2.jpeg', $output);
+        $this->assertContains('http://localhost/images/web_path_loader/thumbnail_default/images/cats.jpeg', $output);
+        $this->assertContains('http://localhost/images/web_path_loader/thumbnail_default/images/cats2.jpeg', $output);
     }
 
     /**

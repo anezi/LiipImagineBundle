@@ -92,7 +92,7 @@ class JpegOptimPostProcessor implements PostProcessorInterface
     public function process(BinaryInterface $binary)
     {
         $type = strtolower($binary->getMimeType());
-        if (!in_array($type, array('image/jpeg', 'image/jpg'))) {
+        if (!in_array($type, ['image/jpeg', 'image/jpg'], true)) {
             return $binary;
         }
 
@@ -100,7 +100,7 @@ class JpegOptimPostProcessor implements PostProcessorInterface
             throw new \RuntimeException(sprintf('Temp file can not be created in "%s".', sys_get_temp_dir()));
         }
 
-        $pb = new ProcessBuilder(array($this->jpegoptimBin));
+        $pb = new ProcessBuilder([$this->jpegoptimBin]);
 
         if ($this->stripAll) {
             $pb->add('--strip-all');

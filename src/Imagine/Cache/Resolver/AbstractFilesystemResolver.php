@@ -141,13 +141,13 @@ abstract class AbstractFilesystemResolver implements ResolverInterface, CacheMan
     }
 
     /**
-     * @return Request
-     *
      * @throws \LogicException
+     *
+     * @return Request
      */
     protected function getRequest()
     {
-        if (false == $this->request) {
+        if (false === $this->request) {
             throw new \LogicException('The request was not injected, inject it before using resolver.');
         }
 

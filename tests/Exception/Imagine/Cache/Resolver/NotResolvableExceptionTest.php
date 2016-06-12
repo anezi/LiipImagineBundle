@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Exception\Imagine\Cache\Resolver;
+namespace Anezi\ImagineBundle\tests\Exception\Imagine\Cache\Resolver;
 
 use Anezi\ImagineBundle\Exception\Imagine\Cache\Resolver\NotResolvableException;
 

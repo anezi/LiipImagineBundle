@@ -1,14 +1,14 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\DependencyInjection;
+namespace Anezi\ImagineBundle\tests\DependencyInjection;
 
+use Anezi\ImagineBundle\DependencyInjection\AneziImagineExtension;
 use Anezi\ImagineBundle\DependencyInjection\Factory\Loader\FileSystemLoaderFactory;
 use Anezi\ImagineBundle\DependencyInjection\Factory\Resolver\WebPathResolverFactory;
 use Anezi\ImagineBundle\Tests\AbstractTest;
-use Anezi\ImagineBundle\DependencyInjection\AneziImagineExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Yaml\Parser;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * @covers Anezi\ImagineBundle\DependencyInjection\Configuration
@@ -27,8 +27,8 @@ class AneziImagineExtensionTest extends AbstractTest
     public function testUserLoadThrowsExceptionUnlessDriverIsValid()
     {
         $loader = new AneziImagineExtension();
-        $config = array('driver' => 'foo');
-        $loader->load(array($config), new ContainerBuilder());
+        $config = ['driver' => 'foo'];
+        $loader->load([$config], new ContainerBuilder());
     }
 
     public function testLoadWithDefaults()
@@ -47,7 +47,7 @@ class AneziImagineExtensionTest extends AbstractTest
         $this->assertTrue(isset($param['small']['filters']['route']['requirements']));
 
         $variable1 = $param['small']['filters']['route']['requirements']['variable1'];
-        $this->assertEquals('value1', $variable1, sprintf('%s parameter is correct', $variable1));
+        $this->assertSame('value1', $variable1, sprintf('%s parameter is correct', $variable1));
     }
 
     /**
@@ -62,7 +62,7 @@ class AneziImagineExtensionTest extends AbstractTest
         $this->createEmptyConfiguration();
         $definition = $this->containerBuilder->getDefinition($service);
 
-        $this->assertEquals($factory, $definition->getFactory());
+        $this->assertSame($factory, $definition->getFactory());
     }
 
     /**
@@ -77,22 +77,22 @@ class AneziImagineExtensionTest extends AbstractTest
         $this->createEmptyConfiguration();
         $definition = $this->containerBuilder->getDefinition($service);
 
-        $this->assertEquals($factory[0], $definition->getFactoryClass());
-        $this->assertEquals($factory[1], $definition->getFactoryMethod());
+        $this->assertSame($factory[0], $definition->getFactoryClass());
+        $this->assertSame($factory[1], $definition->getFactoryMethod());
     }
 
     public function factoriesProvider()
     {
-        return array(
-            array(
+        return [
+            [
               'anezi_imagine.mime_type_guesser',
-              array('Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser', 'getInstance'),
-            ),
-            array(
+              ['Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser', 'getInstance'],
+            ],
+            [
               'anezi_imagine.extension_guesser',
-              array('Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser', 'getInstance'),
-            ),
-        );
+              ['Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser', 'getInstance'],
+            ],
+        ];
     }
 
     /**
@@ -104,7 +104,7 @@ class AneziImagineExtensionTest extends AbstractTest
         $loader = new AneziImagineExtension();
         $loader->addLoaderFactory(new FileSystemLoaderFactory());
         $loader->addResolverFactory(new WebPathResolverFactory());
-        $loader->load(array(array()), $this->containerBuilder);
+        $loader->load([[]], $this->containerBuilder);
         $this->assertTrue($this->containerBuilder instanceof ContainerBuilder);
     }
 
@@ -117,7 +117,7 @@ class AneziImagineExtensionTest extends AbstractTest
         $loader = new AneziImagineExtension();
         $loader->addLoaderFactory(new FileSystemLoaderFactory());
         $loader->addResolverFactory(new WebPathResolverFactory());
-        $loader->load(array($this->getFullConfig()), $this->containerBuilder);
+        $loader->load([$this->getFullConfig()], $this->containerBuilder);
         $this->assertTrue($this->containerBuilder instanceof ContainerBuilder);
     }
 
@@ -163,12 +163,12 @@ EOF;
 
     private function assertAlias($value, $key)
     {
-        $this->assertEquals($value, (string) $this->containerBuilder->getAlias($key), sprintf('%s alias is correct', $key));
+        $this->assertSame($value, (string) $this->containerBuilder->getAlias($key), sprintf('%s alias is correct', $key));
     }
 
     private function assertParameter($value, $key)
     {
-        $this->assertEquals($value, $this->containerBuilder->getParameter($key), sprintf('%s parameter is correct', $key));
+        $this->assertSame($value, $this->containerBuilder->getParameter($key), sprintf('%s parameter is correct', $key));
     }
 
     private function assertHasDefinition($id)
@@ -183,7 +183,7 @@ EOF;
 
     private function assertDICConstructorArguments($definition, $args)
     {
-        $this->assertEquals($args, $definition->getArguments(), "Expected and actual DIC Service constructor arguments of definition '".$definition->getClass()."' don't match.");
+        $this->assertSame($args, $definition->getArguments(), "Expected and actual DIC Service constructor arguments of definition '".$definition->getClass()."' don't match.");
     }
 
     protected function tearDown()

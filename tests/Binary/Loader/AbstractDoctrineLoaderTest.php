@@ -1,9 +1,9 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Binary\Loader;
+namespace Anezi\ImagineBundle\tests\Binary\Loader;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use Anezi\ImagineBundle\Binary\Loader\AbstractDoctrineLoader;
+use Doctrine\Common\Persistence\ObjectRepository;
 
 /**
  * @covers Anezi\ImagineBundle\Binary\Loader\AbstractDoctrineLoader<extended>
@@ -24,7 +24,7 @@ class AbstractDoctrineLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $this->om = $this->getMock('Doctrine\Common\Persistence\ObjectManager');
 
-        $this->loader = $this->getMockBuilder('Anezi\ImagineBundle\Binary\Loader\AbstractDoctrineLoader')->setConstructorArgs(array($this->om))->getMockForAbstractClass();
+        $this->loader = $this->getMockBuilder('Anezi\ImagineBundle\Binary\Loader\AbstractDoctrineLoader')->setConstructorArgs([$this->om])->getMockForAbstractClass();
     }
 
     public function testFindWithValidObjectFirstHit()
@@ -36,26 +36,26 @@ class AbstractDoctrineLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->om->expects($this->atLeastOnce())->method('find')->with(null, 1337)->will($this->returnValue($image));
 
-        $this->assertEquals('foo', $this->loader->find('/foo/bar'));
+        $this->assertSame('foo', $this->loader->find('/foo/bar'));
     }
 
     public function testFindWithValidObjectSecondHit()
     {
         $image = new \stdClass();
 
-        $this->loader->expects($this->atLeastOnce())->method('mapPathToId')->will($this->returnValueMap(array(
-            array('/foo/bar.png', 1337),
-            array('/foo/bar', 4711),
-        )));
+        $this->loader->expects($this->atLeastOnce())->method('mapPathToId')->will($this->returnValueMap([
+            ['/foo/bar.png', 1337],
+            ['/foo/bar', 4711],
+        ]));
 
         $this->loader->expects($this->atLeastOnce())->method('getStreamFromImage')->with($image)->will($this->returnValue(fopen('data://text/plain,foo', 'r')));
 
-        $this->om->expects($this->atLeastOnce())->method('find')->will($this->returnValueMap(array(
-            array(null, 1337, null),
-            array(null, 4711, $image),
-        )));
+        $this->om->expects($this->atLeastOnce())->method('find')->will($this->returnValueMap([
+            [null, 1337, null],
+            [null, 4711, $image],
+        ]));
 
-        $this->assertEquals('foo', $this->loader->find('/foo/bar.png'));
+        $this->assertSame('foo', $this->loader->find('/foo/bar.png'));
     }
 
     /**

@@ -2,9 +2,9 @@
 
 namespace Anezi\ImagineBundle\Controller;
 
-use Imagine\Exception\RuntimeException;
-use Anezi\ImagineBundle\Exception\Imagine\Filter\NonExistingFilterException;
 use Anezi\ImagineBundle\Exception\Binary\Loader\NotLoadableException;
+use Anezi\ImagineBundle\Exception\Imagine\Filter\NonExistingFilterException;
+use Imagine\Exception\RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,8 +29,9 @@ class ImagineController extends Controller
      * @param string  $filter
      * @param string  $path
      *
-     * @return Response
      * @throws \Exception
+     *
+     * @return Response
      */
     public function loadAction(Request $request, string $loader, string $filter, string $path) : Response
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Functional\Imagine\Filter\Loader;
+namespace Anezi\ImagineBundle\tests\Functional\Imagine\Filter\Loader;
 
 use Anezi\ImagineBundle\Tests\Functional\WebTestCase;
 

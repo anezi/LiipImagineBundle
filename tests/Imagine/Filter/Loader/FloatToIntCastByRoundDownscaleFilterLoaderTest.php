@@ -2,9 +2,9 @@
 
 namespace Anezi\ImagineBundle\Tests\Filter;
 
-use Imagine\Gd\Imagine;
 use Anezi\ImagineBundle\Imagine\Filter\Loader\DownscaleFilterLoader;
 use Anezi\ImagineBundle\Tests\AbstractTest;
+use Imagine\Gd\Imagine;
 
 /**
  * @covers Anezi\ImagineBundle\Imagine\Filter\Loader\DownscaleFilterLoader
@@ -21,13 +21,13 @@ class FloatToIntCastByRoundDownscaleFilterLoaderTest extends AbstractTest
         $imagine = new Imagine();
         $image = $imagine->open(__DIR__.'/../../../Fixtures/assets/square-300x300.png');
 
-        $options = array(
-            'max' => array(201, 201),
-        );
+        $options = [
+            'max' => [201, 201],
+        ];
 
         $image = $loader->load($image, $options);
         $size = $image->getSize();
 
-        $this->assertEquals($options['max'], array($size->getWidth(), $size->getHeight()));
+        $this->assertSame($options['max'], [$size->getWidth(), $size->getHeight()]);
     }
 }

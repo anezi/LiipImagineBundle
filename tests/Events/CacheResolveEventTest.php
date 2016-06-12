@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Events;
+namespace Anezi\ImagineBundle\tests\Events;
 
 use Anezi\ImagineBundle\Events\CacheResolveEvent;
 
@@ -17,13 +17,13 @@ class CacheResolveEventTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function testShouldAllowSetPathInConstruct()
     {
         $event = new CacheResolveEvent('default_path', 'default_loader', 'default_filter');
 
-        $this->assertAttributeEquals('default_path', 'path', $event);
+        $this->assertAttributeSame('default_path', 'path', $event);
     }
 
     /**
@@ -34,7 +34,7 @@ class CacheResolveEventTest extends \PHPUnit_Framework_TestCase
         $event = new CacheResolveEvent('default_path', 'default_loader', 'default_filter');
         $event->setPath('new_path');
 
-        $this->assertAttributeEquals('new_path', 'path', $event);
+        $this->assertAttributeSame('new_path', 'path', $event);
     }
 
     /**
@@ -44,7 +44,7 @@ class CacheResolveEventTest extends \PHPUnit_Framework_TestCase
     {
         $event = new CacheResolveEvent('default_path', 'default_loader', 'default_filter');
 
-        $this->assertEquals('default_path', $event->getPath());
+        $this->assertSame('default_path', $event->getPath());
     }
 
     /**
@@ -55,7 +55,7 @@ class CacheResolveEventTest extends \PHPUnit_Framework_TestCase
         $event = new CacheResolveEvent('default_path', 'default_loader', 'default_filter');
         $event->setPath('new_path');
 
-        $this->assertEquals('new_path', $event->getPath());
+        $this->assertSame('new_path', $event->getPath());
     }
 
     /**
@@ -65,7 +65,7 @@ class CacheResolveEventTest extends \PHPUnit_Framework_TestCase
     {
         $event = new CacheResolveEvent('default_path', 'default_loader', 'default_filter');
 
-        $this->assertAttributeEquals('default_filter', 'filter', $event);
+        $this->assertAttributeSame('default_filter', 'filter', $event);
     }
 
     /**
@@ -76,7 +76,7 @@ class CacheResolveEventTest extends \PHPUnit_Framework_TestCase
         $event = new CacheResolveEvent('default_path', 'default_loader', 'default_filter');
         $event->setFilter('new_filter');
 
-        $this->assertAttributeEquals('new_filter', 'filter', $event);
+        $this->assertAttributeSame('new_filter', 'filter', $event);
     }
 
     /**
@@ -86,7 +86,7 @@ class CacheResolveEventTest extends \PHPUnit_Framework_TestCase
     {
         $event = new CacheResolveEvent('default_path', 'default_loader', 'default_filter');
 
-        $this->assertEquals('default_filter', $event->getFilter());
+        $this->assertSame('default_filter', $event->getFilter());
     }
 
     /**
@@ -97,7 +97,7 @@ class CacheResolveEventTest extends \PHPUnit_Framework_TestCase
         $event = new CacheResolveEvent('default_path', 'default_loader', 'default_filter');
         $event->setFilter('new_filter');
 
-        $this->assertEquals('new_filter', $event->getFilter());
+        $this->assertSame('new_filter', $event->getFilter());
     }
 
     /**
@@ -107,7 +107,7 @@ class CacheResolveEventTest extends \PHPUnit_Framework_TestCase
     {
         $event = new CacheResolveEvent('default_path', 'default_filter', 'default_url');
 
-        $this->assertAttributeEquals('default_url', 'url', $event);
+        $this->assertAttributeSame('default_url', 'url', $event);
     }
 
     /**
@@ -118,7 +118,7 @@ class CacheResolveEventTest extends \PHPUnit_Framework_TestCase
         $event = new CacheResolveEvent('default_path', 'default_loader', 'default_filter');
         $event->setUrl('new_url');
 
-        $this->assertAttributeEquals('new_url', 'url', $event);
+        $this->assertAttributeSame('new_url', 'url', $event);
     }
 
     /**
@@ -128,7 +128,7 @@ class CacheResolveEventTest extends \PHPUnit_Framework_TestCase
     {
         $event = new CacheResolveEvent('default_path', 'default_filter', 'default_url');
 
-        $this->assertEquals('default_url', $event->getUrl());
+        $this->assertSame('default_url', $event->getUrl());
     }
 
     /**
@@ -139,6 +139,6 @@ class CacheResolveEventTest extends \PHPUnit_Framework_TestCase
         $event = new CacheResolveEvent('default_path', 'default_loader', 'default_filter');
         $event->setUrl('new_url');
 
-        $this->assertEquals('new_url', $event->getUrl());
+        $this->assertSame('new_url', $event->getUrl());
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\DependencyInjection\Factory\Loader;
+namespace Anezi\ImagineBundle\tests\DependencyInjection\Factory\Loader;
 
 use Anezi\ImagineBundle\DependencyInjection\Factory\Loader\StreamLoaderFactory;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -28,7 +28,7 @@ class StreamLoaderFactoryTest extends \Phpunit_Framework_TestCase
     {
         $loader = new StreamLoaderFactory();
 
-        $this->assertEquals('stream', $loader->getName());
+        $this->assertSame('stream', $loader->getName());
     }
 
     public function testCreateLoaderDefinitionOnCreate()
@@ -37,19 +37,19 @@ class StreamLoaderFactoryTest extends \Phpunit_Framework_TestCase
 
         $loader = new StreamLoaderFactory();
 
-        $loader->create($container, 'theLoaderName', array(
+        $loader->create($container, 'theLoaderName', [
             'wrapper' => 'theWrapper',
             'context' => 'theContext',
-        ));
+        ]);
 
         $this->assertTrue($container->hasDefinition('anezi_imagine.binary.loader.theloadername'));
 
         $loaderDefinition = $container->getDefinition('anezi_imagine.binary.loader.theloadername');
         $this->assertInstanceOf('Symfony\Component\DependencyInjection\DefinitionDecorator', $loaderDefinition);
-        $this->assertEquals('anezi_imagine.binary.loader.prototype.stream', $loaderDefinition->getParent());
+        $this->assertSame('anezi_imagine.binary.loader.prototype.stream', $loaderDefinition->getParent());
 
-        $this->assertEquals('theWrapper', $loaderDefinition->getArgument(0));
-        $this->assertEquals('theContext', $loaderDefinition->getArgument(1));
+        $this->assertSame('theWrapper', $loaderDefinition->getArgument(0));
+        $this->assertSame('theContext', $loaderDefinition->getArgument(1));
     }
 
     /**
@@ -64,7 +64,7 @@ class StreamLoaderFactoryTest extends \Phpunit_Framework_TestCase
         $resolver = new StreamLoaderFactory();
         $resolver->addConfiguration($rootNode);
 
-        $this->processConfigTree($treeBuilder, array());
+        $this->processConfigTree($treeBuilder, []);
     }
 
     public function testProcessCorrectlyOptionsOnAddConfiguration()
@@ -78,18 +78,18 @@ class StreamLoaderFactoryTest extends \Phpunit_Framework_TestCase
         $loader = new StreamLoaderFactory();
         $loader->addConfiguration($rootNode);
 
-        $config = $this->processConfigTree($treeBuilder, array(
-            'stream' => array(
+        $config = $this->processConfigTree($treeBuilder, [
+            'stream' => [
                 'wrapper' => $expectedWrapper,
                 'context' => $expectedContext,
-            ),
-        ));
+            ],
+        ]);
 
         $this->assertArrayHasKey('wrapper', $config);
-        $this->assertEquals($expectedWrapper, $config['wrapper']);
+        $this->assertSame($expectedWrapper, $config['wrapper']);
 
         $this->assertArrayHasKey('context', $config);
-        $this->assertEquals($expectedContext, $config['context']);
+        $this->assertSame($expectedContext, $config['context']);
     }
 
     public function testAddDefaultOptionsIfNotSetOnAddConfiguration()
@@ -100,11 +100,11 @@ class StreamLoaderFactoryTest extends \Phpunit_Framework_TestCase
         $loader = new StreamLoaderFactory();
         $loader->addConfiguration($rootNode);
 
-        $config = $this->processConfigTree($treeBuilder, array(
-            'stream' => array(
+        $config = $this->processConfigTree($treeBuilder, [
+            'stream' => [
                 'wrapper' => 'aWrapper',
-            ),
-        ));
+            ],
+        ]);
 
         $this->assertArrayHasKey('context', $config);
         $this->assertNull($config['context']);

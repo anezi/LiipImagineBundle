@@ -140,16 +140,16 @@ class WebPathResolver implements ResolverInterface
     protected function getBaseUrl()
     {
         $port = '';
-        if ('https' == $this->requestContext->getScheme() && $this->requestContext->getHttpsPort() != 443) {
+        if ('https' === $this->requestContext->getScheme() && $this->requestContext->getHttpsPort() !== 443) {
             $port = ":{$this->requestContext->getHttpsPort()}";
         }
 
-        if ('http' == $this->requestContext->getScheme() && $this->requestContext->getHttpPort() != 80) {
+        if ('http' === $this->requestContext->getScheme() && $this->requestContext->getHttpPort() !== 80) {
             $port = ":{$this->requestContext->getHttpPort()}";
         }
 
         $baseUrl = $this->requestContext->getBaseUrl();
-        if ('.php' == substr($this->requestContext->getBaseUrl(), -4)) {
+        if ('.php' === substr($this->requestContext->getBaseUrl(), -4)) {
             $baseUrl = pathinfo($this->requestContext->getBaseUrl(), PATHINFO_DIRNAME);
         }
         $baseUrl = rtrim($baseUrl, '/\\');

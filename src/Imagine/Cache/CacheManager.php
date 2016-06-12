@@ -3,15 +3,15 @@
 namespace Anezi\ImagineBundle\Imagine\Cache;
 
 use Anezi\ImagineBundle\Binary\BinaryInterface;
+use Anezi\ImagineBundle\Events\CacheResolveEvent;
 use Anezi\ImagineBundle\Imagine\Cache\Resolver\ResolverInterface;
 use Anezi\ImagineBundle\Imagine\Filter\FilterConfiguration;
 use Anezi\ImagineBundle\Imagine\Filter\FilterManager;
+use Anezi\ImagineBundle\ImagineEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Anezi\ImagineBundle\ImagineEvents;
-use Anezi\ImagineBundle\Events\CacheResolveEvent;
 
 /**
  * Class CacheManager.
@@ -102,14 +102,14 @@ class CacheManager
      * @param string $filter
      * @param string $resolver
      *
-     * @return ResolverInterface
-     *
      * @throws \OutOfBoundsException If neither a specific nor a default resolver is available.
+     *
+     * @return ResolverInterface
      */
     protected function getResolver($filter, $resolver)
     {
         // BC
-        if (false == $resolver) {
+        if (false === $resolver) {
             $config = $this->filterConfig->get($filter);
 
             $resolverName = empty($config['cache']) ? $this->defaultResolver : $config['cache'];
@@ -146,14 +146,12 @@ class CacheManager
 
             return $this->isStored($rcPath, $filter, $resolver) ?
                 $this->resolve($rcPath, $filter, $resolver) :
-                $this->generateUrl($path, $filter, $runtimeConfig, $resolver)
-            ;
+                $this->generateUrl($path, $filter, $runtimeConfig, $resolver);
         }
 
         return $this->isStored($path, $filter, $resolver) ?
             $this->resolve($path, $filter, $resolver) :
-            $this->generateUrl($path, $filter, [], $resolver)
-        ;
+            $this->generateUrl($path, $filter, [], $resolver);
     }
 
     /**
@@ -182,7 +180,7 @@ class CacheManager
     public function generateUrl($path, $filter, array $runtimeConfig = [], $resolver = null)
     {
         $params = [
-            'path' => ltrim($path, '/'),
+            'path'   => ltrim($path, '/'),
             'filter' => $filter,
         ];
 
@@ -263,7 +261,7 @@ class CacheManager
 
     /**
      * @param string|string[]|null $paths
-     * @param string|string[]|null  $loaders
+     * @param string|string[]|null $loaders
      * @param string|string[]|null $filters
      */
     public function remove($paths = null, $loaders = null, $filters = null)
@@ -271,19 +269,19 @@ class CacheManager
         if (null === $filters) {
             $filters = array_keys($this->filterConfig->all());
         }
-        
+
         if (!is_array($filters)) {
             $filters = [$filters];
         }
-        
+
         if (null === $loaders) {
             $loaders = array_keys($this->filterManager->getLoaders());
         }
-        
+
         if (!is_array($loaders)) {
             $loaders = [$loaders];
         }
-        
+
         if (!is_array($paths)) {
             $paths = [$paths];
         }
@@ -302,7 +300,7 @@ class CacheManager
 
             $mapping[$resolver] = $list;
         }
-        
+
         /** @var ResolverInterface $resolver */
         foreach ($mapping as $resolver) {
             $resolver->remove($paths, $loaders, $mapping[$resolver]);

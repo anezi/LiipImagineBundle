@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\DependencyInjection\Factory\Loader;
+namespace Anezi\ImagineBundle\tests\DependencyInjection\Factory\Loader;
 
 use Anezi\ImagineBundle\DependencyInjection\Factory\Loader\FlysystemLoaderFactory;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -40,7 +40,7 @@ class FlysystemLoaderFactoryTest extends \Phpunit_Framework_TestCase
     {
         $loader = new FlysystemLoaderFactory();
 
-        $this->assertEquals('flysystem', $loader->getName());
+        $this->assertSame('flysystem', $loader->getName());
     }
 
     public function testCreateLoaderDefinitionOnCreate()
@@ -49,18 +49,18 @@ class FlysystemLoaderFactoryTest extends \Phpunit_Framework_TestCase
 
         $loader = new FlysystemLoaderFactory();
 
-        $loader->create($container, 'theLoaderName', array(
+        $loader->create($container, 'theLoaderName', [
             'filesystem_service' => 'flyfilesystemservice',
-        ));
+        ]);
 
         $this->assertTrue($container->hasDefinition('anezi_imagine.binary.loader.theloadername'));
 
         $loaderDefinition = $container->getDefinition('anezi_imagine.binary.loader.theloadername');
         $this->assertInstanceOf('Symfony\Component\DependencyInjection\DefinitionDecorator', $loaderDefinition);
-        $this->assertEquals('anezi_imagine.binary.loader.prototype.flysystem', $loaderDefinition->getParent());
+        $this->assertSame('anezi_imagine.binary.loader.prototype.flysystem', $loaderDefinition->getParent());
 
         $reference = $loaderDefinition->getArgument(1);
-        $this->assertEquals('flyfilesystemservice', "$reference");
+        $this->assertSame('flyfilesystemservice', "$reference");
     }
 
     /**
@@ -75,7 +75,7 @@ class FlysystemLoaderFactoryTest extends \Phpunit_Framework_TestCase
         $resolver = new FlysystemLoaderFactory();
         $resolver->addConfiguration($rootNode);
 
-        $this->processConfigTree($treeBuilder, array());
+        $this->processConfigTree($treeBuilder, []);
     }
 
     public function testProcessCorrectlyOptionsOnAddConfiguration()
@@ -88,14 +88,14 @@ class FlysystemLoaderFactoryTest extends \Phpunit_Framework_TestCase
         $loader = new FlysystemLoaderFactory();
         $loader->addConfiguration($rootNode);
 
-        $config = $this->processConfigTree($treeBuilder, array(
-            'flysystem' => array(
+        $config = $this->processConfigTree($treeBuilder, [
+            'flysystem' => [
                 'filesystem_service' => $expectedService,
-            ),
-        ));
+            ],
+        ]);
 
         $this->assertArrayHasKey('filesystem_service', $config);
-        $this->assertEquals($expectedService, $config['filesystem_service']);
+        $this->assertSame($expectedService, $config['filesystem_service']);
     }
 
     /**

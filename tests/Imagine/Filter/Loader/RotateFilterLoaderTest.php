@@ -20,7 +20,7 @@ class RotateFilterLoaderTest extends AbstractTest
 
         $image = $this->getMockImage();
 
-        $result = $loader->load($image, array('angle' => 0));
+        $result = $loader->load($image, ['angle' => 0]);
         $this->assertSame($image, $result);
     }
 
@@ -35,10 +35,9 @@ class RotateFilterLoaderTest extends AbstractTest
             ->expects($this->once())
             ->method('rotate')
             ->with(90)
-            ->willReturn($rotatedImage)
-        ;
+            ->willReturn($rotatedImage);
 
-        $result = $loader->load($image, array('angle' => 90));
+        $result = $loader->load($image, ['angle' => 90]);
         $this->assertSame($rotatedImage, $result);
     }
 }

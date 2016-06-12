@@ -2,8 +2,8 @@
 
 namespace Anezi\ImagineBundle\Binary\Loader;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Anezi\ImagineBundle\Exception\Binary\Loader\NotLoadableException;
+use Doctrine\Common\Persistence\ObjectManager;
 
 abstract class AbstractDoctrineLoader implements LoaderInterface
 {

@@ -1,15 +1,15 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Functional\Command;
+namespace Anezi\ImagineBundle\tests\Functional\Command;
 
-use Anezi\ImagineBundle\Tests\Functional\WebTestCase;
 use Anezi\ImagineBundle\Command\RemoveCacheCommand;
+use Anezi\ImagineBundle\Tests\Functional\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @covers Anezi\ImagineBundle\Command\RemoveCacheCommand
@@ -72,7 +72,7 @@ class RemoveCacheTest extends WebTestCase
         $this->executeConsole(
             new RemoveCacheCommand(),
             [
-                'paths' => ['images/cats.jpeg'],
+                'paths'     => ['images/cats.jpeg'],
                 '--filters' => ['thumbnail_web_path'],
             ]);
     }
@@ -281,7 +281,7 @@ class RemoveCacheTest extends WebTestCase
         $this->executeConsole(
             new RemoveCacheCommand(),
             [
-                'paths' => ['images/cats.jpeg'],
+                'paths'     => ['images/cats.jpeg'],
                 '--filters' => ['thumbnail_default', 'thumbnail_web_path'],
             ]
         );
@@ -312,7 +312,7 @@ class RemoveCacheTest extends WebTestCase
         $this->executeConsole(
             new RemoveCacheCommand(),
             [
-                'paths' => ['images/cats.jpeg', 'images/cats2.jpeg'],
+                'paths'     => ['images/cats.jpeg', 'images/cats2.jpeg'],
                 '--filters' => ['thumbnail_web_path'],
             ]
         );

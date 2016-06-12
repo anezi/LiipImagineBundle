@@ -2,9 +2,9 @@
 
 namespace Anezi\ImagineBundle\Imagine\Filter\Loader;
 
-use Imagine\Image\Point;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
+use Imagine\Image\Point;
 
 class PasteFilterLoader implements LoaderInterface
 {
@@ -27,7 +27,7 @@ class PasteFilterLoader implements LoaderInterface
     /**
      * @see Anezi\ImagineBundle\Imagine\Filter\Loader\LoaderInterface::load()
      */
-    public function load(ImageInterface $image, array $options = array())
+    public function load(ImageInterface $image, array $options = [])
     {
         list($x, $y) = $options['start'];
         $destImage = $this->imagine->open($this->rootPath.'/'.$options['image']);

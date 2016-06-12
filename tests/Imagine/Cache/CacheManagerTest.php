@@ -1,13 +1,13 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Imagine\Cache;
+namespace Anezi\ImagineBundle\tests\Imagine\Cache;
 
+use Anezi\ImagineBundle\Events\CacheResolveEvent;
 use Anezi\ImagineBundle\Imagine\Cache\CacheManager;
-use Anezi\ImagineBundle\Model\Binary;
-use Anezi\ImagineBundle\Tests\AbstractTest;
 use Anezi\ImagineBundle\Imagine\Cache\Signer;
 use Anezi\ImagineBundle\ImagineEvents;
-use Anezi\ImagineBundle\Events\CacheResolveEvent;
+use Anezi\ImagineBundle\Model\Binary;
+use Anezi\ImagineBundle\Tests\AbstractTest;
 use Anezi\ImagineBundle\Tests\Fixtures\CacheManagerAwareResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -22,6 +22,7 @@ class CacheManagerTest extends AbstractTest
     public function testAddCacheManagerAwareResolver()
     {
         $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
             $this->createFilterConfigurationMock(),
             $this->createRouterMock(),
             new Signer('secret'),
@@ -33,8 +34,7 @@ class CacheManagerTest extends AbstractTest
         $resolver
             ->expects($this->once())
             ->method('setCacheManager')
-            ->with($cacheManager)
-        ;
+            ->with($cacheManager);
 
         $cacheManager->addResolver('thumbnail', $resolver);
     }
@@ -44,19 +44,25 @@ class CacheManagerTest extends AbstractTest
      */
     public function testGetBrowserPathWithoutResolver()
     {
+        $filterManager = $this->createFilterManagerMock();
+
         $config = $this->createFilterConfigurationMock();
         $config
             ->expects($this->once())
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size' => [180, 180],
-                'mode' => 'outbound',
+                'size'  => [180, 180],
+                'mode'  => 'outbound',
                 'cache' => null,
-            ]))
-        ;
+            ]));
 
-        $cacheManager = new CacheManager($config, $this->createRouterMock(), new Signer('secret'), $this->createEventDispatcherMock());
+        $cacheManager = new CacheManager(
+            $filterManager,
+            $config,
+            $this->createRouterMock(),
+            new Signer('secret'), $this->createEventDispatcherMock()
+        );
 
         $this->setExpectedException('OutOfBoundsException', 'Could not find resolver "default" for "thumbnail" filter type');
         $cacheManager->getBrowserPath('cats.jpeg', 'thumbnail');
@@ -67,8 +73,15 @@ class CacheManagerTest extends AbstractTest
      */
     public function testGetRuntimePath()
     {
+        $filterManager = $this->createFilterManagerMock();
         $config = $this->createFilterConfigurationMock();
-        $cacheManager = new CacheManager($config, $this->createRouterMock(), new Signer('secret'), $this->createEventDispatcherMock());
+        $cacheManager = new CacheManager(
+            $filterManager,
+            $config,
+            $this->createRouterMock(),
+            new Signer('secret'),
+            $this->createEventDispatcherMock()
+        );
 
         $rcPath = $cacheManager->getRuntimePath('image.jpg', [
             'thumbnail' => [
@@ -76,7 +89,7 @@ class CacheManagerTest extends AbstractTest
             ],
         ]);
 
-        $this->assertEquals('rc/ILfTutxX/image.jpg', $rcPath);
+        $this->assertSame('rc/ILfTutxX/image.jpg', $rcPath);
     }
 
     /**
@@ -89,14 +102,14 @@ class CacheManagerTest extends AbstractTest
             ->expects($this->once())
             ->method('isStored')
             ->with('cats.jpeg', 'thumbnail')
-            ->will($this->returnValue(true))
-        ;
+            ->will($this->returnValue(true));
         $resolver
             ->expects($this->once())
             ->method('resolve')
             ->with('cats.jpeg', 'thumbnail')
-            ->will($this->returnValue('http://a/path/to/an/image.png'))
-        ;
+            ->will($this->returnValue('http://a/path/to/an/image.png'));
+
+        $filterManager = $this->createFilterManagerMock();
 
         $config = $this->createFilterConfigurationMock();
         $config
@@ -104,24 +117,28 @@ class CacheManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size' => [180, 180],
-                'mode' => 'outbound',
+                'size'  => [180, 180],
+                'mode'  => 'outbound',
                 'cache' => null,
-            ]))
-        ;
+            ]));
 
         $router = $this->createRouterMock();
         $router
             ->expects($this->never())
-            ->method('generate')
-        ;
+            ->method('generate');
 
-        $cacheManager = new CacheManager($config, $router, new Signer('secret'), $this->createEventDispatcherMock());
+        $cacheManager = new CacheManager(
+            $filterManager,
+            $config,
+            $router,
+            new Signer('secret'),
+            $this->createEventDispatcherMock()
+        );
         $cacheManager->addResolver('default', $resolver);
 
         $actualBrowserPath = $cacheManager->getBrowserPath('cats.jpeg', 'thumbnail');
 
-        $this->assertEquals('http://a/path/to/an/image.png', $actualBrowserPath);
+        $this->assertSame('http://a/path/to/an/image.png', $actualBrowserPath);
     }
 
     /**
@@ -134,12 +151,12 @@ class CacheManagerTest extends AbstractTest
             ->expects($this->once())
             ->method('isStored')
             ->with('cats.jpeg', 'thumbnail')
-            ->will($this->returnValue(false))
-        ;
+            ->will($this->returnValue(false));
         $resolver
             ->expects($this->never())
-            ->method('resolve')
-        ;
+            ->method('resolve');
+
+        $filterManager = $this->createFilterManagerMock();
 
         $config = $this->createFilterConfigurationMock();
         $config
@@ -147,25 +164,29 @@ class CacheManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size' => [180, 180],
-                'mode' => 'outbound',
+                'size'  => [180, 180],
+                'mode'  => 'outbound',
                 'cache' => null,
-            ]))
-        ;
+            ]));
 
         $router = $this->createRouterMock();
         $router
             ->expects($this->once())
             ->method('generate')
-            ->will($this->returnValue('/media/cache/thumbnail/cats.jpeg'))
-        ;
+            ->will($this->returnValue('/media/cache/thumbnail/cats.jpeg'));
 
-        $cacheManager = new CacheManager($config, $router, new Signer('secret'), $this->createEventDispatcherMock());
+        $cacheManager = new CacheManager(
+            $filterManager,
+            $config,
+            $router,
+            new Signer('secret'),
+            $this->createEventDispatcherMock()
+        );
         $cacheManager->addResolver('default', $resolver);
 
         $actualBrowserPath = $cacheManager->getBrowserPath('cats.jpeg', 'thumbnail');
 
-        $this->assertEquals('/media/cache/thumbnail/cats.jpeg', $actualBrowserPath);
+        $this->assertSame('/media/cache/thumbnail/cats.jpeg', $actualBrowserPath);
     }
 
     /**
@@ -184,12 +205,12 @@ class CacheManagerTest extends AbstractTest
             ->expects($this->once())
             ->method('isStored')
             ->with('rc/VhOzTGRB/cats.jpeg', 'thumbnail')
-            ->will($this->returnValue(false))
-        ;
+            ->will($this->returnValue(false));
         $resolver
             ->expects($this->never())
-            ->method('resolve')
-        ;
+            ->method('resolve');
+
+        $filterManager = $this->createFilterManagerMock();
 
         $config = $this->createFilterConfigurationMock();
         $config
@@ -197,25 +218,29 @@ class CacheManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size' => [180, 180],
-                'mode' => 'outbound',
+                'size'  => [180, 180],
+                'mode'  => 'outbound',
                 'cache' => null,
-            ]))
-        ;
+            ]));
 
         $router = $this->createRouterMock();
         $router
             ->expects($this->once())
             ->method('generate')
-            ->will($this->returnValue('/media/cache/thumbnail/rc/VhOzTGRB/cats.jpeg'))
-        ;
+            ->will($this->returnValue('/media/cache/thumbnail/rc/VhOzTGRB/cats.jpeg'));
 
-        $cacheManager = new CacheManager($config, $router, new Signer('secret'), $this->createEventDispatcherMock());
+        $cacheManager = new CacheManager(
+            $filterManager,
+            $config,
+            $router,
+            new Signer('secret'),
+            $this->createEventDispatcherMock()
+        );
         $cacheManager->addResolver('default', $resolver);
 
         $actualBrowserPath = $cacheManager->getBrowserPath('cats.jpeg', 'thumbnail', $runtimeConfig);
 
-        $this->assertEquals('/media/cache/thumbnail/rc/VhOzTGRB/cats.jpeg', $actualBrowserPath);
+        $this->assertSame('/media/cache/thumbnail/rc/VhOzTGRB/cats.jpeg', $actualBrowserPath);
     }
 
     /**
@@ -224,6 +249,7 @@ class CacheManagerTest extends AbstractTest
     public function testResolveInvalidPath($path)
     {
         $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
             $this->createFilterConfigurationMock(),
             $this->createRouterMock(),
             new Signer('secret'),
@@ -240,6 +266,7 @@ class CacheManagerTest extends AbstractTest
     public function testThrowsIfConcreteResolverNotExists()
     {
         $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
             $this->createFilterConfigurationMock(),
             $this->createRouterMock(),
             new Signer('secret'),
@@ -262,19 +289,16 @@ class CacheManagerTest extends AbstractTest
             ->expects($this->once())
             ->method('resolve')
             ->with('cats.jpeg', 'thumbnail')
-            ->will($this->returnValue('/thumbs/cats.jpeg'))
-        ;
+            ->will($this->returnValue('/thumbs/cats.jpeg'));
         $resolver
             ->expects($this->once())
             ->method('store')
-            ->with($binary, '/thumbs/cats.jpeg', 'thumbnail')
-        ;
+            ->with($binary, '/thumbs/cats.jpeg', 'thumbnail');
         $resolver
             ->expects($this->once())
             ->method('remove')
             ->with(['/thumbs/cats.jpeg'], ['thumbnail'])
-            ->will($this->returnValue(true))
-        ;
+            ->will($this->returnValue(true));
 
         $config = $this->createFilterConfigurationMock();
         $config
@@ -282,13 +306,13 @@ class CacheManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size' => [180, 180],
-                'mode' => 'outbound',
+                'size'  => [180, 180],
+                'mode'  => 'outbound',
                 'cache' => null,
-            ]))
-        ;
+            ]));
 
         $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
             $config,
             $this->createRouterMock(),
             new Signer('secret'),
@@ -297,7 +321,7 @@ class CacheManagerTest extends AbstractTest
         $cacheManager->addResolver('default', $resolver);
 
         // Resolve fallback to default resolver
-        $this->assertEquals('/thumbs/cats.jpeg', $cacheManager->resolve('cats.jpeg', 'default', 'thumbnail'));
+        $this->assertSame('/thumbs/cats.jpeg', $cacheManager->resolve('cats.jpeg', 'default', 'thumbnail'));
 
         $cacheManager->store($binary, '/thumbs/cats.jpeg', 'default', 'thumbnail');
 
@@ -320,22 +344,22 @@ class CacheManagerTest extends AbstractTest
             ->with(
                 'anezi_imagine_load',
                 [
-                    'path' => $path,
+                    'path'   => $path,
                     'filter' => 'thumbnail',
                 ],
                 UrlGeneratorInterface::ABSOLUTE_URL
             )
-            ->will($this->returnValue($expectedUrl))
-        ;
+            ->will($this->returnValue($expectedUrl));
 
         $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
             $this->createFilterConfigurationMock(),
             $routerMock,
             new Signer('secret'),
             $this->createEventDispatcherMock()
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             $expectedUrl,
             $cacheManager->generateUrl($path, 'thumbnail')
         );
@@ -353,8 +377,7 @@ class CacheManagerTest extends AbstractTest
         $resolver
             ->expects($this->once())
             ->method('remove')
-            ->with([$expectedPath], [$expectedFilter])
-        ;
+            ->with([$expectedPath], [$expectedFilter]);
 
         $config = $this->createFilterConfigurationMock();
         $config
@@ -364,10 +387,15 @@ class CacheManagerTest extends AbstractTest
                 return [
                     'cache' => $filter,
                 ];
-            }))
-        ;
+            }));
 
-        $cacheManager = new CacheManager($config, $this->createRouterMock(), new Signer('secret'), $this->createEventDispatcherMock());
+        $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
+            $config,
+            $this->createRouterMock(),
+            new Signer('secret'),
+            $this->createEventDispatcherMock()
+        );
         $cacheManager->addResolver($expectedFilter, $resolver);
 
         $cacheManager->remove($expectedPath, $expectedFilter);
@@ -386,15 +414,13 @@ class CacheManagerTest extends AbstractTest
         $resolverOne
             ->expects($this->once())
             ->method('remove')
-            ->with([$expectedPath], [$expectedFilterOne])
-        ;
+            ->with([$expectedPath], [$expectedFilterOne]);
 
         $resolverTwo = $this->createResolverMock();
         $resolverTwo
             ->expects($this->once())
             ->method('remove')
-            ->with([$expectedPath], [$expectedFilterTwo])
-        ;
+            ->with([$expectedPath], [$expectedFilterTwo]);
 
         $config = $this->createFilterConfigurationMock();
         $config
@@ -404,10 +430,15 @@ class CacheManagerTest extends AbstractTest
                 return [
                     'cache' => $filter,
                 ];
-            }))
-        ;
+            }));
 
-        $cacheManager = new CacheManager($config, $this->createRouterMock(), new Signer('secret'), $this->createEventDispatcherMock());
+        $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
+            $config,
+            $this->createRouterMock(),
+            new Signer('secret'),
+            $this->createEventDispatcherMock()
+        );
         $cacheManager->addResolver($expectedFilterOne, $resolverOne);
         $cacheManager->addResolver($expectedFilterTwo, $resolverTwo);
 
@@ -430,8 +461,7 @@ class CacheManagerTest extends AbstractTest
             ->with(
                 [$expectedPathOne, $expectedPathTwo],
                 [$expectedFilter]
-            )
-        ;
+            );
 
         $config = $this->createFilterConfigurationMock();
         $config
@@ -441,10 +471,15 @@ class CacheManagerTest extends AbstractTest
                 return [
                     'cache' => $filter,
                 ];
-            }))
-        ;
+            }));
 
-        $cacheManager = new CacheManager($config, $this->createRouterMock(), new Signer('secret'), $this->createEventDispatcherMock());
+        $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
+            $config,
+            $this->createRouterMock(),
+            new Signer('secret'),
+            $this->createEventDispatcherMock()
+        );
         $cacheManager->addResolver($expectedFilter, $resolver);
 
         $cacheManager->remove([$expectedPathOne, $expectedPathTwo], $expectedFilter);
@@ -464,15 +499,13 @@ class CacheManagerTest extends AbstractTest
         $resolverOne
             ->expects($this->once())
             ->method('remove')
-            ->with([$expectedPathOne, $expectedPathTwo], [$expectedFilterOne])
-        ;
+            ->with([$expectedPathOne, $expectedPathTwo], [$expectedFilterOne]);
 
         $resolverTwo = $this->createResolverMock();
         $resolverTwo
             ->expects($this->once())
             ->method('remove')
-            ->with([$expectedPathOne, $expectedPathTwo], [$expectedFilterTwo])
-        ;
+            ->with([$expectedPathOne, $expectedPathTwo], [$expectedFilterTwo]);
 
         $config = $this->createFilterConfigurationMock();
         $config
@@ -482,10 +515,15 @@ class CacheManagerTest extends AbstractTest
                 return [
                     'cache' => $filter,
                 ];
-            }))
-        ;
+            }));
 
-        $cacheManager = new CacheManager($config, $this->createRouterMock(), new Signer('secret'), $this->createEventDispatcherMock());
+        $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
+            $config,
+            $this->createRouterMock(),
+            new Signer('secret'),
+            $this->createEventDispatcherMock()
+        );
         $cacheManager->addResolver($expectedFilterOne, $resolverOne);
         $cacheManager->addResolver($expectedFilterTwo, $resolverTwo);
 
@@ -507,15 +545,13 @@ class CacheManagerTest extends AbstractTest
         $resolverOne
             ->expects($this->once())
             ->method('remove')
-            ->with([], [$expectedFilterOne])
-        ;
+            ->with([], [$expectedFilterOne]);
 
         $resolverTwo = $this->createResolverMock();
         $resolverTwo
             ->expects($this->once())
             ->method('remove')
-            ->with([], [$expectedFilterTwo])
-        ;
+            ->with([], [$expectedFilterTwo]);
 
         $config = $this->createFilterConfigurationMock();
         $config
@@ -525,18 +561,22 @@ class CacheManagerTest extends AbstractTest
                 return [
                     'cache' => $filter,
                 ];
-            }))
-        ;
+            }));
         $config
             ->expects($this->once())
             ->method('all')
             ->will($this->returnValue([
                 $expectedFilterOne => [],
                 $expectedFilterTwo => [],
-            ]))
-        ;
+            ]));
 
-        $cacheManager = new CacheManager($config, $this->createRouterMock(), new Signer('secret'), $this->createEventDispatcherMock());
+        $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
+            $config,
+            $this->createRouterMock(),
+            new Signer('secret'),
+            $this->createEventDispatcherMock()
+        );
         $cacheManager->addResolver($expectedFilterOne, $resolverOne);
         $cacheManager->addResolver($expectedFilterTwo, $resolverTwo);
 
@@ -556,15 +596,13 @@ class CacheManagerTest extends AbstractTest
         $resolverOne
             ->expects($this->once())
             ->method('remove')
-            ->with([$expectedPath], [$expectedFilterOne])
-        ;
+            ->with([$expectedPath], [$expectedFilterOne]);
 
         $resolverTwo = $this->createResolverMock();
         $resolverTwo
             ->expects($this->once())
             ->method('remove')
-            ->with([$expectedPath], [$expectedFilterTwo])
-        ;
+            ->with([$expectedPath], [$expectedFilterTwo]);
 
         $config = $this->createFilterConfigurationMock();
         $config
@@ -574,18 +612,22 @@ class CacheManagerTest extends AbstractTest
                 return [
                     'cache' => $filter,
                 ];
-            }))
-        ;
+            }));
         $config
             ->expects($this->once())
             ->method('all')
             ->will($this->returnValue([
                 $expectedFilterOne => [],
                 $expectedFilterTwo => [],
-            ]))
-        ;
+            ]));
 
-        $cacheManager = new CacheManager($config, $this->createRouterMock(), new Signer('secret'), $this->createEventDispatcherMock());
+        $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
+            $config,
+            $this->createRouterMock(),
+            new Signer('secret'),
+            $this->createEventDispatcherMock()
+        );
         $cacheManager->addResolver($expectedFilterOne, $resolverOne);
         $cacheManager->addResolver($expectedFilterTwo, $resolverTwo);
 
@@ -604,8 +646,7 @@ class CacheManagerTest extends AbstractTest
         $resolver
             ->expects($this->once())
             ->method('remove')
-            ->with([], [$expectedFilterOne, $expectedFilterTwo])
-        ;
+            ->with([], [$expectedFilterOne, $expectedFilterTwo]);
 
         $config = $this->createFilterConfigurationMock();
         $config
@@ -615,10 +656,15 @@ class CacheManagerTest extends AbstractTest
                 return [
                     'cache' => $filter,
                 ];
-            }))
-        ;
+            }));
 
-        $cacheManager = new CacheManager($config, $this->createRouterMock(), new Signer('secret'), $this->createEventDispatcherMock());
+        $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
+            $config,
+            $this->createRouterMock(),
+            new Signer('secret'),
+            $this->createEventDispatcherMock()
+        );
         $cacheManager->addResolver($expectedFilterOne, $resolver);
         $cacheManager->addResolver($expectedFilterTwo, $resolver);
 
@@ -634,10 +680,10 @@ class CacheManagerTest extends AbstractTest
         $dispatcher
             ->expects($this->at(0))
             ->method('dispatch')
-            ->with(ImagineEvents::PRE_RESOLVE, new CacheResolveEvent('cats.jpg', 'default', 'thumbnail'))
-        ;
+            ->with(ImagineEvents::PRE_RESOLVE, new CacheResolveEvent('cats.jpg', 'default', 'thumbnail'));
 
         $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
             $this->createFilterConfigurationMock(),
             $this->createRouterMock(),
             new Signer('secret'),
@@ -657,10 +703,10 @@ class CacheManagerTest extends AbstractTest
         $dispatcher
             ->expects($this->at(1))
             ->method('dispatch')
-            ->with(ImagineEvents::POST_RESOLVE, new CacheResolveEvent('cats.jpg', 'default', 'thumbnail'))
-        ;
+            ->with(ImagineEvents::POST_RESOLVE, new CacheResolveEvent('cats.jpg', 'default', 'thumbnail'));
 
         $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
             $this->createFilterConfigurationMock(),
             $this->createRouterMock(),
             new Signer('secret'),
@@ -684,17 +730,16 @@ class CacheManagerTest extends AbstractTest
             ->will($this->returnCallback(function (string $name, CacheResolveEvent $event) {
                 $event->setPath('changed_path');
                 $event->setFilter('changed_filter');
-            }))
-        ;
+            }));
 
         $resolver = $this->createResolverMock();
         $resolver
             ->expects($this->once())
             ->method('resolve')
-            ->with('changed_path', 'changed_filter')
-        ;
+            ->with('changed_path', 'changed_filter');
 
         $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
             $this->createFilterConfigurationMock(),
             $this->createRouterMock(),
             new Signer('secret'),
@@ -716,8 +761,7 @@ class CacheManagerTest extends AbstractTest
             ->method('dispatch')
             ->will($this->returnCallback(function (string $name, CacheResolveEvent $event) {
                 $event->setFilter('thumbnail');
-            }))
-        ;
+            }));
 
         /** @var CacheManager|\PHPUnit_Framework_MockObject_MockObject $cacheManager */
         $cacheManager = $this->getMock('Anezi\ImagineBundle\Imagine\Cache\CacheManager', ['getResolver'], [
@@ -731,8 +775,7 @@ class CacheManagerTest extends AbstractTest
             ->expects($this->once())
             ->method('getResolver')
             ->with('thumbnail')
-            ->will($this->returnValue($this->createResolverMock()))
-        ;
+            ->will($this->returnValue($this->createResolverMock()));
 
         $cacheManager->resolve('cats.jpg', 'default', 'default');
     }
@@ -750,8 +793,7 @@ class CacheManagerTest extends AbstractTest
             ->will($this->returnCallback(function (string $name, CacheResolveEvent $event) {
                 $event->setPath('changed_path');
                 $event->setFilter('changed_filter');
-            }))
-        ;
+            }));
 
         $dispatcher
             ->expects($this->at(1))
@@ -762,10 +804,10 @@ class CacheManagerTest extends AbstractTest
                     $this->isInstanceOf('Anezi\ImagineBundle\Events\CacheResolveEvent'),
                     $this->attributeEqualTo('path', 'changed_path'),
                     $this->attributeEqualTo('filter', 'changed_filter')
-            ))
-        ;
+            ));
 
         $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
             $this->createFilterConfigurationMock(),
             $this->createRouterMock(),
             new Signer('secret'),
@@ -788,10 +830,10 @@ class CacheManagerTest extends AbstractTest
             ->with(ImagineEvents::POST_RESOLVE, $this->isInstanceOf('Anezi\ImagineBundle\Events\CacheResolveEvent'))
             ->will($this->returnCallback(function (string $name, CacheResolveEvent $event) {
                 $event->setUrl('changed_url');
-            }))
-        ;
+            }));
 
         $cacheManager = new CacheManager(
+            $this->createFilterManagerMock(),
             $this->createFilterConfigurationMock(),
             $this->createRouterMock(),
             new Signer('secret'),
@@ -801,6 +843,6 @@ class CacheManagerTest extends AbstractTest
 
         $url = $cacheManager->resolve('cats.jpg', 'default', 'thumbnail');
 
-        $this->assertEquals('changed_url', $url);
+        $this->assertSame('changed_url', $url);
     }
 }

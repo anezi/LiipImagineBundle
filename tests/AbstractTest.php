@@ -1,10 +1,11 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests;
+namespace Anezi\ImagineBundle\tests;
 
 use Anezi\ImagineBundle\Imagine\Cache\CacheManager;
 use Anezi\ImagineBundle\Imagine\Cache\Resolver\ResolverInterface;
 use Anezi\ImagineBundle\Imagine\Filter\FilterConfiguration;
+use Anezi\ImagineBundle\Imagine\Filter\FilterManager;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Metadata\MetadataBag;
@@ -82,6 +83,14 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     protected function getMockCacheManager()
     {
         return $this->getMock('Anezi\ImagineBundle\Imagine\Cache\CacheManager', [], [], '', false);
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|FilterManager
+     */
+    protected function createFilterManagerMock()
+    {
+        return $this->getMock('Anezi\ImagineBundle\Imagine\Filter\FilterManager', [], [], '', false);
     }
 
     /**

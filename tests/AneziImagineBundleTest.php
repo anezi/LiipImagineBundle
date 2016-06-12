@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests;
+namespace Anezi\ImagineBundle\tests;
 
 use Anezi\ImagineBundle\AneziImagineBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -22,13 +22,11 @@ class AneziImagineBundleTest extends \Phpunit_Framework_TestCase
             ->expects($this->atLeastOnce())
             ->method('getExtension')
             ->with('anezi_imagine')
-            ->will($this->returnValue($this->createExtensionMock()))
-        ;
+            ->will($this->returnValue($this->createExtensionMock()));
         $containerMock
             ->expects($this->at(0))
             ->method('addCompilerPass')
-            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Compiler\LoadersCompilerPass'))
-        ;
+            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Compiler\LoadersCompilerPass'));
 
         $container = new ContainerBuilder();
 
@@ -44,13 +42,11 @@ class AneziImagineBundleTest extends \Phpunit_Framework_TestCase
             ->expects($this->atLeastOnce())
             ->method('getExtension')
             ->with('anezi_imagine')
-            ->will($this->returnValue($this->createExtensionMock()))
-        ;
+            ->will($this->returnValue($this->createExtensionMock()));
         $containerMock
             ->expects($this->at(1))
             ->method('addCompilerPass')
-            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Compiler\FiltersCompilerPass'))
-        ;
+            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Compiler\FiltersCompilerPass'));
 
         $bundle = new AneziImagineBundle();
 
@@ -64,13 +60,11 @@ class AneziImagineBundleTest extends \Phpunit_Framework_TestCase
             ->expects($this->atLeastOnce())
             ->method('getExtension')
             ->with('anezi_imagine')
-            ->will($this->returnValue($this->createExtensionMock()))
-        ;
+            ->will($this->returnValue($this->createExtensionMock()));
         $containerMock
             ->expects($this->at(2))
             ->method('addCompilerPass')
-            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Compiler\PostProcessorsCompilerPass'))
-        ;
+            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Compiler\PostProcessorsCompilerPass'));
 
         $bundle = new AneziImagineBundle();
 
@@ -84,13 +78,11 @@ class AneziImagineBundleTest extends \Phpunit_Framework_TestCase
             ->expects($this->atLeastOnce())
             ->method('getExtension')
             ->with('anezi_imagine')
-            ->will($this->returnValue($this->createExtensionMock()))
-        ;
+            ->will($this->returnValue($this->createExtensionMock()));
         $containerMock
             ->expects($this->at(3))
             ->method('addCompilerPass')
-            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Compiler\ResolversCompilerPass'))
-        ;
+            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Compiler\ResolversCompilerPass'));
 
         $bundle = new AneziImagineBundle();
 
@@ -103,16 +95,14 @@ class AneziImagineBundleTest extends \Phpunit_Framework_TestCase
         $extensionMock
             ->expects($this->at(0))
             ->method('addResolverFactory')
-            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Factory\Resolver\WebPathResolverFactory'))
-        ;
+            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Factory\Resolver\WebPathResolverFactory'));
 
         $containerMock = $this->createContainerBuilderMock();
         $containerMock
             ->expects($this->atLeastOnce())
             ->method('getExtension')
             ->with('anezi_imagine')
-            ->will($this->returnValue($extensionMock))
-        ;
+            ->will($this->returnValue($extensionMock));
 
         $bundle = new AneziImagineBundle();
 
@@ -125,16 +115,14 @@ class AneziImagineBundleTest extends \Phpunit_Framework_TestCase
         $extensionMock
             ->expects($this->at(1))
             ->method('addResolverFactory')
-            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Factory\Resolver\AwsS3ResolverFactory'))
-        ;
+            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Factory\Resolver\AwsS3ResolverFactory'));
 
         $containerMock = $this->createContainerBuilderMock();
         $containerMock
             ->expects($this->atLeastOnce())
             ->method('getExtension')
             ->with('anezi_imagine')
-            ->will($this->returnValue($extensionMock))
-        ;
+            ->will($this->returnValue($extensionMock));
 
         $bundle = new AneziImagineBundle();
 
@@ -147,16 +135,14 @@ class AneziImagineBundleTest extends \Phpunit_Framework_TestCase
         $extensionMock
             ->expects($this->at(2))
             ->method('addLoaderFactory')
-            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Factory\Loader\StreamLoaderFactory'))
-        ;
+            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Factory\Loader\StreamLoaderFactory'));
 
         $containerMock = $this->createContainerBuilderMock();
         $containerMock
             ->expects($this->atLeastOnce())
             ->method('getExtension')
             ->with('anezi_imagine')
-            ->will($this->returnValue($extensionMock))
-        ;
+            ->will($this->returnValue($extensionMock));
 
         $bundle = new AneziImagineBundle();
 
@@ -169,16 +155,14 @@ class AneziImagineBundleTest extends \Phpunit_Framework_TestCase
         $extensionMock
             ->expects($this->at(3))
             ->method('addLoaderFactory')
-            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Factory\Loader\FilesystemLoaderFactory'))
-        ;
+            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Factory\Loader\FilesystemLoaderFactory'));
 
         $containerMock = $this->createContainerBuilderMock();
         $containerMock
             ->expects($this->atLeastOnce())
             ->method('getExtension')
             ->with('anezi_imagine')
-            ->will($this->returnValue($extensionMock))
-        ;
+            ->will($this->returnValue($extensionMock));
 
         $bundle = new AneziImagineBundle();
 
@@ -191,16 +175,14 @@ class AneziImagineBundleTest extends \Phpunit_Framework_TestCase
         $extensionMock
             ->expects($this->at(4))
             ->method('addLoaderFactory')
-            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Factory\Loader\FlysystemLoaderFactory'))
-        ;
+            ->with($this->isInstanceOf('Anezi\ImagineBundle\DependencyInjection\Factory\Loader\FlysystemLoaderFactory'));
 
         $containerMock = $this->createContainerBuilderMock();
         $containerMock
             ->expects($this->atLeastOnce())
             ->method('getExtension')
             ->with('anezi_imagine')
-            ->will($this->returnValue($extensionMock))
-        ;
+            ->will($this->returnValue($extensionMock));
 
         $bundle = new AneziImagineBundle();
 
@@ -209,15 +191,15 @@ class AneziImagineBundleTest extends \Phpunit_Framework_TestCase
 
     protected function createContainerBuilderMock()
     {
-        return $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder', array(), array(), '', false);
+        return $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder', [], [], '', false);
     }
 
     protected function createExtensionMock()
     {
-        $methods = array(
+        $methods = [
             'getNamespace', 'addResolverFactory', 'addLoaderFactory',
-        );
+        ];
 
-        return $this->getMock('Anezi\ImagineBundle\DependencyInjection\AneziImagineExtension', $methods, array(), '', false);
+        return $this->getMock('Anezi\ImagineBundle\DependencyInjection\AneziImagineExtension', $methods, [], '', false);
     }
 }

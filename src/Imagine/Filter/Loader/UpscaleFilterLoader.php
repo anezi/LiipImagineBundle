@@ -3,8 +3,8 @@
 namespace Anezi\ImagineBundle\Imagine\Filter\Loader;
 
 use Imagine\Filter\Basic\Resize;
-use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
 
 /**
  * Upscale filter.
@@ -16,7 +16,7 @@ class UpscaleFilterLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function load(ImageInterface $image, array $options = array())
+    public function load(ImageInterface $image, array $options = [])
     {
         if (!isset($options['min'])) {
             throw new \InvalidArgumentException('Missing min option.');

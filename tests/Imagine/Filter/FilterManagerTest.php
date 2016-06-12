@@ -19,16 +19,15 @@ class FilterManagerTest extends AbstractTest
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with('thumbnail')
-            ->will($this->returnValue(array(
-                'filters' => array(
-                    'thumbnail' => array(
-                        'size' => array(180, 180),
+            ->will($this->returnValue([
+                'filters' => [
+                    'thumbnail' => [
+                        'size' => [180, 180],
                         'mode' => 'outbound',
-                    ),
-                ),
-                'post_processors' => array(),
-            )))
-        ;
+                    ],
+                ],
+                'post_processors' => [],
+            ]));
 
         $binary = new Binary('aContent', 'image/png', 'png');
 
@@ -49,46 +48,42 @@ class FilterManagerTest extends AbstractTest
 
         $binary = new Binary($originalContent, 'image/png', 'png');
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $config = $this->createFilterConfigurationMock();
         $config
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with('thumbnail')
-            ->will($this->returnValue(array(
-                'filters' => array(
+            ->will($this->returnValue([
+                'filters' => [
                     'thumbnail' => $thumbConfig,
-                ),
-                'post_processors' => array(),
-            )))
-        ;
+                ],
+                'post_processors' => [],
+            ]));
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue($expectedFilteredContent))
-        ;
+            ->will($this->returnValue($expectedFilteredContent));
 
         $imagine = $this->createImagineMock();
         $imagine
             ->expects($this->once())
             ->method('load')
             ->with($originalContent)
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $filterManager = new FilterManager(
             $config,
@@ -100,7 +95,7 @@ class FilterManagerTest extends AbstractTest
         $filteredBinary = $filterManager->applyFilter($binary, 'thumbnail');
 
         $this->assertInstanceOf('Anezi\ImagineBundle\Model\Binary', $filteredBinary);
-        $this->assertEquals($expectedFilteredContent, $filteredBinary->getContent());
+        $this->assertSame($expectedFilteredContent, $filteredBinary->getContent());
     }
 
     public function testReturnFilteredBinaryWithFormatOfOriginalBinaryOnApplyFilter()
@@ -110,45 +105,41 @@ class FilterManagerTest extends AbstractTest
 
         $binary = new Binary($originalContent, 'image/png', $expectedFormat);
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $config = $this->createFilterConfigurationMock();
         $config
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with('thumbnail')
-            ->will($this->returnValue(array(
-                'filters' => array(
+            ->will($this->returnValue([
+                'filters' => [
                     'thumbnail' => $thumbConfig,
-                ),
-                'post_processors' => array(),
-            )))
-        ;
+                ],
+                'post_processors' => [],
+            ]));
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue('aFilteredContent'))
-        ;
+            ->will($this->returnValue('aFilteredContent'));
 
         $imagine = $this->createImagineMock();
         $imagine
             ->expects($this->once())
             ->method('load')
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $filterManager = new FilterManager(
             $config,
@@ -160,7 +151,7 @@ class FilterManagerTest extends AbstractTest
         $filteredBinary = $filterManager->applyFilter($binary, 'thumbnail');
 
         $this->assertInstanceOf('Anezi\ImagineBundle\Model\Binary', $filteredBinary);
-        $this->assertEquals($expectedFormat, $filteredBinary->getFormat());
+        $this->assertSame($expectedFormat, $filteredBinary->getFormat());
     }
 
     public function testReturnFilteredBinaryWithCustomFormatIfSetOnApplyFilter()
@@ -171,46 +162,42 @@ class FilterManagerTest extends AbstractTest
 
         $binary = new Binary($originalContent, 'image/png', $originalFormat);
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $config = $this->createFilterConfigurationMock();
         $config
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with('thumbnail')
-            ->will($this->returnValue(array(
-                'format' => $expectedFormat,
-                'filters' => array(
+            ->will($this->returnValue([
+                'format'  => $expectedFormat,
+                'filters' => [
                     'thumbnail' => $thumbConfig,
-                ),
-                'post_processors' => array(),
-            )))
-        ;
+                ],
+                'post_processors' => [],
+            ]));
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue('aFilteredContent'))
-        ;
+            ->will($this->returnValue('aFilteredContent'));
 
         $imagine = $this->createImagineMock();
         $imagine
             ->expects($this->once())
             ->method('load')
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $filterManager = new FilterManager(
             $config,
@@ -222,7 +209,7 @@ class FilterManagerTest extends AbstractTest
         $filteredBinary = $filterManager->applyFilter($binary, 'thumbnail');
 
         $this->assertInstanceOf('Anezi\ImagineBundle\Model\Binary', $filteredBinary);
-        $this->assertEquals($expectedFormat, $filteredBinary->getFormat());
+        $this->assertSame($expectedFormat, $filteredBinary->getFormat());
     }
 
     public function testReturnFilteredBinaryWithMimeTypeOfOriginalBinaryOnApplyFilter()
@@ -232,51 +219,46 @@ class FilterManagerTest extends AbstractTest
 
         $binary = new Binary($originalContent, $expectedMimeType, 'png');
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $config = $this->createFilterConfigurationMock();
         $config
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with('thumbnail')
-            ->will($this->returnValue(array(
-                'filters' => array(
+            ->will($this->returnValue([
+                'filters' => [
                     'thumbnail' => $thumbConfig,
-                ),
-                'post_processors' => array(),
-            )))
-        ;
+                ],
+                'post_processors' => [],
+            ]));
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue('aFilteredContent'))
-        ;
+            ->will($this->returnValue('aFilteredContent'));
 
         $imagine = $this->createImagineMock();
         $imagine
             ->expects($this->once())
             ->method('load')
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $mimeTypeGuesser = $this->getMockMimeTypeGuesser();
         $mimeTypeGuesser
             ->expects($this->never())
-            ->method('guess')
-        ;
+            ->method('guess');
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $filterManager = new FilterManager(
             $config,
@@ -288,7 +270,7 @@ class FilterManagerTest extends AbstractTest
         $filteredBinary = $filterManager->applyFilter($binary, 'thumbnail');
 
         $this->assertInstanceOf('Anezi\ImagineBundle\Model\Binary', $filteredBinary);
-        $this->assertEquals($expectedMimeType, $filteredBinary->getMimeType());
+        $this->assertSame($expectedMimeType, $filteredBinary->getMimeType());
     }
 
     public function testReturnFilteredBinaryWithMimeTypeOfCustomFormatIfSetOnApplyFilter()
@@ -300,54 +282,49 @@ class FilterManagerTest extends AbstractTest
 
         $binary = new Binary($originalContent, $originalMimeType, 'png');
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $config = $this->createFilterConfigurationMock();
         $config
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with('thumbnail')
-            ->will($this->returnValue(array(
-                'format' => 'jpg',
-                'filters' => array(
+            ->will($this->returnValue([
+                'format'  => 'jpg',
+                'filters' => [
                     'thumbnail' => $thumbConfig,
-                ),
-                'post_processors' => array(),
-            )))
-        ;
+                ],
+                'post_processors' => [],
+            ]));
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue($expectedContent))
-        ;
+            ->will($this->returnValue($expectedContent));
 
         $imagine = $this->createImagineMock();
         $imagine
             ->expects($this->once())
             ->method('load')
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $mimeTypeGuesser = $this->getMockMimeTypeGuesser();
         $mimeTypeGuesser
             ->expects($this->once())
             ->method('guess')
             ->with($expectedContent)
-            ->will($this->returnValue($expectedMimeType))
-        ;
+            ->will($this->returnValue($expectedMimeType));
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $filterManager = new FilterManager(
             $config,
@@ -359,7 +336,7 @@ class FilterManagerTest extends AbstractTest
         $filteredBinary = $filterManager->applyFilter($binary, 'thumbnail');
 
         $this->assertInstanceOf('Anezi\ImagineBundle\Model\Binary', $filteredBinary);
-        $this->assertEquals($expectedMimeType, $filteredBinary->getMimeType());
+        $this->assertSame($expectedMimeType, $filteredBinary->getMimeType());
     }
 
     public function testAltersQualityOnApplyFilter()
@@ -369,47 +346,43 @@ class FilterManagerTest extends AbstractTest
 
         $binary = new Binary($originalContent, 'image/png', 'png');
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $config = $this->createFilterConfigurationMock();
         $config
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with('thumbnail')
-            ->will($this->returnValue(array(
+            ->will($this->returnValue([
                 'quality' => $expectedQuality,
-                'filters' => array(
+                'filters' => [
                     'thumbnail' => $thumbConfig,
-                ),
-                'post_processors' => array(),
-            )))
-        ;
+                ],
+                'post_processors' => [],
+            ]));
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->with('png', array('quality' => $expectedQuality))
-            ->will($this->returnValue('aFilteredContent'))
-        ;
+            ->with('png', ['quality' => $expectedQuality])
+            ->will($this->returnValue('aFilteredContent'));
 
         $imagine = $this->createImagineMock();
         $imagine
             ->expects($this->once())
             ->method('load')
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $filterManager = new FilterManager(
             $config,
@@ -428,46 +401,42 @@ class FilterManagerTest extends AbstractTest
 
         $binary = new Binary($originalContent, 'image/png', 'png');
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $config = $this->createFilterConfigurationMock();
         $config
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with('thumbnail')
-            ->will($this->returnValue(array(
-                'filters' => array(
+            ->will($this->returnValue([
+                'filters' => [
                     'thumbnail' => $thumbConfig,
-                ),
-                'post_processors' => array(),
-            )))
-        ;
+                ],
+                'post_processors' => [],
+            ]));
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->with('png', array('quality' => $expectedQuality))
-            ->will($this->returnValue('aFilteredContent'))
-        ;
+            ->with('png', ['quality' => $expectedQuality])
+            ->will($this->returnValue('aFilteredContent'));
 
         $imagine = $this->createImagineMock();
         $imagine
             ->expects($this->once())
             ->method('load')
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $filterManager = new FilterManager(
             $config,
@@ -483,59 +452,55 @@ class FilterManagerTest extends AbstractTest
     {
         $binary = new Binary('aContent', 'image/png', 'png');
 
-        $runtimeConfig = array(
-            'filters' => array(
-                'thumbnail' => array(
-                    'size' => array(100, 100),
-                ),
-            ),
-            'post_processors' => array(),
-        );
+        $runtimeConfig = [
+            'filters' => [
+                'thumbnail' => [
+                    'size' => [100, 100],
+                ],
+            ],
+            'post_processors' => [],
+        ];
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
-        $thumbMergedConfig = array(
-            'size' => array(100, 100),
+        $thumbMergedConfig = [
+            'size' => [100, 100],
             'mode' => 'outbound',
-        );
+        ];
 
         $config = $this->createFilterConfigurationMock();
         $config
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with('thumbnail')
-            ->will($this->returnValue(array(
-                'filters' => array(
+            ->will($this->returnValue([
+                'filters' => [
                     'thumbnail' => $thumbConfig,
-                ),
-                'post_processors' => array(),
-            )))
-        ;
+                ],
+                'post_processors' => [],
+            ]));
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue('aFilteredContent'))
-        ;
+            ->will($this->returnValue('aFilteredContent'));
 
         $imagine = $this->createImagineMock();
         $imagine
             ->expects($this->once())
             ->method('load')
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbMergedConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $filterManager = new FilterManager(
             $config,
@@ -561,14 +526,14 @@ class FilterManagerTest extends AbstractTest
         );
 
         $this->setExpectedException('InvalidArgumentException', 'Could not find filter loader for "thumbnail" filter type');
-        $filterManager->apply($binary, array(
-            'filters' => array(
-                'thumbnail' => array(
-                    'size' => array(180, 180),
+        $filterManager->apply($binary, [
+            'filters' => [
+                'thumbnail' => [
+                    'size' => [180, 180],
                     'mode' => 'outbound',
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
     }
 
     public function testReturnFilteredBinaryWithExpectedContentOnApply()
@@ -578,33 +543,30 @@ class FilterManagerTest extends AbstractTest
 
         $binary = new Binary($originalContent, 'image/png', 'png');
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue($expectedFilteredContent))
-        ;
+            ->will($this->returnValue($expectedFilteredContent));
 
         $imagineMock = $this->createImagineMock();
         $imagineMock
             ->expects($this->once())
             ->method('load')
             ->with($originalContent)
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $filterManager = new FilterManager(
             $this->createFilterConfigurationMock(),
@@ -613,15 +575,15 @@ class FilterManagerTest extends AbstractTest
         );
         $filterManager->addLoader('thumbnail', $loader);
 
-        $filteredBinary = $filterManager->apply($binary, array(
-            'filters' => array(
+        $filteredBinary = $filterManager->apply($binary, [
+            'filters' => [
                 'thumbnail' => $thumbConfig,
-            ),
-            'post_processors' => array(),
-        ));
+            ],
+            'post_processors' => [],
+        ]);
 
         $this->assertInstanceOf('Anezi\ImagineBundle\Model\Binary', $filteredBinary);
-        $this->assertEquals($expectedFilteredContent, $filteredBinary->getContent());
+        $this->assertSame($expectedFilteredContent, $filteredBinary->getContent());
     }
 
     public function testReturnFilteredBinaryWithFormatOfOriginalBinaryOnApply()
@@ -631,32 +593,29 @@ class FilterManagerTest extends AbstractTest
 
         $binary = new Binary($originalContent, 'image/png', $expectedFormat);
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue('aFilteredContent'))
-        ;
+            ->will($this->returnValue('aFilteredContent'));
 
         $imagineMock = $this->createImagineMock();
         $imagineMock
             ->expects($this->once())
             ->method('load')
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $filterManager = new FilterManager(
             $this->createFilterConfigurationMock(),
@@ -665,15 +624,15 @@ class FilterManagerTest extends AbstractTest
         );
         $filterManager->addLoader('thumbnail', $loader);
 
-        $filteredBinary = $filterManager->apply($binary, array(
-            'filters' => array(
+        $filteredBinary = $filterManager->apply($binary, [
+            'filters' => [
                 'thumbnail' => $thumbConfig,
-            ),
-            'post_processors' => array(),
-        ));
+            ],
+            'post_processors' => [],
+        ]);
 
         $this->assertInstanceOf('Anezi\ImagineBundle\Model\Binary', $filteredBinary);
-        $this->assertEquals($expectedFormat, $filteredBinary->getFormat());
+        $this->assertSame($expectedFormat, $filteredBinary->getFormat());
     }
 
     public function testReturnFilteredBinaryWithCustomFormatIfSetOnApply()
@@ -684,32 +643,29 @@ class FilterManagerTest extends AbstractTest
 
         $binary = new Binary($originalContent, 'image/png', $originalFormat);
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue('aFilteredContent'))
-        ;
+            ->will($this->returnValue('aFilteredContent'));
 
         $imagineMock = $this->createImagineMock();
         $imagineMock
             ->expects($this->once())
             ->method('load')
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $filterManager = new FilterManager(
             $this->createFilterConfigurationMock(),
@@ -718,16 +674,16 @@ class FilterManagerTest extends AbstractTest
         );
         $filterManager->addLoader('thumbnail', $loader);
 
-        $filteredBinary = $filterManager->apply($binary, array(
-            'format' => $expectedFormat,
-            'filters' => array(
+        $filteredBinary = $filterManager->apply($binary, [
+            'format'  => $expectedFormat,
+            'filters' => [
                 'thumbnail' => $thumbConfig,
-            ),
-            'post_processors' => array(),
-        ));
+            ],
+            'post_processors' => [],
+        ]);
 
         $this->assertInstanceOf('Anezi\ImagineBundle\Model\Binary', $filteredBinary);
-        $this->assertEquals($expectedFormat, $filteredBinary->getFormat());
+        $this->assertSame($expectedFormat, $filteredBinary->getFormat());
     }
 
     public function testReturnFilteredBinaryWithMimeTypeOfOriginalBinaryOnApply()
@@ -737,38 +693,34 @@ class FilterManagerTest extends AbstractTest
 
         $binary = new Binary($originalContent, $expectedMimeType, 'png');
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue('aFilteredContent'))
-        ;
+            ->will($this->returnValue('aFilteredContent'));
 
         $imagineMock = $this->createImagineMock();
         $imagineMock
             ->expects($this->once())
             ->method('load')
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $mimeTypeGuesser = $this->getMockMimeTypeGuesser();
         $mimeTypeGuesser
             ->expects($this->never())
-            ->method('guess')
-        ;
+            ->method('guess');
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $filterManager = new FilterManager(
             $this->createFilterConfigurationMock(),
@@ -777,15 +729,15 @@ class FilterManagerTest extends AbstractTest
         );
         $filterManager->addLoader('thumbnail', $loader);
 
-        $filteredBinary = $filterManager->apply($binary, array(
-            'filters' => array(
+        $filteredBinary = $filterManager->apply($binary, [
+            'filters' => [
                 'thumbnail' => $thumbConfig,
-            ),
-            'post_processors' => array(),
-        ));
+            ],
+            'post_processors' => [],
+        ]);
 
         $this->assertInstanceOf('Anezi\ImagineBundle\Model\Binary', $filteredBinary);
-        $this->assertEquals($expectedMimeType, $filteredBinary->getMimeType());
+        $this->assertSame($expectedMimeType, $filteredBinary->getMimeType());
     }
 
     public function testReturnFilteredBinaryWithMimeTypeOfCustomFormatIfSetOnApply()
@@ -797,40 +749,36 @@ class FilterManagerTest extends AbstractTest
 
         $binary = new Binary($originalContent, $originalMimeType, 'png');
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue($expectedContent))
-        ;
+            ->will($this->returnValue($expectedContent));
 
         $imagineMock = $this->createImagineMock();
         $imagineMock
             ->expects($this->once())
             ->method('load')
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $mimeTypeGuesser = $this->getMockMimeTypeGuesser();
         $mimeTypeGuesser
             ->expects($this->once())
             ->method('guess')
             ->with($expectedContent)
-            ->will($this->returnValue($expectedMimeType))
-        ;
+            ->will($this->returnValue($expectedMimeType));
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $filterManager = new FilterManager(
             $this->createFilterConfigurationMock(),
@@ -839,16 +787,16 @@ class FilterManagerTest extends AbstractTest
         );
         $filterManager->addLoader('thumbnail', $loader);
 
-        $filteredBinary = $filterManager->apply($binary, array(
-            'format' => 'jpg',
-            'filters' => array(
+        $filteredBinary = $filterManager->apply($binary, [
+            'format'  => 'jpg',
+            'filters' => [
                 'thumbnail' => $thumbConfig,
-            ),
-            'post_processors' => array(),
-        ));
+            ],
+            'post_processors' => [],
+        ]);
 
         $this->assertInstanceOf('Anezi\ImagineBundle\Model\Binary', $filteredBinary);
-        $this->assertEquals($expectedMimeType, $filteredBinary->getMimeType());
+        $this->assertSame($expectedMimeType, $filteredBinary->getMimeType());
     }
 
     public function testAltersQualityOnApply()
@@ -858,33 +806,30 @@ class FilterManagerTest extends AbstractTest
 
         $binary = new Binary($originalContent, 'image/png', 'png');
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->with('png', array('quality' => $expectedQuality))
-            ->will($this->returnValue('aFilteredContent'))
-        ;
+            ->with('png', ['quality' => $expectedQuality])
+            ->will($this->returnValue('aFilteredContent'));
 
         $imagineMock = $this->createImagineMock();
         $imagineMock
             ->expects($this->once())
             ->method('load')
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $filterManager = new FilterManager(
             $this->createFilterConfigurationMock(),
@@ -893,13 +838,13 @@ class FilterManagerTest extends AbstractTest
         );
         $filterManager->addLoader('thumbnail', $loader);
 
-        $filteredBinary = $filterManager->apply($binary, array(
+        $filteredBinary = $filterManager->apply($binary, [
             'quality' => $expectedQuality,
-            'filters' => array(
+            'filters' => [
                 'thumbnail' => $thumbConfig,
-            ),
-            'post_processors' => array(),
-        ));
+            ],
+            'post_processors' => [],
+        ]);
 
         $this->assertInstanceOf('Anezi\ImagineBundle\Model\Binary', $filteredBinary);
     }
@@ -911,33 +856,30 @@ class FilterManagerTest extends AbstractTest
 
         $binary = new Binary($originalContent, 'image/png', 'png');
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->with('png', array('quality' => $expectedQuality))
-            ->will($this->returnValue('aFilteredContent'))
-        ;
+            ->with('png', ['quality' => $expectedQuality])
+            ->will($this->returnValue('aFilteredContent'));
 
         $imagineMock = $this->createImagineMock();
         $imagineMock
             ->expects($this->once())
             ->method('load')
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $filterManager = new FilterManager(
             $this->createFilterConfigurationMock(),
@@ -946,12 +888,12 @@ class FilterManagerTest extends AbstractTest
         );
         $filterManager->addLoader('thumbnail', $loader);
 
-        $filteredBinary = $filterManager->apply($binary, array(
-            'filters' => array(
+        $filteredBinary = $filterManager->apply($binary, [
+            'filters' => [
                 'thumbnail' => $thumbConfig,
-            ),
-            'post_processors' => array(),
-        ));
+            ],
+            'post_processors' => [],
+        ]);
 
         $this->assertInstanceOf('Anezi\ImagineBundle\Model\Binary', $filteredBinary);
     }
@@ -962,53 +904,49 @@ class FilterManagerTest extends AbstractTest
         $expectedPostProcessedContent = 'postProcessedContent';
         $binary = new Binary($originalContent, 'image/png', 'png');
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $config = $this->createFilterConfigurationMock();
         $config
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with('thumbnail')
-            ->will($this->returnValue(array(
-                'filters' => array(
+            ->will($this->returnValue([
+                'filters' => [
                     'thumbnail' => $thumbConfig,
-                ),
-                'post_processors' => array(
-                    'foo' => array(),
-                ),
-            )))
-        ;
+                ],
+                'post_processors' => [
+                    'foo' => [],
+                ],
+            ]));
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue($originalContent))
-        ;
+            ->will($this->returnValue($originalContent));
 
         $imagineMock = $this->createImagineMock();
         $imagineMock
             ->expects($this->once())
             ->method('load')
             ->with($originalContent)
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $processedBinary = new Binary($expectedPostProcessedContent, 'image/png', 'png');
 
@@ -1029,7 +967,7 @@ class FilterManagerTest extends AbstractTest
 
         $filteredBinary = $filterManager->applyFilter($binary, 'thumbnail');
         $this->assertInstanceOf('Anezi\ImagineBundle\Model\Binary', $filteredBinary);
-        $this->assertEquals($expectedPostProcessedContent, $filteredBinary->getContent());
+        $this->assertSame($expectedPostProcessedContent, $filteredBinary->getContent());
     }
 
     public function testThrowsIfNoPostProcessorAddedForFilterOnApplyFilter()
@@ -1037,53 +975,49 @@ class FilterManagerTest extends AbstractTest
         $originalContent = 'aContent';
         $binary = new Binary($originalContent, 'image/png', 'png');
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $config = $this->createFilterConfigurationMock();
         $config
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with('thumbnail')
-            ->will($this->returnValue(array(
-                'filters' => array(
+            ->will($this->returnValue([
+                'filters' => [
                     'thumbnail' => $thumbConfig,
-                ),
-                'post_processors' => array(
-                    'foo' => array(),
-                ),
-            )))
-        ;
+                ],
+                'post_processors' => [
+                    'foo' => [],
+                ],
+            ]));
 
-        $thumbConfig = array(
-            'size' => array(180, 180),
+        $thumbConfig = [
+            'size' => [180, 180],
             'mode' => 'outbound',
-        );
+        ];
 
         $image = $this->getMockImage();
         $image
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue($originalContent))
-        ;
+            ->will($this->returnValue($originalContent));
 
         $imagineMock = $this->createImagineMock();
         $imagineMock
             ->expects($this->once())
             ->method('load')
             ->with($originalContent)
-            ->will($this->returnValue($image))
-        ;
+            ->will($this->returnValue($image));
 
         $loader = $this->getMockLoader();
         $loader
             ->expects($this->once())
             ->method('load')
             ->with($this->identicalTo($image), $thumbConfig)
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         $filterManager = new FilterManager(
             $config,
@@ -1106,7 +1040,7 @@ class FilterManagerTest extends AbstractTest
             $this->getMockMimeTypeGuesser()
         );
 
-        $this->assertSame($binary, $filterManager->applyPostProcessors($binary, array()));
+        $this->assertSame($binary, $filterManager->applyPostProcessors($binary, []));
     }
 
     /**

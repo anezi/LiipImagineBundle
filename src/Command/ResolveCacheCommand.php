@@ -11,8 +11,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class ResolveCacheCommand.
+ */
 class ResolveCacheCommand extends ContainerAwareCommand
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this
@@ -20,6 +26,11 @@ class ResolveCacheCommand extends ContainerAwareCommand
             ->setDescription('Resolve cache for given path and set of filters.')
             ->addArgument('paths', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Image paths')
             ->addOption(
+                'loaders',
+                'l',
+                InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+                'Loaders list'
+            )->addOption(
                 'filters',
                 'f',
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
@@ -49,9 +60,13 @@ EOF
             );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $paths = $input->getArgument('paths');
+        $loaders = $input->getOption('loaders');
         $filters = $input->getOption('filters');
 
         /* @var FilterManager filterManager */
@@ -61,23 +76,30 @@ EOF
         /* @var DataManager dataManager */
         $dataManager = $this->getContainer()->get('anezi_imagine.data.manager');
 
+        if (empty($loaders)) {
+            $loaders = array_keys($filterManager->getLoaders());
+        }
+
         if (empty($filters)) {
             $filters = array_keys($filterManager->getFilterConfiguration()->all());
         }
 
         foreach ($paths as $path) {
-            foreach ($filters as $filter) {
-                if (!$cacheManager->isStored($path, $filter)) {
-                    $binary = $dataManager->find($filter, $path);
+            foreach ($loaders as $loader) {
+                foreach ($filters as $filter) {
+                    if (!$cacheManager->isStored($path, $loader, $filter)) {
+                        $binary = $dataManager->find($filter, $path);
 
-                    $cacheManager->store(
-                        $filterManager->applyFilter($binary, $filter),
-                        $path,
-                        $filter
-                    );
+                        $cacheManager->store(
+                            $filterManager->applyFilter($binary, $filter),
+                            $path,
+                            $loader,
+                            $filter
+                        );
+                    }
+
+                    $output->writeln($cacheManager->resolve($path, $loader, $filter));
                 }
-
-                $output->writeln($cacheManager->resolve($path, $filter));
             }
         }
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Controller;
+namespace Anezi\ImagineBundle\tests\Controller;
 
 use Anezi\ImagineBundle\Controller\ImagineController;
 use Anezi\ImagineBundle\Imagine\Cache\CacheManager;
@@ -12,6 +12,9 @@ use Anezi\ImagineBundle\Imagine\Filter\FilterManager;
  */
 class ImagineControllerTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
     public function testCouldBeConstructedWithExpectedServices()
     {
         new ImagineController(
@@ -28,7 +31,7 @@ class ImagineControllerTest extends \PHPUnit_Framework_TestCase
      */
     protected function createDataManagerMock()
     {
-        return $this->getMock('Anezi\ImagineBundle\Imagine\Data\DataManager', array(), array(), '', false);
+        return $this->getMock('Anezi\ImagineBundle\Imagine\Data\DataManager', [], [], '', false);
     }
 
     /**
@@ -36,7 +39,7 @@ class ImagineControllerTest extends \PHPUnit_Framework_TestCase
      */
     protected function createFilterManagerMock()
     {
-        return $this->getMock('Anezi\ImagineBundle\Imagine\Filter\FilterManager', array(), array(), '', false);
+        return $this->getMock('Anezi\ImagineBundle\Imagine\Filter\FilterManager', [], [], '', false);
     }
 
     /**
@@ -44,7 +47,7 @@ class ImagineControllerTest extends \PHPUnit_Framework_TestCase
      */
     protected function createCacheManagerMock()
     {
-        return $this->getMock('Anezi\ImagineBundle\Imagine\Cache\CacheManager', array(), array(), '', false);
+        return $this->getMock('Anezi\ImagineBundle\Imagine\Cache\CacheManager', [], [], '', false);
     }
 
     /**
@@ -52,7 +55,7 @@ class ImagineControllerTest extends \PHPUnit_Framework_TestCase
      */
     protected function createSignerMock()
     {
-        return $this->getMock('Anezi\ImagineBundle\Imagine\Cache\Signer', array(), array(), '', false);
+        return $this->getMock('Anezi\ImagineBundle\Imagine\Cache\Signer', [], [], '', false);
     }
 
     /**

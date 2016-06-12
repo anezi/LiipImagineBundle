@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\DependencyInjection\Factory\Resolver;
+namespace Anezi\ImagineBundle\tests\DependencyInjection\Factory\Resolver;
 
 use Anezi\ImagineBundle\DependencyInjection\Factory\Resolver\WebPathResolverFactory;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -28,7 +28,7 @@ class WebPathResolverFactoryTest extends \Phpunit_Framework_TestCase
     {
         $resolver = new WebPathResolverFactory();
 
-        $this->assertEquals('web_path', $resolver->getName());
+        $this->assertSame('web_path', $resolver->getName());
     }
 
     public function testCreateResolverDefinitionOnCreate()
@@ -37,19 +37,19 @@ class WebPathResolverFactoryTest extends \Phpunit_Framework_TestCase
 
         $resolver = new WebPathResolverFactory();
 
-        $resolver->create($container, 'theResolverName', array(
-            'web_root' => 'theWebRoot',
+        $resolver->create($container, 'theResolverName', [
+            'web_root'     => 'theWebRoot',
             'cache_prefix' => 'theCachePrefix',
-        ));
+        ]);
 
         $this->assertTrue($container->hasDefinition('anezi_imagine.cache.resolver.theresolvername'));
 
         $resolverDefinition = $container->getDefinition('anezi_imagine.cache.resolver.theresolvername');
         $this->assertInstanceOf('Symfony\Component\DependencyInjection\DefinitionDecorator', $resolverDefinition);
-        $this->assertEquals('anezi_imagine.cache.resolver.prototype.web_path', $resolverDefinition->getParent());
+        $this->assertSame('anezi_imagine.cache.resolver.prototype.web_path', $resolverDefinition->getParent());
 
-        $this->assertEquals('theWebRoot', $resolverDefinition->getArgument(2));
-        $this->assertEquals('theCachePrefix', $resolverDefinition->getArgument(3));
+        $this->assertSame('theWebRoot', $resolverDefinition->getArgument(2));
+        $this->assertSame('theCachePrefix', $resolverDefinition->getArgument(3));
     }
 
     public function testProcessCorrectlyOptionsOnAddConfiguration()
@@ -63,18 +63,18 @@ class WebPathResolverFactoryTest extends \Phpunit_Framework_TestCase
         $resolver = new WebPathResolverFactory();
         $resolver->addConfiguration($rootNode);
 
-        $config = $this->processConfigTree($treeBuilder, array(
-            'web_path' => array(
-                'web_root' => $expectedWebPath,
+        $config = $this->processConfigTree($treeBuilder, [
+            'web_path' => [
+                'web_root'     => $expectedWebPath,
                 'cache_prefix' => $expectedCachePrefix,
-            ),
-        ));
+            ],
+        ]);
 
         $this->assertArrayHasKey('web_root', $config);
-        $this->assertEquals($expectedWebPath, $config['web_root']);
+        $this->assertSame($expectedWebPath, $config['web_root']);
 
         $this->assertArrayHasKey('cache_prefix', $config);
-        $this->assertEquals($expectedCachePrefix, $config['cache_prefix']);
+        $this->assertSame($expectedCachePrefix, $config['cache_prefix']);
     }
 
     public function testAddDefaultOptionsIfNotSetOnAddConfiguration()
@@ -85,15 +85,15 @@ class WebPathResolverFactoryTest extends \Phpunit_Framework_TestCase
         $resolver = new WebPathResolverFactory();
         $resolver->addConfiguration($rootNode);
 
-        $config = $this->processConfigTree($treeBuilder, array(
-            'web_path' => array(),
-        ));
+        $config = $this->processConfigTree($treeBuilder, [
+            'web_path' => [],
+        ]);
 
         $this->assertArrayHasKey('web_root', $config);
-        $this->assertEquals('%kernel.root_dir%/../web', $config['web_root']);
+        $this->assertSame('%kernel.root_dir%/../web', $config['web_root']);
 
         $this->assertArrayHasKey('cache_prefix', $config);
-        $this->assertEquals('media/cache', $config['cache_prefix']);
+        $this->assertSame('media/cache', $config['cache_prefix']);
     }
 
     /**

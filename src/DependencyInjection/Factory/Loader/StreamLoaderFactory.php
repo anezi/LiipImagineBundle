@@ -16,9 +16,9 @@ class StreamLoaderFactory implements LoaderFactoryInterface
         $loaderDefinition = new DefinitionDecorator('anezi_imagine.binary.loader.prototype.stream');
         $loaderDefinition->replaceArgument(0, $config['wrapper']);
         $loaderDefinition->replaceArgument(1, $config['context']);
-        $loaderDefinition->addTag('anezi_imagine.binary.loader', array(
+        $loaderDefinition->addTag('anezi_imagine.binary.loader', [
             'loader' => $loaderName,
-        ));
+        ]);
         $loaderId = 'anezi_imagine.binary.loader.'.$loaderName;
 
         $container->setDefinition($loaderId, $loaderDefinition);
@@ -43,7 +43,6 @@ class StreamLoaderFactory implements LoaderFactoryInterface
             ->children()
                 ->scalarNode('wrapper')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('context')->defaultValue(null)->end()
-            ->end()
-        ;
+            ->end();
     }
 }

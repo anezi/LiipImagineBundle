@@ -10,6 +10,9 @@ use Anezi\ImagineBundle\Twig\ImagineExtension;
  */
 class ImagineExtensionTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
     public function testSubClassOfHelper()
     {
         $rc = new \ReflectionClass('Anezi\ImagineBundle\Twig\ImagineExtension');
@@ -17,21 +20,31 @@ class ImagineExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($rc->isSubclassOf('Twig_Extension'));
     }
 
+    /**
+     * @test
+     */
     public function testCouldBeConstructedWithCacheManagerAsArgument()
     {
         new ImagineExtension($this->createCacheManagerMock());
     }
 
+    /**
+     * @test
+     */
     public function testAllowGetName()
     {
         $extension = new ImagineExtension($this->createCacheManagerMock());
 
-        $this->assertEquals('anezi_imagine', $extension->getName());
+        $this->assertSame('anezi_imagine', $extension->getName());
     }
 
+    /**
+     * @test
+     */
     public function testProxyCallToCacheManagerOnFilter()
     {
         $expectedPath = 'thePathToTheImage';
+        $expectedLoader = 'loader';
         $expectedFilter = 'thumbnail';
         $expectedCachePath = 'thePathToTheCachedImage';
 
@@ -40,14 +53,16 @@ class ImagineExtensionTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getBrowserPath')
             ->with($expectedPath, $expectedFilter)
-            ->will($this->returnValue($expectedCachePath))
-        ;
+            ->will($this->returnValue($expectedCachePath));
 
         $extension = new ImagineExtension($cacheManager);
 
-        $this->assertEquals($expectedCachePath, $extension->filter($expectedPath, $expectedFilter));
+        $this->assertSame($expectedCachePath, $extension->filter($expectedPath, $expectedLoader, $expectedFilter));
     }
 
+    /**
+     * @test
+     */
     public function testAddsFilterMethodToFiltersList()
     {
         $extension = new ImagineExtension($this->createCacheManagerMock());
@@ -63,6 +78,6 @@ class ImagineExtensionTest extends \PHPUnit_Framework_TestCase
      */
     protected function createCacheManagerMock()
     {
-        return $this->getMock('Anezi\ImagineBundle\Imagine\Cache\CacheManager', array(), array(), '', false);
+        return $this->getMock('Anezi\ImagineBundle\Imagine\Cache\CacheManager', [], [], '', false);
     }
 }

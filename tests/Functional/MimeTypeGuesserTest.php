@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Functional;
+namespace Anezi\ImagineBundle\tests\Functional;
 
 class MimeTypeGuesserTest extends WebTestCase
 {

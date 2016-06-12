@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\DependencyInjection\Compiler;
+namespace Anezi\ImagineBundle\tests\DependencyInjection\Compiler;
 
 use Anezi\ImagineBundle\DependencyInjection\Compiler\ResolversCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -15,9 +15,9 @@ class ResolversCompilerPassTest extends \PHPUnit_Framework_TestCase
     {
         $managerDefinition = new Definition();
         $resolverDefinition = new Definition();
-        $resolverDefinition->addTag('anezi_imagine.cache.resolver', array(
+        $resolverDefinition->addTag('anezi_imagine.cache.resolver', [
             'resolver' => 'foo',
-        ));
+        ]);
 
         $container = new ContainerBuilder();
         $container->setDefinition('anezi_imagine.cache.manager', $managerDefinition);

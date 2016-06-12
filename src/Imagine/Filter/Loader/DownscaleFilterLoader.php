@@ -3,8 +3,8 @@
 namespace Anezi\ImagineBundle\Imagine\Filter\Loader;
 
 use Imagine\Filter\Basic\Resize;
-use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
 
 /**
  * downscale filter.
@@ -14,7 +14,7 @@ class DownscaleFilterLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function load(ImageInterface $image, array $options = array())
+    public function load(ImageInterface $image, array $options = [])
     {
         if (!isset($options['max'])) {
             throw new \InvalidArgumentException('Missing max option.');

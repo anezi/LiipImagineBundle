@@ -2,14 +2,14 @@
 
 namespace Anezi\ImagineBundle\Imagine\Filter;
 
-use Imagine\Image\ImagineInterface;
 use Anezi\ImagineBundle\Binary\BinaryInterface;
 use Anezi\ImagineBundle\Binary\FileBinaryInterface;
 use Anezi\ImagineBundle\Binary\MimeTypeGuesserInterface;
-use Anezi\ImagineBundle\Imagine\Filter\PostProcessor\PostProcessorInterface;
-use Anezi\ImagineBundle\Imagine\Filter\PostProcessor\ConfigurablePostProcessorInterface;
 use Anezi\ImagineBundle\Imagine\Filter\Loader\LoaderInterface;
+use Anezi\ImagineBundle\Imagine\Filter\PostProcessor\ConfigurablePostProcessorInterface;
+use Anezi\ImagineBundle\Imagine\Filter\PostProcessor\PostProcessorInterface;
 use Anezi\ImagineBundle\Model\Binary;
+use Imagine\Image\ImagineInterface;
 
 /**
  * Class FilterManager.
@@ -98,8 +98,8 @@ class FilterManager
     {
         $config = array_replace(
             [
-                'filters' => [],
-                'quality' => 100,
+                'filters'  => [],
+                'quality'  => 100,
                 'animated' => false,
             ],
             $config

@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\DependencyInjection\Factory\Loader;
+namespace Anezi\ImagineBundle\tests\DependencyInjection\Factory\Loader;
 
 use Anezi\ImagineBundle\DependencyInjection\Factory\Loader\FileSystemLoaderFactory;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -28,7 +28,7 @@ class FileSystemLoaderFactoryTest extends \Phpunit_Framework_TestCase
     {
         $loader = new FileSystemLoaderFactory();
 
-        $this->assertEquals('filesystem', $loader->getName());
+        $this->assertSame('filesystem', $loader->getName());
     }
 
     public function testCreateLoaderDefinitionOnCreate()
@@ -37,17 +37,17 @@ class FileSystemLoaderFactoryTest extends \Phpunit_Framework_TestCase
 
         $loader = new FileSystemLoaderFactory();
 
-        $loader->create($container, 'theLoaderName', array(
+        $loader->create($container, 'theLoaderName', [
             'data_root' => 'theDataRoot',
-        ));
+        ]);
 
         $this->assertTrue($container->hasDefinition('anezi_imagine.binary.loader.theloadername'));
 
         $loaderDefinition = $container->getDefinition('anezi_imagine.binary.loader.theloadername');
         $this->assertInstanceOf('Symfony\Component\DependencyInjection\DefinitionDecorator', $loaderDefinition);
-        $this->assertEquals('anezi_imagine.binary.loader.prototype.filesystem', $loaderDefinition->getParent());
+        $this->assertSame('anezi_imagine.binary.loader.prototype.filesystem', $loaderDefinition->getParent());
 
-        $this->assertEquals('theDataRoot', $loaderDefinition->getArgument(2));
+        $this->assertSame('theDataRoot', $loaderDefinition->getArgument(2));
     }
 
     public function testProcessCorrectlyOptionsOnAddConfiguration()
@@ -60,14 +60,14 @@ class FileSystemLoaderFactoryTest extends \Phpunit_Framework_TestCase
         $loader = new FileSystemLoaderFactory();
         $loader->addConfiguration($rootNode);
 
-        $config = $this->processConfigTree($treeBuilder, array(
-            'filesystem' => array(
+        $config = $this->processConfigTree($treeBuilder, [
+            'filesystem' => [
                 'data_root' => $expectedDataRoot,
-            ),
-        ));
+            ],
+        ]);
 
         $this->assertArrayHasKey('data_root', $config);
-        $this->assertEquals($expectedDataRoot, $config['data_root']);
+        $this->assertSame($expectedDataRoot, $config['data_root']);
     }
 
     public function testAddDefaultOptionsIfNotSetOnAddConfiguration()
@@ -80,12 +80,12 @@ class FileSystemLoaderFactoryTest extends \Phpunit_Framework_TestCase
         $loader = new FileSystemLoaderFactory();
         $loader->addConfiguration($rootNode);
 
-        $config = $this->processConfigTree($treeBuilder, array(
-            'filesystem' => array(),
-        ));
+        $config = $this->processConfigTree($treeBuilder, [
+            'filesystem' => [],
+        ]);
 
         $this->assertArrayHasKey('data_root', $config);
-        $this->assertEquals($expectedDataRoot, $config['data_root']);
+        $this->assertSame($expectedDataRoot, $config['data_root']);
     }
 
     /**

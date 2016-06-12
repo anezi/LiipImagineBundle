@@ -35,7 +35,7 @@ class OptiPngPostProcessor implements PostProcessorInterface
     public function process(BinaryInterface $binary)
     {
         $type = strtolower($binary->getMimeType());
-        if (!in_array($type, array('image/png'))) {
+        if (!in_array($type, ['image/png'], true)) {
             return $binary;
         }
 
@@ -43,7 +43,7 @@ class OptiPngPostProcessor implements PostProcessorInterface
             throw new \RuntimeException(sprintf('Temp file can not be created in "%s".', sys_get_temp_dir()));
         }
 
-        $pb = new ProcessBuilder(array($this->optipngBin));
+        $pb = new ProcessBuilder([$this->optipngBin]);
         $pb->add('--o7');
         $pb->add($input);
 

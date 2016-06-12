@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Imagine\Cache\Resolver;
+namespace Anezi\ImagineBundle\tests\Imagine\Cache\Resolver;
 
 use Anezi\ImagineBundle\Imagine\Cache\Resolver\NoCacheWebPathResolver;
 use Anezi\ImagineBundle\Model\Binary;
@@ -12,20 +12,29 @@ use Symfony\Component\Routing\RequestContext;
  */
 class NoCacheWebPathResolverTest extends AbstractTest
 {
+    /**
+     * @test
+     */
     public function testCouldBeConstructedWithRequestContextAsArgument()
     {
         new NoCacheWebPathResolver(new RequestContext());
     }
 
+    /**
+     * @test
+     */
     public function testComposeSchemaHostAndPathOnResolve()
     {
         $context = new RequestContext('', 'GET', 'thehost', 'theSchema');
 
         $resolver = new NoCacheWebPathResolver($context);
 
-        $this->assertEquals('theschema://thehost/aPath', $resolver->resolve('aPath', 'aFilter'));
+        $this->assertSame('theschema://thehost/aPath', $resolver->resolve('aPath', 'aLoader', 'aFilter'));
     }
 
+    /**
+     * @test
+     */
     public function testDoNothingOnStore()
     {
         $resolver = new NoCacheWebPathResolver(new RequestContext());
@@ -33,28 +42,38 @@ class NoCacheWebPathResolverTest extends AbstractTest
         $this->assertNull($resolver->store(
             new Binary('aContent', 'image/jpeg', 'jpg'),
             'a/path',
+            'aLoader',
             'aFilter'
         ));
     }
 
+    /**
+     * @test
+     */
     public function testDoNothingForPathAndFilterOnRemove()
     {
         $resolver = new NoCacheWebPathResolver(new RequestContext());
 
-        $resolver->remove(array('a/path'), array('aFilter'));
+        $resolver->remove(['a/path'], ['aLoader'], ['aFilter']);
     }
 
+    /**
+     * @test
+     */
     public function testDoNothingForSomePathsAndSomeFiltersOnRemove()
     {
         $resolver = new NoCacheWebPathResolver(new RequestContext());
 
-        $resolver->remove(array('foo', 'bar'), array('foo', 'bar'));
+        $resolver->remove(['foo', 'bar'], ['aLoader'], ['foo', 'bar']);
     }
 
+    /**
+     * @test
+     */
     public function testDoNothingForEmptyPathAndEmptyFilterOnRemove()
     {
         $resolver = new NoCacheWebPathResolver(new RequestContext());
 
-        $resolver->remove(array(), array());
+        $resolver->remove([], [], []);
     }
 }

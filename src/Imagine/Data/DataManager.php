@@ -2,11 +2,11 @@
 
 namespace Anezi\ImagineBundle\Imagine\Data;
 
-use Anezi\ImagineBundle\Binary\Loader\LoaderInterface;
-use Anezi\ImagineBundle\Imagine\Filter\FilterConfiguration;
-use Anezi\ImagineBundle\Binary\MimeTypeGuesserInterface;
-use Anezi\ImagineBundle\Model\Binary;
 use Anezi\ImagineBundle\Binary\BinaryInterface;
+use Anezi\ImagineBundle\Binary\Loader\LoaderInterface;
+use Anezi\ImagineBundle\Binary\MimeTypeGuesserInterface;
+use Anezi\ImagineBundle\Imagine\Filter\FilterConfiguration;
+use Anezi\ImagineBundle\Model\Binary;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesserInterface;
 
 /**
@@ -137,7 +137,7 @@ class DataManager
         $config = $this->filterConfig->get($filter);
 
         $defaultImage = null;
-        if (false == empty($config['default_image'])) {
+        if (false === empty($config['default_image'])) {
             $defaultImage = $config['default_image'];
         } elseif (!empty($this->globalDefaultImage)) {
             $defaultImage = $this->globalDefaultImage;

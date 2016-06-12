@@ -2,8 +2,8 @@
 
 namespace Anezi\ImagineBundle\Imagine\Filter\Loader;
 
-use Imagine\Image\ImageInterface;
 use Imagine\Exception\InvalidArgumentException;
+use Imagine\Image\ImageInterface;
 
 /**
  * AutoRotateFilterLoader - rotates an Image based on its EXIF Data.
@@ -12,15 +12,15 @@ use Imagine\Exception\InvalidArgumentException;
  */
 class AutoRotateFilterLoader implements LoaderInterface
 {
-    protected $orientationKeys = array(
+    protected $orientationKeys = [
         'exif.Orientation',
         'ifd0.Orientation',
-    );
+    ];
 
     /**
      * {@inheritdoc}
      */
-    public function load(ImageInterface $image, array $options = array())
+    public function load(ImageInterface $image, array $options = [])
     {
         if ($orientation = $this->getOrientation($image)) {
             if ($orientation < 1 || $orientation > 8) {

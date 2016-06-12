@@ -1,11 +1,11 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Functional\Controller;
+namespace Anezi\ImagineBundle\tests\Functional\Controller;
 
+use Anezi\ImagineBundle\Imagine\Cache\Signer;
 use Anezi\ImagineBundle\Tests\Functional\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Filesystem\Filesystem;
-use Anezi\ImagineBundle\Imagine\Cache\Signer;
 
 /**
  * @covers Anezi\ImagineBundle\Controller\ImagineController
@@ -61,8 +61,8 @@ class ImagineControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertEquals(301, $response->getStatusCode());
-        $this->assertEquals('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $response->getTargetUrl());
+        $this->assertSame(301, $response->getStatusCode());
+        $this->assertSame('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $response->getTargetUrl());
 
         $this->assertFileExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
     }
@@ -82,8 +82,8 @@ class ImagineControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertEquals(301, $response->getStatusCode());
-        $this->assertEquals('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $response->getTargetUrl());
+        $this->assertSame(301, $response->getStatusCode());
+        $this->assertSame('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $response->getTargetUrl());
 
         $this->assertFileExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
     }
@@ -110,7 +110,7 @@ class ImagineControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/media/cache/resolve/thumbnail_web_path/rc/invalidHash/images/cats.jpeg?'.http_build_query([
             'filters' => 'some-string',
-            '_hash' => 'hash',
+            '_hash'   => 'hash',
             ]));
     }
 
@@ -161,8 +161,8 @@ class ImagineControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertEquals(301, $response->getStatusCode());
-        $this->assertEquals('http://localhost/media/cache/'.$expectedCachePath, $response->getTargetUrl());
+        $this->assertSame(301, $response->getStatusCode());
+        $this->assertSame('http://localhost/media/cache/'.$expectedCachePath, $response->getTargetUrl());
 
         $this->assertFileExists($this->cacheRoot.'/'.$expectedCachePath);
     }
@@ -199,8 +199,8 @@ class ImagineControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertEquals(301, $response->getStatusCode());
-        $this->assertEquals('http://localhost/media/cache'.'/'.$expectedCachePath, $response->getTargetUrl());
+        $this->assertSame(301, $response->getStatusCode());
+        $this->assertSame('http://localhost/media/cache'.'/'.$expectedCachePath, $response->getTargetUrl());
 
         $this->assertFileExists($this->cacheRoot.'/'.$expectedCachePath);
     }
@@ -222,8 +222,8 @@ class ImagineControllerTest extends WebTestCase
         $response = $this->client->getResponse();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertEquals(301, $response->getStatusCode());
-        $this->assertEquals('http://localhost/media/cache/thumbnail_web_path/images/foo bar.jpeg', $response->getTargetUrl());
+        $this->assertSame(301, $response->getStatusCode());
+        $this->assertSame('http://localhost/media/cache/thumbnail_web_path/images/foo bar.jpeg', $response->getTargetUrl());
 
         $this->assertFileExists($this->cacheRoot.'/thumbnail_web_path/images/foo bar.jpeg');
     }

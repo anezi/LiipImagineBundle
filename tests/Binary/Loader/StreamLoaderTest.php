@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Binary\Loader;
+namespace Anezi\ImagineBundle\tests\Binary\Loader;
 
 use Anezi\ImagineBundle\Binary\Loader\StreamLoader;
 use Anezi\ImagineBundle\Tests\AbstractTest;

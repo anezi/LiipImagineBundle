@@ -2,9 +2,9 @@
 
 namespace Anezi\ImagineBundle\Imagine\Filter\Loader;
 
+use Anezi\ImagineBundle\Imagine\Filter\RelativeResize;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Image\ImageInterface;
-use Anezi\ImagineBundle\Imagine\Filter\RelativeResize;
 
 /**
  * Loader for this bundle's relative resize filter.
@@ -16,7 +16,7 @@ class RelativeResizeFilterLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function load(ImageInterface $image, array $options = array())
+    public function load(ImageInterface $image, array $options = [])
     {
         if (list($method, $parameter) = each($options)) {
             $filter = new RelativeResize($method, $parameter);

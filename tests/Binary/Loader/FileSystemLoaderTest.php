@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Binary\Loader;
+namespace Anezi\ImagineBundle\tests\Binary\Loader;
 
 use Anezi\ImagineBundle\Binary\Loader\FileSystemLoader;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
@@ -15,14 +15,14 @@ class FileSystemLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $fileName = pathinfo(__FILE__, PATHINFO_BASENAME);
 
-        return array(
-            array(__DIR__, $fileName),
-            array(__DIR__.'/', $fileName),
-            array(__DIR__, '/'.$fileName),
-            array(__DIR__.'/', '/'.$fileName),
-            array(realpath(__DIR__.'/..'), 'Loader/'.$fileName),
-            array(realpath(__DIR__.'/../'), '/Loader/'.$fileName),
-        );
+        return [
+            [__DIR__, $fileName],
+            [__DIR__.'/', $fileName],
+            [__DIR__, '/'.$fileName],
+            [__DIR__.'/', '/'.$fileName],
+            [realpath(__DIR__.'/..'), 'Loader/'.$fileName],
+            [realpath(__DIR__.'/../'), '/Loader/'.$fileName],
+        ];
     }
 
     public function testShouldImplementLoaderInterface()

@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\DependencyInjection\Compiler;
+namespace Anezi\ImagineBundle\tests\DependencyInjection\Compiler;
 
 use Anezi\ImagineBundle\DependencyInjection\Compiler\FiltersCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -15,9 +15,9 @@ class FiltersCompilerPassTest extends \PHPUnit_Framework_TestCase
     {
         $managerDefinition = new Definition();
         $loaderDefinition = new Definition();
-        $loaderDefinition->addTag('anezi_imagine.filter.loader', array(
+        $loaderDefinition->addTag('anezi_imagine.filter.loader', [
             'loader' => 'foo',
-        ));
+        ]);
 
         $container = new ContainerBuilder();
         $container->setDefinition('anezi_imagine.filter.manager', $managerDefinition);

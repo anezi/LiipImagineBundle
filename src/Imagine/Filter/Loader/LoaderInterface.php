@@ -14,5 +14,5 @@ interface LoaderInterface
      *
      * @return ImageInterface
      */
-    public function load(ImageInterface $image, array $options = array());
+    public function load(ImageInterface $image, array $options = []);
 }

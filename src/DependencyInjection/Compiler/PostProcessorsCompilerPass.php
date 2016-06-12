@@ -24,7 +24,7 @@ class PostProcessorsCompilerPass implements CompilerPassInterface
             $manager = $container->getDefinition('anezi_imagine.filter.manager');
 
             foreach ($tags as $id => $tag) {
-                $manager->addMethodCall('addPostProcessor', array($tag[0]['post_processor'], new Reference($id)));
+                $manager->addMethodCall('addPostProcessor', [$tag[0]['post_processor'], new Reference($id)]);
             }
         }
     }

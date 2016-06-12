@@ -27,9 +27,9 @@ class FilterConfiguration
      *
      * @param string $filter
      *
-     * @return array
-     *
      * @throws NonExistingFilterException
+     *
+     * @return array
      */
     public function get($filter)
     {

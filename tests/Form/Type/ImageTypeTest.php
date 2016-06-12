@@ -1,11 +1,11 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Form\Type;
+namespace Anezi\ImagineBundle\tests\Form\Type;
 
 use Anezi\ImagineBundle\Form\Type\ImageType;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @covers Anezi\ImagineBundle\Form\Type\ImageType
@@ -16,14 +16,14 @@ class ImageTypeTest extends \PHPUnit_Framework_TestCase
     {
         $type = new ImageType();
 
-        $this->assertEquals('anezi_imagine_image', $type->getName());
+        $this->assertSame('anezi_imagine_image', $type->getName());
     }
 
     public function testGetParent()
     {
         $type = new ImageType();
 
-        $this->assertEquals('file', $type->getParent());
+        $this->assertSame('file', $type->getParent());
     }
 
     public function testConfigureOptions()
@@ -68,14 +68,14 @@ class ImageTypeTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildView()
     {
-        $options = array(
-            'image_path' => 'foo',
+        $options = [
+            'image_path'   => 'foo',
             'image_filter' => 'bar',
-            'image_attr' => 'bazz',
-            'link_url' => 'http://anezi.net',
-            'link_filter' => 'foo',
-            'link_attr' => 'bazz',
-        );
+            'image_attr'   => 'bazz',
+            'link_url'     => 'http://anezi.net',
+            'link_filter'  => 'foo',
+            'link_attr'    => 'bazz',
+        ];
 
         $view = new FormView();
         $type = new ImageType();
@@ -85,7 +85,7 @@ class ImageTypeTest extends \PHPUnit_Framework_TestCase
 
         foreach ($options as $name => $value) {
             $this->assertArrayHasKey($name, $view->vars);
-            $this->assertEquals($value, $view->vars[$name]);
+            $this->assertSame($value, $view->vars[$name]);
         }
     }
 }

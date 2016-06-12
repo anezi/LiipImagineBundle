@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Imagine\Cache\Resolver;
+namespace Anezi\ImagineBundle\tests\Imagine\Cache\Resolver;
 
 use Anezi\ImagineBundle\Imagine\Cache\Resolver\WebPathResolver;
 use Anezi\ImagineBundle\Model\Binary;
@@ -21,6 +21,9 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
     /** @var string */
     private $existingFile;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
         $this->filesystem = new Filesystem();
@@ -30,11 +33,17 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
         $this->filesystem->touch($this->existingFile);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function tearDown()
     {
         $this->filesystem->remove($this->basePath);
     }
 
+    /**
+     * @test 
+     */
     public function testImplementsResolverInterface()
     {
         $rc = new \ReflectionClass('Anezi\ImagineBundle\Imagine\Cache\Resolver\WebPathResolver');
@@ -42,6 +51,9 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($rc->implementsInterface('Anezi\ImagineBundle\Imagine\Cache\Resolver\ResolverInterface'));
     }
 
+    /**
+     * @test
+     */
     public function testCouldBeConstructedWithRequiredArguments()
     {
         $filesystemMock = $this->createFilesystemMock();
@@ -55,6 +67,9 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeSame($webRoot, 'webRoot', $resolver);
     }
 
+    /**
+     * @test
+     */
     public function testCouldBeConstructedWithOptionalArguments()
     {
         $resolver = new WebPathResolver(
@@ -67,6 +82,9 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeSame('theCachePrefix', 'cachePrefix', $resolver);
     }
 
+    /**
+     * @test
+     */
     public function testTrimRightSlashFromWebPathOnConstruct()
     {
         $resolver = new WebPathResolver(
@@ -79,6 +97,9 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeSame('aWebRoot', 'webRoot', $resolver);
     }
 
+    /**
+     * @test
+     */
     public function testRemoveDoubleSlashFromWebRootOnConstruct()
     {
         $resolver = new WebPathResolver(
@@ -91,6 +112,9 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeSame('aWeb/Root', 'webRoot', $resolver);
     }
 
+    /**
+     * @test
+     */
     public function testTrimRightSlashFromCachePrefixOnConstruct()
     {
         $resolver = new WebPathResolver(
@@ -103,6 +127,9 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeSame('aCachePrefix', 'cachePrefix', $resolver);
     }
 
+    /**
+     * @test
+     */
     public function testRemoveDoubleSlashFromCachePrefixOnConstruct()
     {
         $resolver = new WebPathResolver(
@@ -115,6 +142,9 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeSame('aCache/Prefix', 'cachePrefix', $resolver);
     }
 
+    /**
+     * @test
+     */
     public function testReturnTrueIfFileExistsOnIsStored()
     {
         $resolver = new WebPathResolver(
@@ -124,9 +154,12 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
             'aCachePrefix'
         );
 
-        $this->assertTrue($resolver->isStored('existingPath', 'aFilter'));
+        $this->assertTrue($resolver->isStored('existingPath', 'aLoader', 'aFilter'));
     }
 
+    /**
+     * @test
+     */
     public function testReturnFalseIfFileNotExistsOnIsStored()
     {
         $resolver = new WebPathResolver(
@@ -136,9 +169,12 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
             'aCachePrefix'
         );
 
-        $this->assertFalse($resolver->isStored('nonExistingPath', 'aFilter'));
+        $this->assertFalse($resolver->isStored('nonExistingPath', 'aLoader', 'aFilter'));
     }
 
+    /**
+     * @test
+     */
     public function testReturnFalseIfIsNotFile()
     {
         $resolver = new WebPathResolver(
@@ -148,9 +184,12 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
             'aCachePrefix'
         );
 
-        $this->assertFalse($resolver->isStored('', 'aFilter'));
+        $this->assertFalse($resolver->isStored('', 'aLoader', 'aFilter'));
     }
 
+    /**
+     * @test
+     */
     public function testComposeSchemaHostAndFileUrlOnResolve()
     {
         $requestContext = new RequestContext();
@@ -164,12 +203,15 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
             'aCachePrefix'
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'theschema://thehost/aCachePrefix/aFilter/aPath',
-            $resolver->resolve('aPath', 'aFilter')
+            $resolver->resolve('aPath', 'aLoader', 'aFilter')
         );
     }
 
+    /**
+     * @test
+     */
     public function testComposeSchemaHostAndBasePathWithPhpFileAndFileUrlOnResolve()
     {
         $requestContext = new RequestContext();
@@ -184,12 +226,15 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
             'aCachePrefix'
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'theschema://thehost/theBasePath/aCachePrefix/aFilter/aPath',
-            $resolver->resolve('aPath', 'aFilter')
+            $resolver->resolve('aPath', 'aLoader', 'aFilter')
         );
     }
 
+    /**
+     * @test
+     */
     public function testComposeSchemaHostAndBasePathWithDirsOnlyAndFileUrlOnResolve()
     {
         $requestContext = new RequestContext();
@@ -204,12 +249,15 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
             'aCachePrefix'
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'theschema://thehost/theBasePath/theSubBasePath/aCachePrefix/aFilter/aPath',
-            $resolver->resolve('aPath', 'aFilter')
+            $resolver->resolve('aPath', 'aLoader', 'aFilter')
         );
     }
 
+    /**
+     * @test
+     */
     public function testComposeSchemaHostAndBasePathWithBackSplashOnResolve()
     {
         $requestContext = new RequestContext();
@@ -224,12 +272,15 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
             'aCachePrefix'
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'theschema://thehost/aCachePrefix/aFilter/aPath',
-            $resolver->resolve('aPath', 'aFilter')
+            $resolver->resolve('aPath', 'aLoader', 'aFilter')
         );
     }
 
+    /**
+     * @test
+     */
     public function testComposeSchemaHttpAndCustomPortAndFileUrlOnResolve()
     {
         $requestContext = new RequestContext();
@@ -244,12 +295,15 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
             'aCachePrefix'
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://thehost:88/aCachePrefix/aFilter/aPath',
-            $resolver->resolve('aPath', 'aFilter')
+            $resolver->resolve('aPath', 'aLoader', 'aFilter')
         );
     }
 
+    /**
+     * @test
+     */
     public function testComposeSchemaHttpsAndCustomPortAndFileUrlOnResolve()
     {
         $requestContext = new RequestContext();
@@ -264,12 +318,15 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
             'aCachePrefix'
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'https://thehost:444/aCachePrefix/aFilter/aPath',
-            $resolver->resolve('aPath', 'aFilter')
+            $resolver->resolve('aPath', 'aLoader', 'aFilter')
         );
     }
 
+    /**
+     * @test
+     */
     public function testDumpBinaryContentOnStore()
     {
         $binary = new Binary('theContent', 'aMimeType', 'aFormat');
@@ -278,8 +335,7 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
         $filesystemMock
             ->expects($this->once())
             ->method('dumpFile')
-            ->with('/aWebRoot/aCachePrefix/aFilter/aPath', 'theContent')
-        ;
+            ->with('/aWebRoot/aCachePrefix/aFilter/aPath', 'theContent');
 
         $resolver = new WebPathResolver(
             $filesystemMock,
@@ -288,16 +344,18 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
             'aCachePrefix'
         );
 
-        $this->assertNull($resolver->store($binary, 'aPath', 'aFilter'));
+        $this->assertNull($resolver->store($binary, 'aPath', 'aLoader', 'aFilter'));
     }
 
+    /**
+     * @test
+     */
     public function testDoNothingIfFiltersAndPathsEmptyOnRemove()
     {
         $filesystemMock = $this->createFilesystemMock();
         $filesystemMock
             ->expects($this->never())
-            ->method('remove')
-        ;
+            ->method('remove');
 
         $resolver = new WebPathResolver(
             $filesystemMock,
@@ -306,17 +364,19 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
             'aCachePrefix'
         );
 
-        $resolver->remove(array(), array());
+        $resolver->remove([], [], []);
     }
 
+    /**
+     * @test
+     */
     public function testRemoveCacheForPathAndFilterOnRemove()
     {
         $filesystemMock = $this->createFilesystemMock();
         $filesystemMock
             ->expects($this->once())
             ->method('remove')
-            ->with('/aWebRoot/aCachePrefix/aFilter/aPath')
-        ;
+            ->with('/aWebRoot/aCachePrefix/aFilter/aPath');
 
         $resolver = new WebPathResolver(
             $filesystemMock,
@@ -325,22 +385,23 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
             'aCachePrefix'
         );
 
-        $resolver->remove(array('aPath'), array('aFilter'));
+        $resolver->remove(['aPath'], ['aLoader'], ['aFilter']);
     }
 
+    /**
+     * @test
+     */
     public function testRemoveCacheForSomePathsAndFilterOnRemove()
     {
         $filesystemMock = $this->createFilesystemMock();
         $filesystemMock
             ->expects($this->at(0))
             ->method('remove')
-            ->with('/aWebRoot/aCachePrefix/aFilter/aPathOne')
-        ;
+            ->with('/aWebRoot/aCachePrefix/aFilter/aPathOne');
         $filesystemMock
             ->expects($this->at(1))
             ->method('remove')
-            ->with('/aWebRoot/aCachePrefix/aFilter/aPathTwo')
-        ;
+            ->with('/aWebRoot/aCachePrefix/aFilter/aPathTwo');
 
         $resolver = new WebPathResolver(
             $filesystemMock,
@@ -349,32 +410,31 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
             'aCachePrefix'
         );
 
-        $resolver->remove(array('aPathOne', 'aPathTwo'), array('aFilter'));
+        $resolver->remove(['aPathOne', 'aPathTwo'], ['aLoader'], ['aFilter']);
     }
 
+    /**
+     * @test
+     */
     public function testRemoveCacheForSomePathsAndSomeFiltersOnRemove()
     {
         $filesystemMock = $this->createFilesystemMock();
         $filesystemMock
             ->expects($this->at(0))
             ->method('remove')
-            ->with('/aWebRoot/aCachePrefix/aFilterOne/aPathOne')
-        ;
+            ->with('/aWebRoot/aCachePrefix/aFilterOne/aPathOne');
         $filesystemMock
             ->expects($this->at(1))
             ->method('remove')
-            ->with('/aWebRoot/aCachePrefix/aFilterTwo/aPathOne')
-        ;
+            ->with('/aWebRoot/aCachePrefix/aFilterTwo/aPathOne');
         $filesystemMock
             ->expects($this->at(2))
             ->method('remove')
-            ->with('/aWebRoot/aCachePrefix/aFilterOne/aPathTwo')
-        ;
+            ->with('/aWebRoot/aCachePrefix/aFilterOne/aPathTwo');
         $filesystemMock
             ->expects($this->at(3))
             ->method('remove')
-            ->with('/aWebRoot/aCachePrefix/aFilterTwo/aPathTwo')
-        ;
+            ->with('/aWebRoot/aCachePrefix/aFilterTwo/aPathTwo');
 
         $resolver = new WebPathResolver(
             $filesystemMock,
@@ -384,21 +444,24 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
         );
 
         $resolver->remove(
-            array('aPathOne', 'aPathTwo'),
-            array('aFilterOne', 'aFilterTwo')
+            ['aPathOne', 'aPathTwo'],
+            ['aLoader'],
+            ['aFilterOne', 'aFilterTwo']
         );
     }
 
+    /**
+     * @test
+     */
     public function testRemoveCacheForFilterOnRemove()
     {
         $filesystemMock = $this->createFilesystemMock();
         $filesystemMock
             ->expects($this->once())
             ->method('remove')
-            ->with(array(
+            ->with([
                 '/aWebRoot/aCachePrefix/aFilter',
-            ))
-        ;
+            ]);
 
         $resolver = new WebPathResolver(
             $filesystemMock,
@@ -407,20 +470,22 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
             'aCachePrefix'
         );
 
-        $resolver->remove(array(), array('aFilter'));
+        $resolver->remove([], ['aLoader'], ['aFilter']);
     }
 
+    /**
+     * @test
+     */
     public function testRemoveCacheForSomeFiltersOnRemove()
     {
         $filesystemMock = $this->createFilesystemMock();
         $filesystemMock
             ->expects($this->once())
             ->method('remove')
-            ->with(array(
+            ->with([
                 '/aWebRoot/aCachePrefix/aFilterOne',
                 '/aWebRoot/aCachePrefix/aFilterTwo',
-            ))
-        ;
+            ]);
 
         $resolver = new WebPathResolver(
             $filesystemMock,
@@ -429,9 +494,12 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
             'aCachePrefix'
         );
 
-        $resolver->remove(array(), array('aFilterOne', 'aFilterTwo'));
+        $resolver->remove([], ['aLoader'], ['aFilterOne', 'aFilterTwo']);
     }
 
+    /**
+     * @test
+     */
     public function testShouldRemoveDoubleSlashInUrl()
     {
         $resolver = new WebPathResolver(
@@ -445,11 +513,14 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
         $method = $rc->getMethod('getFileUrl');
         $method->setAccessible(true);
 
-        $result = $method->invokeArgs($resolver, array('/cats.jpg', 'some_filter'));
+        $result = $method->invokeArgs($resolver, ['/cats.jpg', 'some_filter']);
 
-        $this->assertEquals('aCachePrefix/some_filter/cats.jpg', $result);
+        $this->assertSame('aCachePrefix/some_filter/cats.jpg', $result);
     }
 
+    /**
+     * @test
+     */
     public function testShouldSanitizeSeparatorBetweenSchemeAndAuthorityInUrl()
     {
         $resolver = new WebPathResolver(
@@ -463,9 +534,9 @@ class WebPathResolverTest extends \PHPUnit_Framework_TestCase
         $method = $rc->getMethod('getFileUrl');
         $method->setAccessible(true);
 
-        $result = $method->invokeArgs($resolver, array('https://some.meme.com/cute/cats.jpg', 'some_filter'));
+        $result = $method->invokeArgs($resolver, ['https://some.meme.com/cute/cats.jpg', 'some_filter']);
 
-        $this->assertEquals('aCachePrefix/some_filter/https---some.meme.com/cute/cats.jpg', $result);
+        $this->assertSame('aCachePrefix/some_filter/https---some.meme.com/cute/cats.jpg', $result);
     }
 
     /**

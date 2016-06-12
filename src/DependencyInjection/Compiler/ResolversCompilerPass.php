@@ -19,7 +19,7 @@ class ResolversCompilerPass implements CompilerPassInterface
             $manager = $container->getDefinition('anezi_imagine.cache.manager');
 
             foreach ($tags as $id => $tag) {
-                $manager->addMethodCall('addResolver', array($tag[0]['resolver'], new Reference($id)));
+                $manager->addMethodCall('addResolver', [$tag[0]['resolver'], new Reference($id)]);
             }
         }
     }

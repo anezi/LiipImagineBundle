@@ -84,16 +84,16 @@ class AmazonS3Resolver implements ResolverInterface
         $objectPath = $this->getObjectPath($path, $loader, $filter);
 
         $storageResponse = $this->storage->create_object($this->bucket, $objectPath, [
-            'body' => $binary->getContent(),
+            'body'        => $binary->getContent(),
             'contentType' => $binary->getMimeType(),
-            'length' => strlen($binary->getContent()),
-            'acl' => $this->acl,
+            'length'      => strlen($binary->getContent()),
+            'acl'         => $this->acl,
         ]);
 
         if (!$storageResponse->isOK()) {
             $this->logError('The object could not be created on Amazon S3.', [
-                'objectPath' => $objectPath,
-                'filter' => $filter,
+                'objectPath'  => $objectPath,
+                'filter'      => $filter,
                 's3_response' => $storageResponse,
             ]);
 
@@ -114,7 +114,7 @@ class AmazonS3Resolver implements ResolverInterface
             if (!$this->storage->delete_all_objects($this->bucket, sprintf('/%s/i', implode('|', $filters)))) {
                 $this->logError('The objects could not be deleted from Amazon S3.', [
                     'filters' => implode(', ', $filters),
-                    'bucket' => $this->bucket,
+                    'bucket'  => $this->bucket,
                 ]);
             }
 
@@ -133,7 +133,7 @@ class AmazonS3Resolver implements ResolverInterface
                         $this->logError('The objects could not be deleted from Amazon S3.', [
                             'filter' => $filter,
                             'bucket' => $this->bucket,
-                            'path' => $path,
+                            'path'   => $path,
                         ]);
                     }
                 }

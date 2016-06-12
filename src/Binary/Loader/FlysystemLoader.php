@@ -2,10 +2,10 @@
 
 namespace Anezi\ImagineBundle\Binary\Loader;
 
-use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesserInterface;
-use Anezi\ImagineBundle\Model\Binary;
 use Anezi\ImagineBundle\Exception\Binary\Loader\NotLoadableException;
+use Anezi\ImagineBundle\Model\Binary;
 use League\Flysystem\FilesystemInterface;
+use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesserInterface;
 
 class FlysystemLoader implements LoaderInterface
 {

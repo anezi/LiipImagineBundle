@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Functional\Imagine\Cache\Resolver;
+namespace Anezi\ImagineBundle\tests\Functional\Imagine\Cache\Resolver;
 
 use Anezi\ImagineBundle\Tests\Functional\WebTestCase;
 

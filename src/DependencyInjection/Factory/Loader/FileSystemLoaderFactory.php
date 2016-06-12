@@ -15,9 +15,9 @@ class FileSystemLoaderFactory implements LoaderFactoryInterface
     {
         $loaderDefinition = new DefinitionDecorator('anezi_imagine.binary.loader.prototype.filesystem');
         $loaderDefinition->replaceArgument(2, $config['data_root']);
-        $loaderDefinition->addTag('anezi_imagine.binary.loader', array(
+        $loaderDefinition->addTag('anezi_imagine.binary.loader', [
             'loader' => $loaderName,
-        ));
+        ]);
         $loaderId = 'anezi_imagine.binary.loader.'.$loaderName;
 
         $container->setDefinition($loaderId, $loaderDefinition);
@@ -41,7 +41,6 @@ class FileSystemLoaderFactory implements LoaderFactoryInterface
         $builder
             ->children()
                 ->scalarNode('data_root')->defaultValue('%kernel.root_dir%/../web')->cannotBeEmpty()->end()
-            ->end()
-        ;
+            ->end();
     }
 }

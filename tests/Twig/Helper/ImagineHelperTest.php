@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Twig\Helper;
+namespace Anezi\ImagineBundle\tests\Twig\Helper;
 
 use Anezi\ImagineBundle\Imagine\Cache\CacheManager;
 use Anezi\ImagineBundle\Twig\Helper\ImagineHelper;
@@ -10,6 +10,9 @@ use Anezi\ImagineBundle\Twig\Helper\ImagineHelper;
  */
 class ImagineHelperTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @test
+     */
     public function testSubClassOfHelper()
     {
         $rc = new \ReflectionClass('Anezi\ImagineBundle\Twig\Helper\ImagineHelper');
@@ -17,18 +20,27 @@ class ImagineHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($rc->isSubclassOf('Symfony\Component\Twig\Helper\Helper'));
     }
 
+    /**
+     * @test
+     */
     public function testCouldBeConstructedWithCacheManagerAsArgument()
     {
         new ImagineHelper($this->createCacheManagerMock());
     }
 
+    /**
+     * @test
+     */
     public function testAllowGetName()
     {
         $helper = new ImagineHelper($this->createCacheManagerMock());
 
-        $this->assertEquals('anezi_imagine', $helper->getName());
+        $this->assertSame('anezi_imagine', $helper->getName());
     }
 
+    /**
+     * @test
+     */
     public function testProxyCallToCacheManagerOnFilter()
     {
         $expectedPath = 'thePathToTheImage';
@@ -40,12 +52,11 @@ class ImagineHelperTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('getBrowserPath')
             ->with($expectedPath, $expectedFilter)
-            ->will($this->returnValue($expectedCachePath))
-        ;
+            ->will($this->returnValue($expectedCachePath));
 
         $helper = new ImagineHelper($cacheManager);
 
-        $this->assertEquals($expectedCachePath, $helper->filter($expectedPath, $expectedFilter));
+        $this->assertSame($expectedCachePath, $helper->filter($expectedPath, $expectedFilter));
     }
 
     /**
@@ -53,6 +64,6 @@ class ImagineHelperTest extends \PHPUnit_Framework_TestCase
      */
     protected function createCacheManagerMock()
     {
-        return $this->getMock('Anezi\ImagineBundle\Imagine\Cache\CacheManager', array(), array(), '', false);
+        return $this->getMock('Anezi\ImagineBundle\Imagine\Cache\CacheManager', [], [], '', false);
     }
 }

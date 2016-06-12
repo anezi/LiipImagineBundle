@@ -29,7 +29,7 @@ class ImagineHelper extends Helper
      *
      * @return string
      */
-    public function filter($path, $filter, array $runtimeConfig = array())
+    public function filter($path, $filter, array $runtimeConfig = [])
     {
         return $this->cacheManager->getBrowserPath($path, $filter, $runtimeConfig);
     }

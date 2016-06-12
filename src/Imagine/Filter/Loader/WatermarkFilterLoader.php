@@ -3,9 +3,9 @@
 namespace Anezi\ImagineBundle\Imagine\Filter\Loader;
 
 use Imagine\Image\Box;
-use Imagine\Image\Point;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
+use Imagine\Image\Point;
 
 class WatermarkFilterLoader implements LoaderInterface
 {
@@ -28,14 +28,14 @@ class WatermarkFilterLoader implements LoaderInterface
     /**
      * @see Anezi\ImagineBundle\Imagine\Filter\Loader\LoaderInterface::load()
      */
-    public function load(ImageInterface $image, array $options = array())
+    public function load(ImageInterface $image, array $options = [])
     {
-        $options += array(
-            'size' => null,
+        $options += [
+            'size'     => null,
             'position' => 'center',
-        );
+        ];
 
-        if (substr($options['size'], -1) == '%') {
+        if (substr($options['size'], -1) === '%') {
             $options['size'] = substr($options['size'], 0, -1) / 100;
         }
 

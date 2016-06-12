@@ -2,8 +2,8 @@
 
 namespace Anezi\ImagineBundle\Imagine\Cache\Resolver;
 
-use Doctrine\Common\Cache\Cache;
 use Anezi\ImagineBundle\Binary\BinaryInterface;
+use Doctrine\Common\Cache\Cache;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -64,8 +64,7 @@ class CacheResolver implements ResolverInterface
 
         return
             $this->cache->contains($cacheKey) ||
-            $this->resolver->isStored($path, $loader, $filter)
-        ;
+            $this->resolver->isStored($path, $loader, $filter);
     }
 
     /**
@@ -135,7 +134,7 @@ class CacheResolver implements ResolverInterface
             $index = [];
         } else {
             $cacheKey = $this->generateCacheKey($path, $loader, $filter);
-            if (false !== $indexIndex = array_search($cacheKey, $index)) {
+            if (false !== $indexIndex = array_search($cacheKey, $index, true)) {
                 unset($index[$indexIndex]);
                 $this->cache->delete($cacheKey);
             }
@@ -216,7 +215,7 @@ class CacheResolver implements ResolverInterface
         if ($this->cache->contains($indexKey)) {
             $index = (array) $this->cache->fetch($indexKey);
 
-            if (!in_array($cacheKey, $index)) {
+            if (!in_array($cacheKey, $index, true)) {
                 $index[] = $cacheKey;
             }
         } else {
@@ -243,14 +242,14 @@ class CacheResolver implements ResolverInterface
     {
         $resolver->setDefaults([
             'global_prefix' => 'anezi_imagine.resolver_cache',
-            'prefix' => get_class($this->resolver),
-            'index_key' => 'index',
+            'prefix'        => get_class($this->resolver),
+            'index_key'     => 'index',
         ]);
 
         $allowedTypesList = [
           'global_prefix' => 'string',
-          'prefix' => 'string',
-          'index_key' => 'string',
+          'prefix'        => 'string',
+          'index_key'     => 'string',
         ];
 
         foreach ($allowedTypesList as $option => $allowedTypes) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Model;
+namespace Anezi\ImagineBundle\tests\Model;
 
 use Anezi\ImagineBundle\Model\Binary;
 
@@ -20,20 +20,20 @@ class BinaryTest extends \PHPUnit_Framework_TestCase
     {
         $image = new Binary('theContent', 'image/png', 'png');
 
-        $this->assertEquals('theContent', $image->getContent());
+        $this->assertSame('theContent', $image->getContent());
     }
 
     public function testAllowGetMimeTypeSetInConstructor()
     {
         $image = new Binary('aContent', 'image/png', 'png');
 
-        $this->assertEquals('image/png', $image->getMimeType());
+        $this->assertSame('image/png', $image->getMimeType());
     }
 
     public function testAllowGetFormatSetInConstructor()
     {
         $image = new Binary('aContent', 'image/png', 'png');
 
-        $this->assertEquals('png', $image->getFormat());
+        $this->assertSame('png', $image->getFormat());
     }
 }

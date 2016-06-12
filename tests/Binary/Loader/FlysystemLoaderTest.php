@@ -1,10 +1,10 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Binary\Loader;
+namespace Anezi\ImagineBundle\tests\Binary\Loader;
 
 use Anezi\ImagineBundle\Binary\Loader\FlysystemLoader;
-use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 use Anezi\ImagineBundle\Tests\AbstractTest;
+use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 
 /**
  * @requires PHP 5.4

@@ -16,9 +16,9 @@ class FlysystemLoaderFactory implements LoaderFactoryInterface
     {
         $loaderDefinition = new DefinitionDecorator('anezi_imagine.binary.loader.prototype.flysystem');
         $loaderDefinition->replaceArgument(1, new Reference($config['filesystem_service']));
-        $loaderDefinition->addTag('anezi_imagine.binary.loader', array(
+        $loaderDefinition->addTag('anezi_imagine.binary.loader', [
             'loader' => $loaderName,
-        ));
+        ]);
         $loaderId = 'anezi_imagine.binary.loader.'.$loaderName;
 
         $container->setDefinition($loaderId, $loaderDefinition);
@@ -42,7 +42,6 @@ class FlysystemLoaderFactory implements LoaderFactoryInterface
         $builder
             ->children()
                 ->scalarNode('filesystem_service')->isRequired()->cannotBeEmpty()->end()
-            ->end()
-        ;
+            ->end();
     }
 }

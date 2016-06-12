@@ -2,8 +2,8 @@
 
 namespace Anezi\ImagineBundle\DependencyInjection\Factory\Resolver;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
@@ -18,7 +18,7 @@ class AwsS3ResolverFactory implements ResolverFactoryInterface
         $awsS3ClientId = 'anezi_imagine.cache.resolver.'.$resolverName.'.client';
         $awsS3ClientDefinition = new Definition('Aws\S3\S3Client');
         if (method_exists($awsS3ClientDefinition, 'setFactory')) {
-            $awsS3ClientDefinition->setFactory(array('Aws\S3\S3Client', 'factory'));
+            $awsS3ClientDefinition->setFactory(['Aws\S3\S3Client', 'factory']);
         } else {
             // to be removed when dependency on Symfony DependencyInjection is bumped to 2.6
             $awsS3ClientDefinition->setFactoryClass('Aws\S3\S3Client');
@@ -37,7 +37,7 @@ class AwsS3ResolverFactory implements ResolverFactoryInterface
         $container->setDefinition($resolverId, $resolverDefinition);
 
         if (isset($config['cache_prefix'])) {
-            $resolverDefinition->addMethodCall('setCachePrefix', array($config['cache_prefix']));
+            $resolverDefinition->addMethodCall('setCachePrefix', [$config['cache_prefix']]);
         }
 
         if ($config['proxies']) {
@@ -64,9 +64,9 @@ class AwsS3ResolverFactory implements ResolverFactoryInterface
             $container->setDefinition($resolverId, $cacheResolverDefinition);
         }
 
-        $container->getDefinition($resolverId)->addTag('anezi_imagine.cache.resolver', array(
+        $container->getDefinition($resolverId)->addTag('anezi_imagine.cache.resolver', [
             'resolver' => $resolverName,
-        ));
+        ]);
 
         return $resolverId;
     }
@@ -93,7 +93,7 @@ class AwsS3ResolverFactory implements ResolverFactoryInterface
                 ->arrayNode('client_config')
                     ->isRequired()
                     ->prototype('variable')
-                        ->treatNullLike(array())
+                        ->treatNullLike([])
                     ->end()
                 ->end()
                 /* @deprecated Use `get_options` instead */
@@ -110,11 +110,10 @@ class AwsS3ResolverFactory implements ResolverFactoryInterface
                     ->prototype('scalar')->end()
                 ->end()
                 ->arrayNode('proxies')
-                    ->defaultValue(array())
+                    ->defaultValue([])
                     ->useAttributeAsKey('name')
                     ->prototype('scalar')->end()
                 ->end()
-            ->end()
-        ;
+            ->end();
     }
 }

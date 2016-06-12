@@ -26,67 +26,67 @@ class ConfigurationTest extends \Phpunit_Framework_TestCase
 
     public function testCouldBeConstructedWithResolversAndLoadersFactoriesAsArguments()
     {
-        new Configuration(array(), array());
+        new Configuration([], []);
     }
 
     public function testInjectLoaderFactoryConfig()
     {
         $config = $this->processConfiguration(
             new Configuration(
-                array(
+                [
                     new WebPathResolverFactory(),
-                ),
-                array(
+                ],
+                [
                     new FooLoaderFactory(),
                     new FileSystemLoaderFactory(),
-                )
+                ]
             ),
-            array(array(
-                'loaders' => array(
-                    'aLoader' => array(
-                        'foo' => array(
+            [[
+                'loaders' => [
+                    'aLoader' => [
+                        'foo' => [
                             'foo_option' => 'theValue',
-                        ),
-                    ),
-                ),
+                        ],
+                    ],
+                ],
 
-            ))
+            ]]
         );
 
         $this->assertArrayHasKey('loaders', $config);
         $this->assertArrayHasKey('aLoader', $config['loaders']);
         $this->assertArrayHasKey('foo', $config['loaders']['aLoader']);
         $this->assertArrayHasKey('foo_option', $config['loaders']['aLoader']['foo']);
-        $this->assertEquals('theValue', $config['loaders']['aLoader']['foo']['foo_option']);
+        $this->assertSame('theValue', $config['loaders']['aLoader']['foo']['foo_option']);
     }
 
     public function testAllowToUseLoaderFactorySeveralTimes()
     {
         $config = $this->processConfiguration(
             new Configuration(
-                array(
+                [
                     new WebPathResolverFactory(),
-                ),
-                array(
+                ],
+                [
                     new FooLoaderFactory(),
                     new FileSystemLoaderFactory(),
-                )
+                ]
             ),
-            array(array(
-                'loaders' => array(
-                    'aLoader' => array(
-                        'foo' => array(
+            [[
+                'loaders' => [
+                    'aLoader' => [
+                        'foo' => [
                             'foo_option' => 'theValue',
-                        ),
-                    ),
-                    'anotherLoader' => array(
-                        'foo' => array(
+                        ],
+                    ],
+                    'anotherLoader' => [
+                        'foo' => [
                             'foo_option' => 'theValue',
-                        ),
-                    ),
-                ),
+                        ],
+                    ],
+                ],
 
-            ))
+            ]]
         );
 
         $this->assertArrayHasKey('loaders', $config);
@@ -98,17 +98,17 @@ class ConfigurationTest extends \Phpunit_Framework_TestCase
     {
         $config = $this->processConfiguration(
             new Configuration(
-                array(
+                [
                     new WebPathResolverFactory(),
-                ),
-                array(
+                ],
+                [
                     new FileSystemLoaderFactory(),
-                )
+                ]
             ),
-            array(array(
-                'loaders' => array(
-                ),
-            ))
+            [[
+                'loaders' => [
+                ],
+            ]]
         );
 
         $this->assertArrayHasKey('loaders', $config);
@@ -120,16 +120,16 @@ class ConfigurationTest extends \Phpunit_Framework_TestCase
     {
         $config = $this->processConfiguration(
             new Configuration(
-                array(
+                [
                     new WebPathResolverFactory(),
-                ),
-                array(
+                ],
+                [
                     new FileSystemLoaderFactory(),
-                )
+                ]
             ),
-            array(array(
+            [[
                 'loaders' => null,
-            ))
+            ]]
         );
 
         $this->assertArrayHasKey('loaders', $config);
@@ -142,16 +142,16 @@ class ConfigurationTest extends \Phpunit_Framework_TestCase
         $this->setExpectedException('LogicException', 'Loaders has to be array');
         $this->processConfiguration(
             new Configuration(
-                array(
+                [
                     new WebPathResolverFactory(),
-                ),
-                array(
+                ],
+                [
                     new FileSystemLoaderFactory(),
-                )
+                ]
             ),
-            array(array(
+            [[
                 'loaders' => 'not_array',
-            ))
+            ]]
         );
     }
 
@@ -159,14 +159,14 @@ class ConfigurationTest extends \Phpunit_Framework_TestCase
     {
         $config = $this->processConfiguration(
             new Configuration(
-                array(
+                [
                     new WebPathResolverFactory(),
-                ),
-                array(
+                ],
+                [
                     new FileSystemLoaderFactory(),
-                )
+                ]
             ),
-            array(array())
+            [[]]
         );
 
         $this->assertArrayHasKey('loaders', $config);
@@ -178,14 +178,14 @@ class ConfigurationTest extends \Phpunit_Framework_TestCase
     {
         $config = $this->processConfiguration(
             new Configuration(
-                array(
+                [
                     new WebPathResolverFactory(),
-                ),
-                array(
+                ],
+                [
                     new FileSystemLoaderFactory(),
-                )
+                ]
             ),
-            array(array())
+            [[]]
         );
 
         $this->assertArrayHasKey('resolvers', $config);
@@ -197,24 +197,24 @@ class ConfigurationTest extends \Phpunit_Framework_TestCase
     {
         $config = $this->processConfiguration(
             new Configuration(
-                array(
+                [
                     new WebPathResolverFactory(),
-                ),
-                array(
+                ],
+                [
                     new FooLoaderFactory(),
                     new FileSystemLoaderFactory(),
-                )
+                ]
             ),
-            array(array(
-                'loaders' => array(
-                    'default' => array(
-                        'foo' => array(
+            [[
+                'loaders' => [
+                    'default' => [
+                        'foo' => [
                             'foo_option' => 'theValue',
-                        ),
-                    ),
-                ),
+                        ],
+                    ],
+                ],
 
-            ))
+            ]]
         );
 
         $this->assertArrayHasKey('loaders', $config);
@@ -226,59 +226,59 @@ class ConfigurationTest extends \Phpunit_Framework_TestCase
     {
         $config = $this->processConfiguration(
             new Configuration(
-                array(
+                [
                     new BarResolverFactory(),
                     new WebPathResolverFactory(),
-                ), array(
+                ], [
                     new FileSystemLoaderFactory(),
-                )
+                ]
             ),
-            array(array(
-                'resolvers' => array(
-                    'aResolver' => array(
-                        'bar' => array(
+            [[
+                'resolvers' => [
+                    'aResolver' => [
+                        'bar' => [
                             'bar_option' => 'theValue',
-                        ),
-                    ),
-                ),
+                        ],
+                    ],
+                ],
 
-            ))
+            ]]
         );
 
         $this->assertArrayHasKey('resolvers', $config);
         $this->assertArrayHasKey('aResolver', $config['resolvers']);
         $this->assertArrayHasKey('bar', $config['resolvers']['aResolver']);
         $this->assertArrayHasKey('bar_option', $config['resolvers']['aResolver']['bar']);
-        $this->assertEquals('theValue', $config['resolvers']['aResolver']['bar']['bar_option']);
+        $this->assertSame('theValue', $config['resolvers']['aResolver']['bar']['bar_option']);
     }
 
     public function testAllowToUseResolverFactorySeveralTimes()
     {
         $config = $this->processConfiguration(
             new Configuration(
-                array(
+                [
                     new BarResolverFactory(),
                     new WebPathResolverFactory(),
-                ),
-                array(
+                ],
+                [
                     new FileSystemLoaderFactory(),
-                )
+                ]
             ),
-            array(array(
-                'resolvers' => array(
-                    'aResolver' => array(
-                        'bar' => array(
+            [[
+                'resolvers' => [
+                    'aResolver' => [
+                        'bar' => [
                             'bar_option' => 'theValue',
-                        ),
-                    ),
-                    'anotherResolver' => array(
-                        'bar' => array(
+                        ],
+                    ],
+                    'anotherResolver' => [
+                        'bar' => [
                             'bar_option' => 'theValue',
-                        ),
-                    ),
-                ),
+                        ],
+                    ],
+                ],
 
-            ))
+            ]]
         );
 
         $this->assertArrayHasKey('resolvers', $config);
@@ -290,16 +290,16 @@ class ConfigurationTest extends \Phpunit_Framework_TestCase
     {
         $config = $this->processConfiguration(
             new Configuration(
-                array(
+                [
                     new WebPathResolverFactory(),
-                ), array(
+                ], [
                     new FileSystemLoaderFactory(),
-                )
+                ]
             ),
-            array(array(
-                'resolvers' => array(
-                ),
-            ))
+            [[
+                'resolvers' => [
+                ],
+            ]]
         );
 
         $this->assertArrayHasKey('resolvers', $config);
@@ -311,15 +311,15 @@ class ConfigurationTest extends \Phpunit_Framework_TestCase
     {
         $config = $this->processConfiguration(
             new Configuration(
-                array(
+                [
                     new WebPathResolverFactory(),
-                ), array(
+                ], [
                     new FileSystemLoaderFactory(),
-                )
+                ]
             ),
-            array(array(
+            [[
                 'resolvers' => null,
-            ))
+            ]]
         );
 
         $this->assertArrayHasKey('resolvers', $config);
@@ -332,15 +332,15 @@ class ConfigurationTest extends \Phpunit_Framework_TestCase
         $this->setExpectedException('LogicException', 'Resolvers has to be array');
         $config = $this->processConfiguration(
             new Configuration(
-                array(
+                [
                     new WebPathResolverFactory(),
-                ), array(
+                ], [
                     new FileSystemLoaderFactory(),
-                )
+                ]
             ),
-            array(array(
+            [[
                 'resolvers' => 'not_array',
-            ))
+            ]]
         );
 
         $this->assertArrayHasKey('resolvers', $config);
@@ -352,24 +352,24 @@ class ConfigurationTest extends \Phpunit_Framework_TestCase
     {
         $config = $this->processConfiguration(
             new Configuration(
-                array(
+                [
                     new BarResolverFactory(),
                     new WebPathResolverFactory(),
-                ),
-                array(
+                ],
+                [
                     new FileSystemLoaderFactory(),
-                )
+                ]
             ),
-            array(array(
-                'resolvers' => array(
-                    'default' => array(
-                        'bar' => array(
+            [[
+                'resolvers' => [
+                    'default' => [
+                        'bar' => [
                             'bar_option' => 'theValue',
-                        ),
-                    ),
-                ),
+                        ],
+                    ],
+                ],
 
-            ))
+            ]]
         );
 
         $this->assertArrayHasKey('resolvers', $config);
@@ -381,33 +381,33 @@ class ConfigurationTest extends \Phpunit_Framework_TestCase
     {
         $config = $this->processConfiguration(
             new Configuration(
-                array(
+                [
                     new BarResolverFactory(),
                     new WebPathResolverFactory(),
-                ),
-                array(
+                ],
+                [
                     new FileSystemLoaderFactory(),
-                )
+                ]
             ),
-            array(array(
-                'filter_sets' => array(
-                    'test' => array(
-                        'jpeg_quality' => 70,
-                        'png_compression_level' => 9,
+            [[
+                'filter_sets' => [
+                    'test' => [
+                        'jpeg_quality'           => 70,
+                        'png_compression_level'  => 9,
                         'png_compression_filter' => PNG_ALL_FILTERS,
-                    ),
-                ),
-            ))
+                    ],
+                ],
+            ]]
         );
 
         $this->assertArrayHasKey('filter_sets', $config);
         $this->assertArrayHasKey('test', $config['filter_sets']);
         $this->assertArrayHasKey('jpeg_quality', $config['filter_sets']['test']);
-        $this->assertEquals(70, $config['filter_sets']['test']['jpeg_quality']);
+        $this->assertSame(70, $config['filter_sets']['test']['jpeg_quality']);
         $this->assertArrayHasKey('png_compression_level', $config['filter_sets']['test']);
-        $this->assertEquals(9, $config['filter_sets']['test']['png_compression_level']);
+        $this->assertSame(9, $config['filter_sets']['test']['png_compression_level']);
         $this->assertArrayHasKey('png_compression_filter', $config['filter_sets']['test']);
-        $this->assertEquals(PNG_ALL_FILTERS, $config['filter_sets']['test']['png_compression_filter']);
+        $this->assertSame(PNG_ALL_FILTERS, $config['filter_sets']['test']['png_compression_filter']);
     }
 
     /**
@@ -440,8 +440,7 @@ class FooLoaderFactory implements LoaderFactoryInterface
         $builder
             ->children()
                 ->scalarNode('foo_option')->isRequired()->cannotBeEmpty()->end()
-            ->end()
-        ;
+            ->end();
     }
 }
 
@@ -461,7 +460,6 @@ class BarResolverFactory implements ResolverFactoryInterface
         $builder
             ->children()
                 ->scalarNode('bar_option')->isRequired()->cannotBeEmpty()->end()
-            ->end()
-        ;
+            ->end();
     }
 }

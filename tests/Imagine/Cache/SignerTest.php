@@ -1,9 +1,9 @@
 <?php
 
-namespace Anezi\ImagineBundle\Tests\Imagine\Cache;
+namespace Anezi\ImagineBundle\tests\Imagine\Cache;
 
-use Anezi\ImagineBundle\Tests\AbstractTest;
 use Anezi\ImagineBundle\Imagine\Cache\Signer;
+use Anezi\ImagineBundle\Tests\AbstractTest;
 
 class SignerTest extends AbstractTest
 {
@@ -23,7 +23,7 @@ class SignerTest extends AbstractTest
     {
         $singer = new Signer('aSecret');
 
-        $this->assertEquals(8, strlen($singer->sign('aPath')));
+        $this->assertSame(8, strlen($singer->sign('aPath')));
     }
 
     public function testShouldSingAndSuccessfullyCheckPathWithoutRuntimeConfig()
@@ -37,26 +37,26 @@ class SignerTest extends AbstractTest
     {
         $singer = new Signer('aSecret');
 
-        $this->assertTrue($singer->check($singer->sign('aPath', array('aConfig')), 'aPath', array('aConfig')));
+        $this->assertTrue($singer->check($singer->sign('aPath', ['aConfig']), 'aPath', ['aConfig']));
     }
 
     public function testShouldConvertRecursivelyToStringAllRuntimeConfigParameters()
     {
         $singer = new Signer('aSecret');
 
-        $runtimeConfigInts = array(
+        $runtimeConfigInts = [
             'foo' => 14,
-            'bar' => array(
+            'bar' => [
                 'bar' => 15,
-            ),
-        );
+            ],
+        ];
 
-        $runtimeConfigStrings = array(
+        $runtimeConfigStrings = [
             'foo' => '14',
-            'bar' => array(
+            'bar' => [
                 'bar' => '15',
-            ),
-        );
+            ],
+        ];
 
         $this->assertTrue($singer->check($singer->sign('aPath', $runtimeConfigInts), 'aPath', $runtimeConfigStrings));
     }

@@ -2,8 +2,8 @@
 
 namespace Anezi\ImagineBundle\Binary\Loader;
 
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Anezi\ImagineBundle\Exception\Binary\Loader\NotLoadableException;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
 class GridFSLoader implements LoaderInterface
 {
