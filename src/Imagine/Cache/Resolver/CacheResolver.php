@@ -192,7 +192,7 @@ class CacheResolver implements ResolverInterface
      * Save the given content to the cache and update the cache index.
      *
      * @param string $cacheKey
-     * @param mixed  $content
+     * @param string  $content
      *
      * @return bool
      */

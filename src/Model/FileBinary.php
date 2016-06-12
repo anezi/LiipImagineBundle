@@ -22,9 +22,9 @@ class FileBinary implements FileBinaryInterface
     protected $format;
 
     /**
-     * @param string $content
      * @param string $mimeType
      * @param string $format
+     * @param string $path
      */
     public function __construct($path, $mimeType, $format = null)
     {

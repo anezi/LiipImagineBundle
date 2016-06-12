@@ -173,7 +173,7 @@ class AmazonS3Resolver implements ResolverInterface
      *
      * @param string $path
      *
-     * @return string
+     * @return \CFResponse
      */
     protected function getObjectUrl($path)
     {
@@ -185,7 +185,7 @@ class AmazonS3Resolver implements ResolverInterface
      *
      * @param string $objectPath
      *
-     * @return bool
+     * @return boolean|null
      */
     protected function objectExists($objectPath)
     {
@@ -193,7 +193,7 @@ class AmazonS3Resolver implements ResolverInterface
     }
 
     /**
-     * @param mixed $message
+     * @param string $message
      * @param array $context
      */
     protected function logError($message, array $context = array())
