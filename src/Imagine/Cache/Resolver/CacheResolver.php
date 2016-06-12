@@ -5,9 +5,10 @@ namespace Anezi\ImagineBundle\Imagine\Cache\Resolver;
 use Doctrine\Common\Cache\Cache;
 use Anezi\ImagineBundle\Binary\BinaryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\HttpKernel\Kernel;
 
+/**
+ * Class CacheResolver.
+ */
 class CacheResolver implements ResolverInterface
 {
     /**
@@ -15,7 +16,10 @@ class CacheResolver implements ResolverInterface
      */
     protected $cache;
 
-    protected $options = array();
+    /**
+     * @var array
+     */
+    protected $options = [];
 
     /**
      * @var ResolverInterface
@@ -33,12 +37,12 @@ class CacheResolver implements ResolverInterface
      * * index_key
      *   The name of the index key being used to save a list of created cache keys regarding one image and filter pairing.
      *
-     * @param Cache                    $cache
-     * @param ResolverInterface        $cacheResolver
-     * @param array                    $options
-     * @param OptionsResolverInterface $optionsResolver
+     * @param Cache             $cache
+     * @param ResolverInterface $cacheResolver
+     * @param array             $options
+     * @param OptionsResolver   $optionsResolver
      */
-    public function __construct(Cache $cache, ResolverInterface $cacheResolver, array $options = array(), OptionsResolverInterface $optionsResolver = null)
+    public function __construct(Cache $cache, ResolverInterface $cacheResolver, array $options = [], OptionsResolver $optionsResolver = null)
     {
         $this->cache = $cache;
         $this->resolver = $cacheResolver;
@@ -54,20 +58,20 @@ class CacheResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function isStored($path, $filter)
+    public function isStored(string $path, string $loader, string $filter) : bool
     {
         $cacheKey = $this->generateCacheKey($path, $filter);
 
         return
             $this->cache->contains($cacheKey) ||
-            $this->resolver->isStored($path, $filter)
+            $this->resolver->isStored($path, $loader, $filter)
         ;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function resolve($path, $filter)
+    public function resolve(string $path, string $filter) : string
     {
         $key = $this->generateCacheKey($path, $filter);
         if ($this->cache->contains($key)) {
@@ -84,17 +88,17 @@ class CacheResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function store(BinaryInterface $binary, $path, $filter)
+    public function store(BinaryInterface $binary, string $path, string $loader, string $filter)
     {
-        $this->resolver->store($binary, $path, $filter);
+        $this->resolver->store($binary, $path, $loader, $filter);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function remove(array $paths, array $filters)
+    public function remove(array $paths, array $loaders, array $filters)
     {
-        $this->resolver->remove($paths, $filters);
+        $this->resolver->remove($paths, $loaders, $filters);
 
         foreach ($filters as $filter) {
             if (empty($paths)) {
@@ -107,6 +111,10 @@ class CacheResolver implements ResolverInterface
         }
     }
 
+    /**
+     * @param $path
+     * @param $filter
+     */
     protected function removePathAndFilter($path, $filter)
     {
         $indexKey = $this->generateIndexKey($this->generateCacheKey($path, $filter));
@@ -121,7 +129,7 @@ class CacheResolver implements ResolverInterface
                 $this->cache->delete($eachCacheKey);
             }
 
-            $index = array();
+            $index = [];
         } else {
             $cacheKey = $this->generateCacheKey($path, $filter);
             if (false !== $indexIndex = array_search($cacheKey, $index)) {
@@ -149,12 +157,12 @@ class CacheResolver implements ResolverInterface
      */
     public function generateCacheKey($path, $filter)
     {
-        return implode('.', array(
+        return implode('.', [
             $this->sanitizeCacheKeyPart($this->options['global_prefix']),
             $this->sanitizeCacheKeyPart($this->options['prefix']),
             $this->sanitizeCacheKeyPart($filter),
             $this->sanitizeCacheKeyPart($path),
-        ));
+        ]);
     }
 
     /**
@@ -170,12 +178,12 @@ class CacheResolver implements ResolverInterface
     {
         $cacheKeyStack = explode('.', $cacheKey);
 
-        return implode('.', array(
+        return implode('.', [
             $this->sanitizeCacheKeyPart($this->options['global_prefix']),
             $this->sanitizeCacheKeyPart($this->options['prefix']),
             $this->sanitizeCacheKeyPart($this->options['index_key']),
             $this->sanitizeCacheKeyPart($cacheKeyStack[2]), // filter
-        ));
+        ]);
     }
 
     /**
@@ -207,7 +215,7 @@ class CacheResolver implements ResolverInterface
                 $index[] = $cacheKey;
             }
         } else {
-            $index = array($cacheKey);
+            $index = [$cacheKey];
         }
 
         /*
@@ -223,30 +231,32 @@ class CacheResolver implements ResolverInterface
         return false;
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     protected function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'global_prefix' => 'anezi_imagine.resolver_cache',
             'prefix' => get_class($this->resolver),
             'index_key' => 'index',
-        ));
+        ]);
 
-        $allowedTypesList = array(
+        $allowedTypesList = [
           'global_prefix' => 'string',
           'prefix' => 'string',
           'index_key' => 'string',
-        );
+        ];
 
-        if (version_compare(Kernel::VERSION_ID, '20600') >= 0) {
-            foreach ($allowedTypesList as $option => $allowedTypes) {
-                $resolver->setAllowedTypes($option, $allowedTypes);
-            }
-        } else {
-            $resolver->setAllowedTypes($allowedTypesList);
+        foreach ($allowedTypesList as $option => $allowedTypes) {
+            $resolver->setAllowedTypes($option, $allowedTypes);
         }
     }
 
-    protected function setDefaultOptions(OptionsResolverInterface $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     */
+    protected function setDefaultOptions(OptionsResolver $resolver)
     {
         $this->configureOptions($resolver);
     }

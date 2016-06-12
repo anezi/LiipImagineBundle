@@ -21,7 +21,7 @@ class ProxyResolver implements ResolverInterface
      *
      * @var array
      */
-    protected $hosts = array();
+    protected $hosts = [];
 
     /**
      * @param ResolverInterface $resolver
@@ -36,7 +36,7 @@ class ProxyResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve($path, $filter)
+    public function resolve(string $path, string $filter) : string
     {
         return $this->rewriteUrl($this->resolver->resolve($path, $filter));
     }
@@ -44,25 +44,25 @@ class ProxyResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function store(BinaryInterface $binary, $targetPath, $filter)
+    public function store(BinaryInterface $binary, string $path, string $loader, string $filter)
     {
-        return $this->resolver->store($binary, $targetPath, $filter);
+        return $this->resolver->store($binary, $path, $loader, $filter);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isStored($path, $filter)
+    public function isStored(string $path, string $loader, string $filter) : bool
     {
-        return $this->resolver->isStored($path, $filter);
+        return $this->resolver->isStored($path, $loader, $filter);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function remove(array $paths, array $filters)
+    public function remove(array $paths, array $loaders, array $filters)
     {
-        return $this->resolver->remove($paths, $filters);
+        return $this->resolver->remove($paths, $loaders, $filters);
     }
 
     /**

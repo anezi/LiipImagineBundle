@@ -21,11 +21,7 @@ class ImagineController extends Controller
     /**
      * This action applies a given filter to a given image, optionally saves the image and outputs it to the browser at the same time.
      *
-     * @Route(
-     *     path="/media/cache/resolve/{loader}/{filter}/{path}",
-     *     name="anezi_imagine_resolve",
-     *     requirements={"filter"="[A-z0-9_\-]*","path"=".+"}
-     * )
+     * @Route(path="/{loader}/{filter}/{path}", name="anezi_imagine_load",requirements={"filter"="[A-z0-9_\-]*","path"=".+"})
      *
      * @param Request $request
      * @param string  $loader
@@ -34,16 +30,18 @@ class ImagineController extends Controller
      *
      * @return RedirectResponse
      */
-    public function resolveAction(Request $request, string $loader, string $filter, string $path) : RedirectResponse
+    public function loadAction(Request $request, string $loader, string $filter, string $path) : RedirectResponse
     {
         // decoding special characters and whitespaces from path obtained from url
         $path = urldecode($path);
         $resolver = $request->get('resolver');
+        $cacheManager = $this->get('anezi_imagine.cache.manager');
 
         try {
-            $cacheManager = $this->get('anezi_imagine.cache.manager');
+            if ($cacheManager->isStored($path, $filter, $resolver) === false) {
 
-            if (!$cacheManager->isStored($path, $filter, $resolver)) {
+                dump(__LINE__);
+                die;
                 $dataManager = $this->get('anezi_imagine.data.manager');
 
                 try {
@@ -66,6 +64,9 @@ class ImagineController extends Controller
                 );
             }
 
+            dump(__LINE__);
+            die;
+
             return new RedirectResponse($cacheManager->resolve($path, $filter, $resolver), 301);
         } catch (NonExistingFilterException $e) {
             $message = sprintf('Could not locate filter "%s" for path "%s". Message was "%s"', $filter, $path, $e->getMessage());
@@ -74,8 +75,14 @@ class ImagineController extends Controller
                 $this->get('logger')->debug($message);
             }
 
+            dump(__LINE__);
+            die;
+
             throw new NotFoundHttpException($message, $e);
         } catch (RuntimeException $e) {
+
+            dump(__LINE__);
+            die;
             throw new \RuntimeException(sprintf('Unable to create image for path "%s" and filter "%s". Message was "%s"', $path, $filter, $e->getMessage()), 0, $e);
         }
     }

@@ -59,7 +59,7 @@ class WebPathResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve($path, $filter)
+    public function resolve(string $path, string $filter) : string
     {
         return sprintf('%s/%s',
             $this->getBaseUrl(),
@@ -70,7 +70,7 @@ class WebPathResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function isStored($path, $filter)
+    public function isStored(string $path, string $loader, string $filter) : bool
     {
         return is_file($this->getFilePath($path, $filter));
     }
@@ -78,7 +78,7 @@ class WebPathResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function store(BinaryInterface $binary, $path, $filter)
+    public function store(BinaryInterface $binary, string $path, string $loader, string $filter)
     {
         $this->filesystem->dumpFile(
             $this->getFilePath($path, $filter),
@@ -89,7 +89,7 @@ class WebPathResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function remove(array $paths, array $filters)
+    public function remove(array $paths, array $loaders, array $filters)
     {
         if (empty($paths) && empty($filters)) {
             return;
@@ -148,7 +148,7 @@ class WebPathResolver implements ResolverInterface
 
         $baseUrl = $this->requestContext->getBaseUrl();
         if ('.php' == substr($this->requestContext->getBaseUrl(), -4)) {
-            $baseUrl = pathinfo($this->requestContext->getBaseurl(), PATHINFO_DIRNAME);
+            $baseUrl = pathinfo($this->requestContext->getBaseUrl(), PATHINFO_DIRNAME);
         }
         $baseUrl = rtrim($baseUrl, '/\\');
 

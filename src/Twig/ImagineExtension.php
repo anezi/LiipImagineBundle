@@ -32,22 +32,23 @@ class ImagineExtension extends \Twig_Extension
      */
     public function getFilters()
     {
-        return array(
-            new \Twig_SimpleFilter('imagine_filter', array($this, 'filter')),
-        );
+        return [
+            new \Twig_SimpleFilter('imagine_filter', [$this, 'filter']),
+        ];
     }
 
     /**
      * Gets the browser path for the image and filter to apply.
      *
      * @param string $path
+     * @param string $loader
      * @param string $filter
      * @param array  $runtimeConfig
      * @param string $resolver
      *
      * @return \Twig_Markup
      */
-    public function filter($path, $filter, array $runtimeConfig = array(), $resolver = null)
+    public function filter(string $path, string $loader, string $filter, array $runtimeConfig = [], $resolver = null)
     {
         return $this->cacheManager->getBrowserPath($path, $filter, $runtimeConfig, $resolver);
     }

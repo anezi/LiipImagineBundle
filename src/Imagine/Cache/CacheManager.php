@@ -182,7 +182,7 @@ class CacheManager
         }
 
         if (empty($runtimeConfig)) {
-            $filterUrl = $this->router->generate('anezi_imagine_resolve', $params, UrlGeneratorInterface::ABSOLUTE_URL);
+            $filterUrl = $this->router->generate('anezi_imagine_load', $params, UrlGeneratorInterface::ABSOLUTE_URL);
         } else {
             $params['filters'] = $runtimeConfig;
             $params['hash'] = $this->signer->sign($path, $runtimeConfig);

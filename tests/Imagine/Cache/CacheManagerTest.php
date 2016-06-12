@@ -286,11 +286,11 @@ class CacheManagerTest extends AbstractTest
             ->expects($this->once())
             ->method('generate')
             ->with(
-                'anezi_imagine_resolve',
-                array(
+                'anezi_imagine_load',
+                [
                     'path' => $path,
                     'filter' => 'thumbnail',
-                ),
+                ],
                 UrlGeneratorInterface::ABSOLUTE_URL
             )
             ->will($this->returnValue($expectedUrl))

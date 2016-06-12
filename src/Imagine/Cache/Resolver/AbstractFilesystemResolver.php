@@ -9,6 +9,9 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class AbstractFilesystemResolver.
+ */
 abstract class AbstractFilesystemResolver implements ResolverInterface, CacheManagerAwareInterface
 {
     /**
@@ -83,17 +86,17 @@ abstract class AbstractFilesystemResolver implements ResolverInterface, CacheMan
     /**
      * {@inheritdoc}
      */
-    public function isStored($path, $filter)
+    public function isStored(string $path, string $loader, string $filter)
     {
-        return file_exists($this->getFilePath($path, $filter));
+        return file_exists($this->getFilePath($path, $loader, $filter));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function store(BinaryInterface $binary, $path, $filter)
+    public function store(BinaryInterface $binary, string $path, string $loader, string $filter)
     {
-        $filePath = $this->getFilePath($path, $filter);
+        $filePath = $this->getFilePath($path, $loader, $filter);
 
         $dir = pathinfo($filePath, PATHINFO_DIRNAME);
 
@@ -105,17 +108,17 @@ abstract class AbstractFilesystemResolver implements ResolverInterface, CacheMan
     /**
      * {@inheritdoc}
      */
-    public function remove(array $paths, array $filters)
+    public function remove(array $paths, array $loaders, array $filters)
     {
         if (empty($paths) && empty($filters)) {
             return;
         }
 
         // TODO: this logic has to be refactored.
-        list($rootCachePath) = explode(current($filters), $this->getFilePath('whateverpath', current($filters)));
+        list($rootCachePath) = explode(current($filters), $this->getFilePath('whateverpath', current($loaders), current($filters)));
 
         if (empty($paths)) {
-            $filtersCachePaths = array();
+            $filtersCachePaths = [];
             foreach ($filters as $filter) {
                 $filterCachePath = $rootCachePath.$filter;
                 if (is_dir($filterCachePath)) {
@@ -129,8 +132,10 @@ abstract class AbstractFilesystemResolver implements ResolverInterface, CacheMan
         }
 
         foreach ($paths as $path) {
-            foreach ($filters as $filter) {
-                $this->filesystem->remove($this->getFilePath($path, $filter));
+            foreach ($loaders as $loader) {
+                foreach ($filters as $filter) {
+                    $this->filesystem->remove($this->getFilePath($path, $loader, $filter));
+                }
             }
         }
     }
@@ -169,14 +174,14 @@ abstract class AbstractFilesystemResolver implements ResolverInterface, CacheMan
     }
 
     /**
-     * Return the local filepath.
+     * Return the local file path.
      *
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
      * @param string $path   The resource path to convert.
+     * @param string $loader
      * @param string $filter The name of the imagine filter.
      *
      * @return string
      */
-    abstract protected function getFilePath($path, $filter);
+    abstract protected function getFilePath(string $path, string $loader, string $filter) : string;
 }
