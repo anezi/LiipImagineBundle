@@ -38,7 +38,7 @@ class WebPathResolverFactoryTest extends \Phpunit_Framework_TestCase
         $resolver = new WebPathResolverFactory();
 
         $resolver->create($container, 'theResolverName', [
-            'web_root'     => 'theWebRoot',
+            'web_root' => 'theWebRoot',
             'cache_prefix' => 'theCachePrefix',
         ]);
 
@@ -65,7 +65,7 @@ class WebPathResolverFactoryTest extends \Phpunit_Framework_TestCase
 
         $config = $this->processConfigTree($treeBuilder, [
             'web_path' => [
-                'web_root'     => $expectedWebPath,
+                'web_root' => $expectedWebPath,
                 'cache_prefix' => $expectedCachePrefix,
             ],
         ]);

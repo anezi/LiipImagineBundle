@@ -173,7 +173,7 @@ class FilterManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'format'  => $expectedFormat,
+                'format' => $expectedFormat,
                 'filters' => [
                     'thumbnail' => $thumbConfig,
                 ],
@@ -293,7 +293,7 @@ class FilterManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'format'  => 'jpg',
+                'format' => 'jpg',
                 'filters' => [
                     'thumbnail' => $thumbConfig,
                 ],
@@ -675,7 +675,7 @@ class FilterManagerTest extends AbstractTest
         $filterManager->addLoader('thumbnail', $loader);
 
         $filteredBinary = $filterManager->apply($binary, [
-            'format'  => $expectedFormat,
+            'format' => $expectedFormat,
             'filters' => [
                 'thumbnail' => $thumbConfig,
             ],
@@ -788,7 +788,7 @@ class FilterManagerTest extends AbstractTest
         $filterManager->addLoader('thumbnail', $loader);
 
         $filteredBinary = $filterManager->apply($binary, [
-            'format'  => 'jpg',
+            'format' => 'jpg',
             'filters' => [
                 'thumbnail' => $thumbConfig,
             ],

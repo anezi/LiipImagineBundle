@@ -12,7 +12,7 @@ use Anezi\ImagineBundle\Tests\AbstractTest;
 class AwsS3ResolverTest extends AbstractTest
 {
     /**
-     * @test 
+     * @test
      */
     public function testImplementsResolverInterface()
     {
@@ -111,11 +111,11 @@ class AwsS3ResolverTest extends AbstractTest
             ->method('putObject')
             ->with([
                 'CacheControl' => 'max-age=86400',
-                'ACL'          => 'public-read',
-                'Bucket'       => 'images.example.com',
-                'Key'          => 'filter/images/foobar.jpg',
-                'Body'         => 'aContent',
-                'ContentType'  => 'image/jpeg',
+                'ACL' => 'public-read',
+                'Bucket' => 'images.example.com',
+                'Key' => 'filter/images/foobar.jpg',
+                'Body' => 'aContent',
+                'ContentType' => 'image/jpeg',
             ]);
 
         $resolver = new AwsS3Resolver($s3, 'images.example.com');
@@ -196,7 +196,7 @@ class AwsS3ResolverTest extends AbstractTest
             ->method('deleteObject')
             ->with([
                 'Bucket' => 'images.example.com',
-                'Key'    => 'thumb/some-folder/path.jpg',
+                'Key' => 'thumb/some-folder/path.jpg',
             ])
             ->will($this->returnValue($this->getS3ResponseMock(true)));
 
@@ -221,7 +221,7 @@ class AwsS3ResolverTest extends AbstractTest
             ->method('deleteObject')
             ->with([
                 'Bucket' => 'images.example.com',
-                'Key'    => 'thumb/pathOne.jpg',
+                'Key' => 'thumb/pathOne.jpg',
             ])
             ->will($this->returnValue($this->getS3ResponseMock(true)));
         $s3
@@ -234,7 +234,7 @@ class AwsS3ResolverTest extends AbstractTest
             ->method('deleteObject')
             ->with([
                 'Bucket' => 'images.example.com',
-                'Key'    => 'thumb/pathTwo.jpg',
+                'Key' => 'thumb/pathTwo.jpg',
             ])
             ->will($this->returnValue($this->getS3ResponseMock(true)));
 
@@ -263,7 +263,7 @@ class AwsS3ResolverTest extends AbstractTest
             ->method('deleteObject')
             ->with([
                 'Bucket' => 'images.example.com',
-                'Key'    => 'filterOne/pathOne.jpg',
+                'Key' => 'filterOne/pathOne.jpg',
             ])
             ->will($this->returnValue($this->getS3ResponseMock(true)));
         $s3
@@ -276,7 +276,7 @@ class AwsS3ResolverTest extends AbstractTest
             ->method('deleteObject')
             ->with([
                 'Bucket' => 'images.example.com',
-                'Key'    => 'filterOne/pathTwo.jpg',
+                'Key' => 'filterOne/pathTwo.jpg',
             ])
             ->will($this->returnValue($this->getS3ResponseMock(true)));
         $s3
@@ -289,7 +289,7 @@ class AwsS3ResolverTest extends AbstractTest
             ->method('deleteObject')
             ->with([
                 'Bucket' => 'images.example.com',
-                'Key'    => 'filterTwo/pathOne.jpg',
+                'Key' => 'filterTwo/pathOne.jpg',
             ])
             ->will($this->returnValue($this->getS3ResponseMock(true)));
         $s3
@@ -302,7 +302,7 @@ class AwsS3ResolverTest extends AbstractTest
             ->method('deleteObject')
             ->with([
                 'Bucket' => 'images.example.com',
-                'Key'    => 'filterTwo/pathTwo.jpg',
+                'Key' => 'filterTwo/pathTwo.jpg',
             ])
             ->will($this->returnValue($this->getS3ResponseMock(true)));
 

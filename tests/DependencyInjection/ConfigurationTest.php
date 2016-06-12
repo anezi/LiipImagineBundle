@@ -392,8 +392,8 @@ class ConfigurationTest extends \Phpunit_Framework_TestCase
             [[
                 'filter_sets' => [
                     'test' => [
-                        'jpeg_quality'           => 70,
-                        'png_compression_level'  => 9,
+                        'jpeg_quality' => 70,
+                        'png_compression_level' => 9,
                         'png_compression_filter' => PNG_ALL_FILTERS,
                     ],
                 ],

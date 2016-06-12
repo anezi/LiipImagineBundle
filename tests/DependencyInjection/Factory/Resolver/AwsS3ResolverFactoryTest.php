@@ -40,13 +40,13 @@ class AwsS3ResolverFactoryTest extends \Phpunit_Framework_TestCase
 
         $resolver->create($container, 'theResolverName', [
             'client_config' => [],
-            'bucket'        => 'theBucket',
-            'acl'           => 'theAcl',
-            'url_options'   => ['fooKey' => 'fooVal'],
-            'get_options'   => [],
-            'put_options'   => ['barKey' => 'barVal'],
-            'cache'         => false,
-            'proxies'       => [],
+            'bucket' => 'theBucket',
+            'acl' => 'theAcl',
+            'url_options' => ['fooKey' => 'fooVal'],
+            'get_options' => [],
+            'put_options' => ['barKey' => 'barVal'],
+            'cache' => false,
+            'proxies' => [],
         ]);
 
         $this->assertTrue($container->hasDefinition('anezi_imagine.cache.resolver.theresolvername'));
@@ -72,13 +72,13 @@ class AwsS3ResolverFactoryTest extends \Phpunit_Framework_TestCase
 
         $resolver->create($container, 'theResolverName', [
             'client_config' => [],
-            'bucket'        => 'theBucket',
-            'acl'           => 'theAcl',
-            'url_options'   => ['fooKey' => 'fooVal', 'barKey' => 'barVal'],
-            'get_options'   => ['fooKey' => 'fooVal_overridden'],
-            'put_options'   => [],
-            'cache'         => false,
-            'proxies'       => [],
+            'bucket' => 'theBucket',
+            'acl' => 'theAcl',
+            'url_options' => ['fooKey' => 'fooVal', 'barKey' => 'barVal'],
+            'get_options' => ['fooKey' => 'fooVal_overridden'],
+            'put_options' => [],
+            'cache' => false,
+            'proxies' => [],
         ]);
 
         $this->assertTrue($container->hasDefinition('anezi_imagine.cache.resolver.theresolvername'));
@@ -95,13 +95,13 @@ class AwsS3ResolverFactoryTest extends \Phpunit_Framework_TestCase
 
         $resolver->create($container, 'theResolverName', [
             'client_config' => ['theClientConfigKey' => 'theClientConfigVal'],
-            'bucket'        => 'aBucket',
-            'acl'           => 'aAcl',
-            'url_options'   => [],
-            'get_options'   => [],
-            'put_options'   => [],
-            'cache'         => false,
-            'proxies'       => [],
+            'bucket' => 'aBucket',
+            'acl' => 'aAcl',
+            'url_options' => [],
+            'get_options' => [],
+            'put_options' => [],
+            'cache' => false,
+            'proxies' => [],
         ]);
 
         $this->assertTrue($container->hasDefinition('anezi_imagine.cache.resolver.theresolvername.client'));
@@ -123,13 +123,13 @@ class AwsS3ResolverFactoryTest extends \Phpunit_Framework_TestCase
 
         $resolver->create($container, 'theResolverName', [
             'client_config' => ['theClientConfigKey' => 'theClientConfigVal'],
-            'bucket'        => 'aBucket',
-            'acl'           => 'aAcl',
-            'url_options'   => [],
-            'get_options'   => [],
-            'put_options'   => [],
-            'cache'         => false,
-            'proxies'       => [],
+            'bucket' => 'aBucket',
+            'acl' => 'aAcl',
+            'url_options' => [],
+            'get_options' => [],
+            'put_options' => [],
+            'cache' => false,
+            'proxies' => [],
         ]);
 
         $clientDefinition = $container->getDefinition('anezi_imagine.cache.resolver.theresolvername.client');
@@ -148,13 +148,13 @@ class AwsS3ResolverFactoryTest extends \Phpunit_Framework_TestCase
 
         $resolver->create($container, 'theResolverName', [
             'client_config' => ['theClientConfigKey' => 'theClientConfigVal'],
-            'bucket'        => 'aBucket',
-            'acl'           => 'aAcl',
-            'url_options'   => [],
-            'get_options'   => [],
-            'put_options'   => [],
-            'cache'         => false,
-            'proxies'       => [],
+            'bucket' => 'aBucket',
+            'acl' => 'aAcl',
+            'url_options' => [],
+            'get_options' => [],
+            'put_options' => [],
+            'cache' => false,
+            'proxies' => [],
         ]);
 
         $clientDefinition = $container->getDefinition('anezi_imagine.cache.resolver.theresolvername.client');
@@ -170,13 +170,13 @@ class AwsS3ResolverFactoryTest extends \Phpunit_Framework_TestCase
 
         $resolver->create($container, 'theResolverName', [
             'client_config' => [],
-            'bucket'        => 'aBucket',
-            'acl'           => 'aAcl',
-            'url_options'   => [],
-            'get_options'   => [],
-            'put_options'   => [],
-            'cache'         => false,
-            'proxies'       => ['foo'],
+            'bucket' => 'aBucket',
+            'acl' => 'aAcl',
+            'url_options' => [],
+            'get_options' => [],
+            'put_options' => [],
+            'cache' => false,
+            'proxies' => ['foo'],
         ]);
 
         $this->assertTrue($container->hasDefinition('anezi_imagine.cache.resolver.theresolvername.proxied'));
@@ -205,13 +205,13 @@ class AwsS3ResolverFactoryTest extends \Phpunit_Framework_TestCase
 
         $resolver->create($container, 'theResolverName', [
             'client_config' => [],
-            'bucket'        => 'aBucket',
-            'acl'           => 'aAcl',
-            'url_options'   => [],
-            'get_options'   => [],
-            'put_options'   => [],
-            'cache'         => 'theCacheServiceId',
-            'proxies'       => [],
+            'bucket' => 'aBucket',
+            'acl' => 'aAcl',
+            'url_options' => [],
+            'get_options' => [],
+            'put_options' => [],
+            'cache' => 'theCacheServiceId',
+            'proxies' => [],
         ]);
 
         $this->assertTrue($container->hasDefinition('anezi_imagine.cache.resolver.theresolvername.cached'));
@@ -241,13 +241,13 @@ class AwsS3ResolverFactoryTest extends \Phpunit_Framework_TestCase
 
         $resolver->create($container, 'theResolverName', [
             'client_config' => [],
-            'bucket'        => 'aBucket',
-            'acl'           => 'aAcl',
-            'url_options'   => [],
-            'get_options'   => [],
-            'put_options'   => [],
-            'cache'         => 'theCacheServiceId',
-            'proxies'       => ['foo'],
+            'bucket' => 'aBucket',
+            'acl' => 'aAcl',
+            'url_options' => [],
+            'get_options' => [],
+            'put_options' => [],
+            'cache' => 'theCacheServiceId',
+            'proxies' => ['foo'],
         ]);
 
         $this->assertTrue($container->hasDefinition('anezi_imagine.cache.resolver.theresolvername.proxied'));
@@ -285,13 +285,13 @@ class AwsS3ResolverFactoryTest extends \Phpunit_Framework_TestCase
 
         $resolver->create($container, 'theResolverName', [
             'client_config' => [],
-            'bucket'        => 'aBucket',
-            'acl'           => 'aAcl',
-            'url_options'   => [],
-            'get_options'   => [],
-            'put_options'   => [],
-            'cache'         => 'theCacheServiceId',
-            'proxies'       => ['foo' => 'bar'],
+            'bucket' => 'aBucket',
+            'acl' => 'aAcl',
+            'url_options' => [],
+            'get_options' => [],
+            'put_options' => [],
+            'cache' => 'theCacheServiceId',
+            'proxies' => ['foo' => 'bar'],
         ]);
 
         $this->assertTrue($container->hasDefinition('anezi_imagine.cache.resolver.theresolvername.proxied'));
@@ -318,14 +318,14 @@ class AwsS3ResolverFactoryTest extends \Phpunit_Framework_TestCase
 
         $resolver->create($container, 'theResolverName', [
             'client_config' => [],
-            'bucket'        => 'aBucket',
-            'acl'           => 'aAcl',
-            'url_options'   => [],
-            'get_options'   => [],
-            'put_options'   => [],
-            'cache_prefix'  => 'theCachePrefix',
-            'cache'         => null,
-            'proxies'       => [],
+            'bucket' => 'aBucket',
+            'acl' => 'aAcl',
+            'url_options' => [],
+            'get_options' => [],
+            'put_options' => [],
+            'cache_prefix' => 'theCachePrefix',
+            'cache' => null,
+            'proxies' => [],
         ]);
 
         $this->assertTrue($container->hasDefinition('anezi_imagine.cache.resolver.theresolvername'));
@@ -386,7 +386,7 @@ class AwsS3ResolverFactoryTest extends \Phpunit_Framework_TestCase
 
         $this->processConfigTree($treeBuilder, [
             'aws_s3' => [
-                'bucket'        => 'aBucket',
+                'bucket' => 'aBucket',
                 'client_config' => 'not_array',
             ],
         ]);
@@ -395,19 +395,19 @@ class AwsS3ResolverFactoryTest extends \Phpunit_Framework_TestCase
     public function testProcessCorrectlyOptionsOnAddConfiguration()
     {
         $expectedClientConfig = [
-            'theKey'      => 'theClientConfigVal',
+            'theKey' => 'theClientConfigVal',
             'theOtherKey' => 'theOtherClientConfigValue',
         ];
         $expectedUrlOptions = [
-            'theKey'      => 'theUrlOptionsVal',
+            'theKey' => 'theUrlOptionsVal',
             'theOtherKey' => 'theOtherUrlOptionsValue',
         ];
         $expectedGetOptions = [
-            'theKey'      => 'theGetOptionsVal',
+            'theKey' => 'theGetOptionsVal',
             'theOtherKey' => 'theOtherGetOptionsValue',
         ];
         $expectedObjectOptions = [
-            'theKey'      => 'theObjectOptionsVal',
+            'theKey' => 'theObjectOptionsVal',
             'theOtherKey' => 'theOtherObjectOptionsValue',
         ];
         $expectedBucket = 'theBucket';
@@ -422,13 +422,13 @@ class AwsS3ResolverFactoryTest extends \Phpunit_Framework_TestCase
 
         $config = $this->processConfigTree($treeBuilder, [
             'aws_s3' => [
-                'bucket'        => $expectedBucket,
-                'acl'           => $expectedAcl,
+                'bucket' => $expectedBucket,
+                'acl' => $expectedAcl,
                 'client_config' => $expectedClientConfig,
-                'url_options'   => $expectedUrlOptions,
-                'get_options'   => $expectedGetOptions,
-                'put_options'   => $expectedObjectOptions,
-                'cache_prefix'  => $expectedCachePrefix,
+                'url_options' => $expectedUrlOptions,
+                'get_options' => $expectedGetOptions,
+                'put_options' => $expectedObjectOptions,
+                'cache_prefix' => $expectedCachePrefix,
             ],
         ]);
 
@@ -466,7 +466,7 @@ class AwsS3ResolverFactoryTest extends \Phpunit_Framework_TestCase
 
         $config = $this->processConfigTree($treeBuilder, [
             'aws_s3' => [
-                'bucket'        => 'aBucket',
+                'bucket' => 'aBucket',
                 'client_config' => [],
             ],
         ]);
@@ -488,23 +488,23 @@ class AwsS3ResolverFactoryTest extends \Phpunit_Framework_TestCase
     {
         $expectedClientConfig = [
             'credentials' => [
-                'key'    => 'theKey',
+                'key' => 'theKey',
                 'secret' => 'theSecret',
-                'token'  => 'theToken',
+                'token' => 'theToken',
             ],
-            'region'  => 'theRegion',
+            'region' => 'theRegion',
             'version' => 'theVersion',
         ];
         $expectedUrlOptions = [
-            'theKey'      => 'theUrlOptionsVal',
+            'theKey' => 'theUrlOptionsVal',
             'theOtherKey' => 'theOtherUrlOptionsValue',
         ];
         $expectedGetOptions = [
-            'theKey'      => 'theGetOptionsVal',
+            'theKey' => 'theGetOptionsVal',
             'theOtherKey' => 'theOtherGetOptionsValue',
         ];
         $expectedObjectOptions = [
-            'theKey'      => 'theObjectOptionsVal',
+            'theKey' => 'theObjectOptionsVal',
             'theOtherKey' => 'theOtherObjectOptionsValue',
         ];
         $expectedBucket = 'theBucket';
@@ -519,13 +519,13 @@ class AwsS3ResolverFactoryTest extends \Phpunit_Framework_TestCase
 
         $config = $this->processConfigTree($treeBuilder, [
             'aws_s3' => [
-                'bucket'        => $expectedBucket,
-                'acl'           => $expectedAcl,
+                'bucket' => $expectedBucket,
+                'acl' => $expectedAcl,
                 'client_config' => $expectedClientConfig,
-                'url_options'   => $expectedUrlOptions,
-                'get_options'   => $expectedGetOptions,
-                'put_options'   => $expectedObjectOptions,
-                'cache_prefix'  => $expectedCachePrefix,
+                'url_options' => $expectedUrlOptions,
+                'get_options' => $expectedGetOptions,
+                'put_options' => $expectedObjectOptions,
+                'cache_prefix' => $expectedCachePrefix,
             ],
         ]);
 

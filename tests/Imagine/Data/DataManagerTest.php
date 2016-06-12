@@ -29,8 +29,8 @@ class DataManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size'        => [180, 180],
-                'mode'        => 'outbound',
+                'size' => [180, 180],
+                'mode' => 'outbound',
                 'data_loader' => null,
             ]));
 
@@ -63,8 +63,8 @@ class DataManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size'        => [180, 180],
-                'mode'        => 'outbound',
+                'size' => [180, 180],
+                'mode' => 'outbound',
                 'data_loader' => 'the_loader',
             ]));
 
@@ -97,8 +97,8 @@ class DataManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size'        => [180, 180],
-                'mode'        => 'outbound',
+                'size' => [180, 180],
+                'mode' => 'outbound',
                 'data_loader' => 'the_loader',
             ]));
 
@@ -133,8 +133,8 @@ class DataManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size'        => [180, 180],
-                'mode'        => 'outbound',
+                'size' => [180, 180],
+                'mode' => 'outbound',
                 'data_loader' => 'the_loader',
             ]));
 
@@ -169,8 +169,8 @@ class DataManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size'        => [180, 180],
-                'mode'        => 'outbound',
+                'size' => [180, 180],
+                'mode' => 'outbound',
                 'data_loader' => 'the_loader',
             ]));
 
@@ -206,8 +206,8 @@ class DataManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size'        => [180, 180],
-                'mode'        => 'outbound',
+                'size' => [180, 180],
+                'mode' => 'outbound',
                 'data_loader' => 'the_loader',
             ]));
 
@@ -234,8 +234,8 @@ class DataManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size'        => [180, 180],
-                'mode'        => 'outbound',
+                'size' => [180, 180],
+                'mode' => 'outbound',
                 'data_loader' => null,
             ]));
 
@@ -272,8 +272,8 @@ class DataManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size'        => [180, 180],
-                'mode'        => 'outbound',
+                'size' => [180, 180],
+                'mode' => 'outbound',
                 'data_loader' => null,
             ]));
 
@@ -322,8 +322,8 @@ class DataManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size'        => [180, 180],
-                'mode'        => 'outbound',
+                'size' => [180, 180],
+                'mode' => 'outbound',
                 'data_loader' => null,
             ]));
 

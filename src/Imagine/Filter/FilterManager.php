@@ -98,8 +98,8 @@ class FilterManager
     {
         $config = array_replace(
             [
-                'filters'  => [],
-                'quality'  => 100,
+                'filters' => [],
+                'quality' => 100,
                 'animated' => false,
             ],
             $config

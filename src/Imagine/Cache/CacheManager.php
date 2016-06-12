@@ -109,7 +109,7 @@ class CacheManager
     protected function getResolver($filter, $resolver)
     {
         // BC
-        if (false === $resolver) {
+        if (null === $resolver) {
             $config = $this->filterConfig->get($filter);
 
             $resolverName = empty($config['cache']) ? $this->defaultResolver : $config['cache'];
@@ -117,7 +117,7 @@ class CacheManager
             $resolverName = $resolver;
         }
 
-        if (!isset($this->resolvers[$resolverName])) {
+        if (isset($this->resolvers[$resolverName]) === false) {
             throw new \OutOfBoundsException(sprintf(
                 'Could not find resolver "%s" for "%s" filter type',
                 $resolverName,
@@ -180,7 +180,7 @@ class CacheManager
     public function generateUrl($path, $filter, array $runtimeConfig = [], $resolver = null)
     {
         $params = [
-            'path'   => ltrim($path, '/'),
+            'path' => ltrim($path, '/'),
             'filter' => $filter,
         ];
 
@@ -291,6 +291,7 @@ class CacheManager
         $loaders = array_filter($loaders);
 
         $mapping = new \SplObjectStorage();
+
         foreach ($filters as $filter) {
             $resolver = $this->getResolver($filter, null);
 

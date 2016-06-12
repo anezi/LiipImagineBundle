@@ -242,14 +242,14 @@ class CacheResolver implements ResolverInterface
     {
         $resolver->setDefaults([
             'global_prefix' => 'anezi_imagine.resolver_cache',
-            'prefix'        => get_class($this->resolver),
-            'index_key'     => 'index',
+            'prefix' => get_class($this->resolver),
+            'index_key' => 'index',
         ]);
 
         $allowedTypesList = [
           'global_prefix' => 'string',
-          'prefix'        => 'string',
-          'index_key'     => 'string',
+          'prefix' => 'string',
+          'index_key' => 'string',
         ];
 
         foreach ($allowedTypesList as $option => $allowedTypes) {

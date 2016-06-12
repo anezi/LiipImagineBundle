@@ -57,7 +57,7 @@ class FilterConfigurationTest extends AbstractTest
     {
         $config = [
             'quality' => 85,
-            'format'  => 'jpg',
+            'format' => 'jpg',
             'filters' => [
                 'thumbnail' => [
                     'size' => [180, 180],
@@ -77,7 +77,7 @@ class FilterConfigurationTest extends AbstractTest
     {
         $filterConfiguration = new FilterConfiguration([
             'profile_photo' => [],
-            'thumbnail'     => [],
+            'thumbnail' => [],
         ]);
 
         $this->assertInternalType('array', $filterConfiguration->get('profile_photo'));

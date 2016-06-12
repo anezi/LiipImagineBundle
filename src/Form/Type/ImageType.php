@@ -39,10 +39,10 @@ class ImageType extends AbstractType
         ]);
 
         $resolver->setDefaults([
-            'image_attr'  => [],
-            'link_url'    => null,
+            'image_attr' => [],
+            'link_url' => null,
             'link_filter' => null,
-            'link_attr'   => [],
+            'link_attr' => [],
         ]);
     }
 

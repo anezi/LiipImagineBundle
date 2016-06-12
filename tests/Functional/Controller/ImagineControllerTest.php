@@ -73,16 +73,16 @@ class ImagineControllerTest extends WebTestCase
     public function testShouldResolveFromCache()
     {
         $this->filesystem->dumpFile(
-            $this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg',
+            $this->cacheRoot.'/web_path_loader/thumbnail_web_path/images/cats.jpeg',
             'anImageContent'
         );
 
-        $this->client->request('GET', '/media/cache/resolve/thumbnail_web_path/images/cats.jpeg');
+        $this->client->request('GET', '/images/web_path_loader/thumbnail_web_path/images/cats.jpeg');
 
         $response = $this->client->getResponse();
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertSame(301, $response->getStatusCode());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $response->getTargetUrl());
 
         $this->assertFileExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
@@ -110,7 +110,7 @@ class ImagineControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/media/cache/resolve/thumbnail_web_path/rc/invalidHash/images/cats.jpeg?'.http_build_query([
             'filters' => 'some-string',
-            '_hash'   => 'hash',
+            '_hash' => 'hash',
             ]));
     }
 

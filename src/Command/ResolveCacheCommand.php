@@ -87,7 +87,7 @@ EOF
         foreach ($paths as $path) {
             foreach ($loaders as $loader) {
                 foreach ($filters as $filter) {
-                    if (!$cacheManager->isStored($path, $loader, $filter)) {
+                    if ($cacheManager->isStored($path, $loader, $filter) === false) {
                         $binary = $dataManager->find($filter, $path);
 
                         $cacheManager->store(

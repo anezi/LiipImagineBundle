@@ -111,10 +111,10 @@ class AwsS3Resolver implements ResolverInterface
                 array_merge(
                     $this->putOptions,
                     [
-                        'ACL'         => $this->acl,
-                        'Bucket'      => $this->bucket,
-                        'Key'         => $objectPath,
-                        'Body'        => $binary->getContent(),
+                        'ACL' => $this->acl,
+                        'Bucket' => $this->bucket,
+                        'Key' => $objectPath,
+                        'Body' => $binary->getContent(),
                         'ContentType' => $binary->getMimeType(),
                     ]
                 )
@@ -122,9 +122,9 @@ class AwsS3Resolver implements ResolverInterface
         } catch (\Exception $e) {
             $this->logError('The object could not be created on Amazon S3.', [
                 'objectPath' => $objectPath,
-                'filter'     => $filter,
-                'bucket'     => $this->bucket,
-                'exception'  => $e,
+                'filter' => $filter,
+                'bucket' => $this->bucket,
+                'exception' => $e,
             ]);
 
             throw new NotStorableException('The object could not be created on Amazon S3.', null, $e);
@@ -148,8 +148,8 @@ class AwsS3Resolver implements ResolverInterface
                 ));
             } catch (\Exception $e) {
                 $this->logError('The objects could not be deleted from Amazon S3.', [
-                    'filter'    => implode(', ', $filters),
-                    'bucket'    => $this->bucket,
+                    'filter' => implode(', ', $filters),
+                    'bucket' => $this->bucket,
                     'exception' => $e,
                 ]);
             }
@@ -168,14 +168,14 @@ class AwsS3Resolver implements ResolverInterface
                     try {
                         $this->storage->deleteObject([
                             'Bucket' => $this->bucket,
-                            'Key'    => $objectPath,
+                            'Key' => $objectPath,
                         ]);
                     } catch (\Exception $e) {
                         $this->logError('The object could not be deleted from Amazon S3.', [
                             'objectPath' => $objectPath,
-                            'filter'     => $filter,
-                            'bucket'     => $this->bucket,
-                            'exception'  => $e,
+                            'filter' => $filter,
+                            'bucket' => $this->bucket,
+                            'exception' => $e,
                         ]);
                     }
                 }

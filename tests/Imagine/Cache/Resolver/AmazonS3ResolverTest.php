@@ -12,7 +12,7 @@ use Anezi\ImagineBundle\Tests\AbstractTest;
 class AmazonS3ResolverTest extends AbstractTest
 {
     /**
-     * @test 
+     * @test
      */
     public function testImplementsResolverInterface()
     {

@@ -57,12 +57,12 @@ class ResolveCacheTest extends WebTestCase
      */
     public function testShouldResolveWithEmptyCache()
     {
-        $this->assertFileNotExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
+        $this->assertFileNotExists($this->cacheRoot.'/web_path_loader/thumbnail_web_path/images/cats.jpeg');
 
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
             [
-                'paths'     => ['images/cats.jpeg'],
+                'paths' => ['images/cats.jpeg'],
                 '--loaders' => ['web_path_loader'],
                 '--filters' => ['thumbnail_web_path'],
             ]
@@ -86,7 +86,7 @@ class ResolveCacheTest extends WebTestCase
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
             [
-                'paths'     => ['images/cats.jpeg'],
+                'paths' => ['images/cats.jpeg'],
                 '--loaders' => ['web_path_loader'],
                 '--filters' => ['thumbnail_web_path'],
             ]
@@ -105,7 +105,7 @@ class ResolveCacheTest extends WebTestCase
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
             [
-                'paths'     => ['images/cats.jpeg', 'images/cats2.jpeg'],
+                'paths' => ['images/cats.jpeg', 'images/cats2.jpeg'],
                 '--loaders' => ['web_path_loader'],
                 '--filters' => ['thumbnail_web_path'],
             ]
@@ -130,7 +130,7 @@ class ResolveCacheTest extends WebTestCase
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
             [
-                'paths'     => ['images/cats.jpeg', 'images/cats2.jpeg'],
+                'paths' => ['images/cats.jpeg', 'images/cats2.jpeg'],
                 '--loaders' => ['web_path_loader'],
                 '--filters' => ['thumbnail_web_path'],
             ]
@@ -151,7 +151,7 @@ class ResolveCacheTest extends WebTestCase
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
             [
-                'paths'     => ['images/cats.jpeg', 'images/cats2.jpeg'],
+                'paths' => ['images/cats.jpeg', 'images/cats2.jpeg'],
                 '--loaders' => ['web_path_loader'],
                 '--filters' => ['thumbnail_web_path', 'thumbnail_default'],
             ]

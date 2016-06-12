@@ -2,9 +2,15 @@
 
 namespace Anezi\ImagineBundle\tests\Functional\app;
 
+use Anezi\ImagineBundle\AneziImagineBundle;
+use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
+/**
+ * Class AppKernel.
+ */
 class AppKernel extends Kernel
 {
     /**
@@ -13,8 +19,9 @@ class AppKernel extends Kernel
     public function registerBundles()
     {
         $bundles = [
-            new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new \Anezi\ImagineBundle\AneziImagineBundle(),
+            new AneziImagineBundle(),
+            new FrameworkBundle(),
+            new SensioFrameworkExtraBundle(),
         ];
 
         return $bundles;
@@ -37,7 +44,7 @@ class AppKernel extends Kernel
     }
 
     /**
-     * @param \Symfony\Component\Config\Loader\LoaderInterface $loader
+     * @param LoaderInterface $loader
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {

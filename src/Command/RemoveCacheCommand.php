@@ -24,6 +24,13 @@ class RemoveCacheCommand extends ContainerAwareCommand
             ->setDescription('Remove cache for given paths and set of filters.')
             ->addArgument('paths', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'Image paths')
             ->addOption(
+                'loaders',
+                'l',
+                InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+                'Loaders list'
+            )
+
+            ->addOption(
                 'filters',
                 'f',
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
@@ -55,7 +62,12 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $paths = $input->getArgument('paths');
+        $loaders = $input->getOption('loaders');
         $filters = $input->getOption('filters');
+
+        if (empty($loaders)) {
+            $loaders = null;
+        }
 
         if (empty($filters)) {
             $filters = null;
@@ -64,6 +76,6 @@ EOF
         /* @var CacheManager cacheManager */
         $cacheManager = $this->getContainer()->get('anezi_imagine.cache.manager');
 
-        $cacheManager->remove($paths, $filters);
+        $cacheManager->remove($paths, $loaders, $filters);
     }
 }

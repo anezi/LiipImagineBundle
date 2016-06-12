@@ -31,7 +31,7 @@ class WatermarkFilterLoader implements LoaderInterface
     public function load(ImageInterface $image, array $options = [])
     {
         $options += [
-            'size'     => null,
+            'size' => null,
             'position' => 'center',
         ];
 

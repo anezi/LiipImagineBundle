@@ -52,8 +52,8 @@ class CacheManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size'  => [180, 180],
-                'mode'  => 'outbound',
+                'size' => [180, 180],
+                'mode' => 'outbound',
                 'cache' => null,
             ]));
 
@@ -117,8 +117,8 @@ class CacheManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size'  => [180, 180],
-                'mode'  => 'outbound',
+                'size' => [180, 180],
+                'mode' => 'outbound',
                 'cache' => null,
             ]));
 
@@ -164,8 +164,8 @@ class CacheManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size'  => [180, 180],
-                'mode'  => 'outbound',
+                'size' => [180, 180],
+                'mode' => 'outbound',
                 'cache' => null,
             ]));
 
@@ -218,8 +218,8 @@ class CacheManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size'  => [180, 180],
-                'mode'  => 'outbound',
+                'size' => [180, 180],
+                'mode' => 'outbound',
                 'cache' => null,
             ]));
 
@@ -306,8 +306,8 @@ class CacheManagerTest extends AbstractTest
             ->method('get')
             ->with('thumbnail')
             ->will($this->returnValue([
-                'size'  => [180, 180],
-                'mode'  => 'outbound',
+                'size' => [180, 180],
+                'mode' => 'outbound',
                 'cache' => null,
             ]));
 
@@ -344,7 +344,7 @@ class CacheManagerTest extends AbstractTest
             ->with(
                 'anezi_imagine_load',
                 [
-                    'path'   => $path,
+                    'path' => $path,
                     'filter' => 'thumbnail',
                 ],
                 UrlGeneratorInterface::ABSOLUTE_URL

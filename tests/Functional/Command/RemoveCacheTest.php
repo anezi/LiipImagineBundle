@@ -57,7 +57,7 @@ class RemoveCacheTest extends WebTestCase
      */
     public function testExecuteSuccessfullyWithEmptyCacheAndWithoutParameters()
     {
-        $this->assertFileNotExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
+        $this->assertFileNotExists($this->cacheRoot.'/loader/thumbnail_web_path/images/cats.jpeg');
 
         $this->executeConsole(new RemoveCacheCommand());
     }
@@ -72,7 +72,7 @@ class RemoveCacheTest extends WebTestCase
         $this->executeConsole(
             new RemoveCacheCommand(),
             [
-                'paths'     => ['images/cats.jpeg'],
+                'paths' => ['images/cats.jpeg'],
                 '--filters' => ['thumbnail_web_path'],
             ]);
     }
@@ -281,7 +281,7 @@ class RemoveCacheTest extends WebTestCase
         $this->executeConsole(
             new RemoveCacheCommand(),
             [
-                'paths'     => ['images/cats.jpeg'],
+                'paths' => ['images/cats.jpeg'],
                 '--filters' => ['thumbnail_default', 'thumbnail_web_path'],
             ]
         );
@@ -312,7 +312,7 @@ class RemoveCacheTest extends WebTestCase
         $this->executeConsole(
             new RemoveCacheCommand(),
             [
-                'paths'     => ['images/cats.jpeg', 'images/cats2.jpeg'],
+                'paths' => ['images/cats.jpeg', 'images/cats2.jpeg'],
                 '--filters' => ['thumbnail_web_path'],
             ]
         );
