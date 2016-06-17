@@ -161,4 +161,16 @@ class WebPathResolver implements ResolverInterface
             $baseUrl
         );
     }
+
+    /**
+     * @param string $path
+     * @param string $loader
+     * @param string $filter
+     *
+     * @return mixed
+     */
+    public function fetch(string $path, string $loader, string $filter) : string
+    {
+        return file_get_contents($this->getFilePath($path, $loader, $filter));
+    }
 }

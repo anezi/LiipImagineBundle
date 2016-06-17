@@ -173,7 +173,7 @@ class CacheManagerTest extends AbstractTest
         $router
             ->expects($this->once())
             ->method('generate')
-            ->will($this->returnValue('/media/cache/thumbnail/cats.jpeg'));
+            ->will($this->returnValue('/images/web_path_loader/thumbnail/cats.jpeg'));
 
         $cacheManager = new CacheManager(
             $filterManager,
@@ -186,7 +186,7 @@ class CacheManagerTest extends AbstractTest
 
         $actualBrowserPath = $cacheManager->getBrowserPath('cats.jpeg', 'thumbnail');
 
-        $this->assertSame('/media/cache/thumbnail/cats.jpeg', $actualBrowserPath);
+        $this->assertSame('/images/web_path_loader/thumbnail/cats.jpeg', $actualBrowserPath);
     }
 
     /**
@@ -227,7 +227,7 @@ class CacheManagerTest extends AbstractTest
         $router
             ->expects($this->once())
             ->method('generate')
-            ->will($this->returnValue('/media/cache/thumbnail/rc/VhOzTGRB/cats.jpeg'));
+            ->will($this->returnValue('/images/web_path_loader/thumbnail/rc/VhOzTGRB/cats.jpeg'));
 
         $cacheManager = new CacheManager(
             $filterManager,
@@ -240,13 +240,15 @@ class CacheManagerTest extends AbstractTest
 
         $actualBrowserPath = $cacheManager->getBrowserPath('cats.jpeg', 'thumbnail', $runtimeConfig);
 
-        $this->assertSame('/media/cache/thumbnail/rc/VhOzTGRB/cats.jpeg', $actualBrowserPath);
+        $this->assertSame('/images/web_path_loader/thumbnail/rc/VhOzTGRB/cats.jpeg', $actualBrowserPath);
     }
 
     /**
      * @dataProvider invalidPathProvider
+     *
+     * @param string $path
      */
-    public function testResolveInvalidPath($path)
+    public function testResolveInvalidPath(string $path)
     {
         $cacheManager = new CacheManager(
             $this->createFilterManagerMock(),

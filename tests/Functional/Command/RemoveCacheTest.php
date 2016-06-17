@@ -46,7 +46,7 @@ class RemoveCacheTest extends WebTestCase
         $this->client = $this->createClient();
 
         $this->webRoot = self::$kernel->getContainer()->getParameter('kernel.root_dir').'/web';
-        $this->cacheRoot = $this->webRoot.'/media/cache';
+        $this->cacheRoot = $this->webRoot.'/images';
 
         $this->filesystem = new Filesystem();
         $this->filesystem->remove($this->cacheRoot);

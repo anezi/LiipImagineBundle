@@ -307,4 +307,17 @@ class CacheManager
             $resolver->remove($paths, $loaders, $mapping[$resolver]);
         }
     }
+
+    /**
+     * @param string $path
+     * @param string $loader
+     * @param string $filter
+     * @param null   $resolver
+     *
+     * @return string
+     */
+    public function fetch(string $path, string $loader, string $filter, $resolver = null)
+    {
+        return $this->getResolver($filter, $resolver)->fetch($path, $loader, $filter);
+    }
 }

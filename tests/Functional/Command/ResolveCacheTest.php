@@ -57,20 +57,20 @@ class ResolveCacheTest extends WebTestCase
      */
     public function testShouldResolveWithEmptyCache()
     {
-        $this->assertFileNotExists($this->cacheRoot.'/web_path_loader/thumbnail_web_path/images/cats.jpeg');
+        $this->assertFileNotExists($this->cacheRoot.'/default/thumbnail_web_path/images/cats.jpeg');
 
         $output = $this->executeConsole(
             new ResolveCacheCommand(),
             [
                 'paths' => ['images/cats.jpeg'],
-                '--loaders' => ['web_path_loader'],
+                '--loaders' => ['default'],
                 '--filters' => ['thumbnail_web_path'],
             ]
         );
 
-        $this->assertFileExists($this->cacheRoot.'/web_path_loader/thumbnail_web_path/images/cats.jpeg');
-        $this->assertFileNotExists($this->cacheRoot.'/web_path_loader/thumbnail_default/images/cats.jpeg');
-        $this->assertContains('http://localhost/images/web_path_loader/thumbnail_web_path/images/cats.jpeg', $output);
+        $this->assertFileExists($this->cacheRoot.'/default/thumbnail_web_path/images/cats.jpeg');
+        $this->assertFileNotExists($this->cacheRoot.'/default/thumbnail_default/images/cats.jpeg');
+        $this->assertContains('http://localhost/images/default/thumbnail_web_path/images/cats.jpeg', $output);
     }
 
     /**

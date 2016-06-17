@@ -94,4 +94,16 @@ class ProxyResolver implements ResolverInterface
 
         return str_replace($randKey, $this->hosts[$randKey], $url);
     }
+
+    /**
+     * @param string $path
+     * @param string $loader
+     * @param string $filter
+     *
+     * @return mixed
+     */
+    public function fetch(string $path, string $loader, string $filter) : string
+    {
+        return $this->resolver->fetch($path, $loader, $filter);
+    }
 }

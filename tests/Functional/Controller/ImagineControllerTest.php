@@ -6,6 +6,7 @@ use Anezi\ImagineBundle\Imagine\Cache\Signer;
 use Anezi\ImagineBundle\Tests\Functional\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @covers Anezi\ImagineBundle\Controller\ImagineController
@@ -42,7 +43,7 @@ class ImagineControllerTest extends WebTestCase
         $this->client = $this->createClient();
 
         $this->webRoot = self::$kernel->getContainer()->getParameter('kernel.root_dir').'/web';
-        $this->cacheRoot = $this->webRoot.'/media/cache';
+        $this->cacheRoot = $this->webRoot.'/images';
 
         $this->filesystem = new Filesystem();
         $this->filesystem->remove($this->cacheRoot);
@@ -51,67 +52,21 @@ class ImagineControllerTest extends WebTestCase
     /**
      * @test
      */
-    public function testShouldResolvePopulatingCacheFirst()
-    {
-        //guard
-        $this->assertFileNotExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
-
-        $this->client->request('GET', '/media/cache/resolve/thumbnail_web_path/images/cats.jpeg');
-
-        $response = $this->client->getResponse();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertSame(301, $response->getStatusCode());
-        $this->assertSame('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $response->getTargetUrl());
-
-        $this->assertFileExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
-    }
-
-    /**
-     * @test
-     */
     public function testShouldResolveFromCache()
     {
         $this->filesystem->dumpFile(
-            $this->cacheRoot.'/web_path_loader/thumbnail_web_path/images/cats.jpeg',
+            $this->cacheRoot.'/default/thumbnail_web_path/images/cats.jpeg',
             'anImageContent'
         );
 
-        $this->client->request('GET', '/images/web_path_loader/thumbnail_web_path/images/cats.jpeg');
+        $this->client->request('GET', '/images/default/thumbnail_web_path/images/cats.jpeg');
 
         $response = $this->client->getResponse();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('http://localhost/media/cache/thumbnail_web_path/images/cats.jpeg', $response->getTargetUrl());
 
-        $this->assertFileExists($this->cacheRoot.'/thumbnail_web_path/images/cats.jpeg');
-    }
-
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     * @expectedExceptionMessage Signed url does not pass the sign check for path "images/cats.jpeg" and filter "thumbnail_web_path" and runtime config {"thumbnail":{"size":["50","50"]}}
-     */
-    public function testThrowBadRequestIfSignInvalidWhileUsingCustomFilters()
-    {
-        $this->client->request('GET', '/media/cache/resolve/thumbnail_web_path/rc/invalidHash/images/cats.jpeg?'.http_build_query([
-            'filters' => [
-                'thumbnail' => ['size' => [50, 50]],
-            ],
-            '_hash' => 'invalid',
-            ]));
-    }
-
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     * @expectedExceptionMessage Filters must be an array. Value was "some-string"
-     */
-    public function testShouldThrowNotFoundHttpExceptionIfFiltersNotArray()
-    {
-        $this->client->request('GET', '/media/cache/resolve/thumbnail_web_path/rc/invalidHash/images/cats.jpeg?'.http_build_query([
-            'filters' => 'some-string',
-            '_hash' => 'hash',
-            ]));
+        $this->assertFileExists($this->cacheRoot.'/default/thumbnail_web_path/images/cats.jpeg');
     }
 
     /**
@@ -120,7 +75,7 @@ class ImagineControllerTest extends WebTestCase
      */
     public function testShouldThrowNotFoundHttpExceptionIfFileNotExists()
     {
-        $this->client->request('GET', '/media/cache/resolve/thumbnail_web_path/images/shrodinger_cats_which_not_exist.jpeg');
+        $this->client->request('GET', '/images/default/thumbnail_web_path/images/shrodinger_cats_which_not_exist.jpeg');
     }
 
     /**
@@ -128,43 +83,7 @@ class ImagineControllerTest extends WebTestCase
      */
     public function testInvalidFilterShouldThrowNotFoundHttpException()
     {
-        $this->client->request('GET', '/media/cache/resolve/invalid-filter/images/cats.jpeg');
-    }
-
-    /**
-     * @test
-     */
-    public function testShouldResolveWithCustomFiltersPopulatingCacheFirst()
-    {
-        /** @var Signer $signer */
-        $signer = self::$kernel->getContainer()->get('anezi_imagine.cache.signer');
-
-        $params = [
-            'filters' => [
-                'thumbnail' => ['size' => [50, 50]],
-            ],
-        ];
-
-        $path = 'images/cats.jpeg';
-
-        $hash = $signer->sign($path, $params['filters']);
-
-        $expectedCachePath = 'thumbnail_web_path/rc/'.$hash.'/'.$path;
-
-        $url = 'http://localhost/media/cache/resolve/'.$expectedCachePath.'?'.http_build_query($params);
-
-        //guard
-        $this->assertFileNotExists($this->cacheRoot.'/'.$expectedCachePath);
-
-        $this->client->request('GET', $url);
-
-        $response = $this->client->getResponse();
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertSame(301, $response->getStatusCode());
-        $this->assertSame('http://localhost/media/cache/'.$expectedCachePath, $response->getTargetUrl());
-
-        $this->assertFileExists($this->cacheRoot.'/'.$expectedCachePath);
+        $this->client->request('GET', '/images/default/invalid-filter/images/cats.jpeg');
     }
 
     /**
@@ -187,10 +106,10 @@ class ImagineControllerTest extends WebTestCase
 
         $expectedCachePath = 'thumbnail_web_path/rc/'.$hash.'/'.$path;
 
-        $url = 'http://localhost/media/cache/resolve/'.$expectedCachePath.'?'.http_build_query($params);
+        $url = 'http://localhost/images/storage/'.$expectedCachePath.'?'.http_build_query($params);
 
         $this->filesystem->dumpFile(
-            $this->cacheRoot.'/'.$expectedCachePath,
+            $this->cacheRoot.'/storage/'.$expectedCachePath,
             'anImageContent'
         );
 
@@ -198,11 +117,10 @@ class ImagineControllerTest extends WebTestCase
 
         $response = $this->client->getResponse();
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertSame(301, $response->getStatusCode());
-        $this->assertSame('http://localhost/media/cache'.'/'.$expectedCachePath, $response->getTargetUrl());
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
 
-        $this->assertFileExists($this->cacheRoot.'/'.$expectedCachePath);
+        $this->assertFileExists($this->cacheRoot.'/storage/'.$expectedCachePath);
     }
 
     /**
@@ -211,20 +129,17 @@ class ImagineControllerTest extends WebTestCase
     public function testShouldResolvePathWithSpecialCharactersAndWhiteSpaces()
     {
         $this->filesystem->dumpFile(
-            $this->cacheRoot.'/thumbnail_web_path/images/foo bar.jpeg',
+            $this->cacheRoot.'/storage/thumbnail_web_path/foo bar.jpeg',
             'anImageContent'
         );
 
-        // we are calling url with encoded file name as it will be called by browser
-        $urlEncodedFileName = 'foo+bar';
-        $this->client->request('GET', '/media/cache/resolve/thumbnail_web_path/images/'.$urlEncodedFileName.'.jpeg');
+        $this->client->request('GET', '/images/storage/thumbnail_web_path/foo+bar.jpeg');
 
         $response = $this->client->getResponse();
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertSame(301, $response->getStatusCode());
-        $this->assertSame('http://localhost/media/cache/thumbnail_web_path/images/foo bar.jpeg', $response->getTargetUrl());
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
 
-        $this->assertFileExists($this->cacheRoot.'/thumbnail_web_path/images/foo bar.jpeg');
+        $this->assertFileExists($this->cacheRoot.'/storage/thumbnail_web_path/foo bar.jpeg');
     }
 }

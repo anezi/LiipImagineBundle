@@ -7,6 +7,9 @@ use Anezi\ImagineBundle\Model\FileBinary;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesserInterface;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
 
+/**
+ * Class FileSystemLoader.
+ */
 class FileSystemLoader implements LoaderInterface
 {
     /**

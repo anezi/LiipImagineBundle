@@ -292,4 +292,18 @@ class AwsS3Resolver implements ResolverInterface
             $this->logger->error($message, $context);
         }
     }
+
+    /**
+     * @param string $path
+     * @param string $loader
+     * @param string $filter
+     *
+     * @return mixed
+     */
+    public function fetch(string $path, string $loader, string $filter) : string
+    {
+        $url = $this->getObjectUrl($this->getObjectPath($path, $loader, $filter));
+
+        return file_get_contents($url);
+    }
 }

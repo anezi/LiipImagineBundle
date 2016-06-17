@@ -29,7 +29,7 @@ class CacheResolverTest extends AbstractTest
     /**
      * @var string
      */
-    protected $webPath = '/media/cache/thumbnail/MadCat2.jpeg';
+    protected $webPath = '/images/web_path_loader/thumbnail/MadCat2.jpeg';
 
     /**
      * @test

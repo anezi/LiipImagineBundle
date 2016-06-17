@@ -9,20 +9,20 @@ framework:
     templating:      { engines: ['php'] }
     session:
         storage_id: session.storage.mock_file
-    secret:          %secret%
+    secret:          '%secret%'
     router:          { resource: "%kernel.root_dir%/config/routing.yml" }
-    default_locale:  %locale%
+    default_locale:  '%locale%'
 
 anezi_imagine:
     loaders:
-        default:
+        storage:
             filesystem:
-                data_root: %kernel.root_dir%/web
+                data_root: '%kernel.root_dir%/web/storage'
     resolvers:
         default:
             web_path:
-                web_root: %kernel.root_dir%/web
-                cache_prefix: media/cache
+                web_root: '%kernel.root_dir%/web'
+                cache_prefix: images
 
     filter_sets:
         thumbnail_web_path:

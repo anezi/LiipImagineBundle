@@ -2,6 +2,9 @@
 
 namespace Anezi\ImagineBundle\Binary\Loader;
 
+/**
+ * Interface LoaderInterface
+ */
 interface LoaderInterface
 {
     /**

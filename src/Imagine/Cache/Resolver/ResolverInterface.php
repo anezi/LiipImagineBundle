@@ -47,4 +47,13 @@ interface ResolverInterface
      * @param string[] $filters The imagine filters in effect.
      */
     public function remove(array $paths, array $loaders, array $filters);
+
+    /**
+     * @param string $path
+     * @param string $loader
+     * @param string $filter
+     *
+     * @return mixed
+     */
+    public function fetch(string $path, string $loader, string $filter) : string;
 }

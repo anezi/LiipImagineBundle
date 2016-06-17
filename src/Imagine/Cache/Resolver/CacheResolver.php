@@ -264,4 +264,16 @@ class CacheResolver implements ResolverInterface
     {
         $this->configureOptions($resolver);
     }
+
+    /**
+     * @param string $path
+     * @param string $loader
+     * @param string $filter
+     *
+     * @return mixed
+     */
+    public function fetch(string $path, string $loader, string $filter) : string
+    {
+        return $this->resolver->fetch($path, $loader, $filter);
+    }
 }
