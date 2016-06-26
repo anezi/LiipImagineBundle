@@ -58,11 +58,7 @@ class NoCacheWebPathResolver implements ResolverInterface
     }
 
     /**
-     * @param string $path
-     * @param string $loader
-     * @param string $filter
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function fetch(string $path, string $loader, string $filter) : string
     {

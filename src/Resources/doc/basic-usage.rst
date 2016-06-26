@@ -43,27 +43,6 @@ In this example, the final rendered path would be something like
 ``/media/cache/my_thumb/relative/path/to/image.jpg``. This is where Imagine
 would save the filtered image file.
 
-You can also pass some options at runtime:
-
-.. configuration-block::
-
-    .. code-block:: html+jinja
-
-        {% set runtimeConfig = {"thumbnail": {"size": [50, 50] }} %}
-        <img src="{{ '/relative/path/to/image.jpg' | imagine_filter('my_thumb', runtimeConfig) }}" />
-
-    .. code-block:: html+php
-
-        <?php
-        $runtimeConfig = array(
-            "thumbnail" => array(
-                "size" => array(50, 50)
-            )
-        );
-        ?>
-
-        <img src="<?php echo $this['imagine']->filter('/relative/path/to/image.jpg', 'my_thumb', $runtimeConfig) ?>" />
-
 Also you can resolve image url from console:
 
 .. code-block:: bash

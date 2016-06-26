@@ -24,7 +24,6 @@ class ImagineController extends Controller
      *
      * @Route(path="/{loader}/{filter}/{path}", name="anezi_imagine_load",requirements={"filter"="[A-z0-9_\-]*","path"=".+"})
      *
-     * @param Request $request
      * @param string  $loader
      * @param string  $filter
      * @param string  $path
@@ -33,7 +32,7 @@ class ImagineController extends Controller
      *
      * @return Response
      */
-    public function loadAction(Request $request, string $loader, string $filter, string $path) : Response
+    public function loadAction(string $loader, string $filter, string $path) : Response
     {
         // decoding special characters and whitespaces from path obtained from url
         $path = urldecode($path);

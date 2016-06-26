@@ -43,14 +43,12 @@ class ImagineExtension extends \Twig_Extension
      * @param string $path
      * @param string $loader
      * @param string $filter
-     * @param array  $runtimeConfig
-     * @param string $resolver
      *
      * @return \Twig_Markup
      */
-    public function filter(string $path, string $loader, string $filter, array $runtimeConfig = [], $resolver = null)
+    public function filter(string $path, string $loader, string $filter)
     {
-        return $this->cacheManager->getBrowserPath($path, $filter, $runtimeConfig, $resolver);
+        return $this->cacheManager->getBrowserPath($path, $loader, $filter);
     }
 
     /**

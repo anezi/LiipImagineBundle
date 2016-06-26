@@ -26,6 +26,6 @@ Reference the image by its id:
 
 .. code-block:: jinja
 
-    <img src="{{ image.id | imagine_filter('my_thumb') }}" />
+    <img src="{{ image.id | imagine_filter('loader', 'my_thumb') }}" />
 
 .. _`MongoDB GridFS`: http://docs.mongodb.org/manual/applications/gridfs/

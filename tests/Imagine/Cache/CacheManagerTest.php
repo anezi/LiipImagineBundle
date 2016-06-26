@@ -363,7 +363,7 @@ class CacheManagerTest extends AbstractTest
 
         $this->assertSame(
             $expectedUrl,
-            $cacheManager->generateUrl($path, 'thumbnail')
+            $cacheManager->generateUrl($path, 'storage', 'thumbnail')
         );
     }
 

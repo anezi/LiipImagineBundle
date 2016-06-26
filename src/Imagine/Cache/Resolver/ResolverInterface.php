@@ -53,7 +53,7 @@ interface ResolverInterface
      * @param string $loader
      * @param string $filter
      *
-     * @return mixed
+     * @return string
      */
     public function fetch(string $path, string $loader, string $filter) : string;
 }
